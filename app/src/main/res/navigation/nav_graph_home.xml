@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_home"
+    app:startDestination="@id/selectorFragment">
+
+    <fragment
+        android:id="@+id/selectorFragment"
+        android:name="com.rookmotion.rookconnectdemo.home.selector.SelectorFragment"
+        android:label="@string/menu"
+        tools:layout="@layout/fragment_selector" >
+        <action
+            android:id="@+id/action_selectorFragment_to_HCAvailabilityFragment"
+            app:destination="@id/HCAvailabilityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HCAvailabilityFragment"
+        android:name="com.rookmotion.rookconnectdemo.home.health_connect.HCAvailabilityFragment"
+        android:label="@string/health_connect_availability"
+        tools:layout="@layout/fragment_hc_availability">
+        <action
+            android:id="@+id/action_HCAvailabilityFragment_to_HCPermissionsFragment"
+            app:destination="@id/HCPermissionsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HCPermissionsFragment"
+        android:name="com.rookmotion.rookconnectdemo.home.health_connect.HCPermissionsFragment"
+        android:label="@string/health_connect_permissions"
+        tools:layout="@layout/fragment_hc_permissions">
+        <action
+            android:id="@+id/action_HCPermissionsFragment_to_HCPlaygroundFragment"
+            app:destination="@id/HCPlaygroundFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HCPlaygroundFragment"
+        android:name="com.rookmotion.rookconnectdemo.home.health_connect.HCPlaygroundFragment"
+        android:label="@string/health_connect"
+        tools:layout="@layout/fragment_hc_playground" />
+</navigation>

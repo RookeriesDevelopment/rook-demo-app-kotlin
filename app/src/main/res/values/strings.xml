@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Rook Connect Demo</string>
+    <string name="menu">Menu</string>
+    <string name="authorized_until_placeholder">Authorized until: %1$s</string>
+    <string name="hc_placeholder_registered">Health Connect User: %1$s is registered!</string>
+    <string name="authorization">Authorization</string>
+    <string name="retry">Retry</string>
+    <string name="users">Users</string>
+    <string name="health_connect_availability">Health connect availability</string>
+    <string name="health_connect_permissions">Health connect permissions</string>
+    <string name="health_connect">Health connect</string>
+    <string name="health_connect_placeholder">Health Connect: %1$s</string>
+    <string name="permissions_granted_placeholder">Permissions granted: %1$s</string>
+    <string name="request_permissions">Request permissions</string>
+    <string name="go_back">Go back</string>
+    <string name="install_now">Install now</string>
+    <string name="continue_text">Continue</string>
+    <string name="open_health_connect">Open Health Connect</string>
+    <string name="health_connect_permissions_tip">If the \'Request permissions\' button does not work try to open health connect, locate \'Rook Connect Demo\' app and grant and permissions</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="privacy_policy_header">This is a placeholder example.</string>
+    <string name="privacy_policy_body">Your app should display an appropriate privacy policy for how you will handle and use Health Connect data. \n\n This sample app does not store or transmit any data outside of Health Connect.</string>
+    <string name="select_a_day">Select a day</string>
+    <string name="select_a_date">Select a date</string>
+    <string name="sleep">Sleep</string>
+    <string name="physical">Physical</string>
+    <string name="body">Body</string>
+    <string name="physical_events">Physical events</string>
+    <string name="enqueue_this">Enqueue this</string>
+    <string name="sync_all">Sync all</string>
+    <string name="clear_all">Clear all</string>
+    <string name="palceholder_enqueued_placeholder">%1$s enqueued? %2$s</string>
+</resources>

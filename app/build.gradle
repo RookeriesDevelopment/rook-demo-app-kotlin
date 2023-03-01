@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+}
+
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
+android {
+    namespace 'com.rookmotion.rookconnectdemo'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.rookmotion.rookconnectdemo"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "USER_ID", "\"${localProperties.userID}\"")
+        buildConfigField("String", "CLIENT_UUID", "\"${localProperties.clientUUID}\"")
+        buildConfigField("String", "CLIENT_PASSWORD", "\"${localProperties.clientPassword}\"")
+        buildConfigField("String", "ROOK_AUTH_URL", "\"${localProperties.rookAuthUrl}\"")
+        buildConfigField("String", "ROOK_USERS_URL", "\"${localProperties.rookUsersUrl}\"")
+        buildConfigField("String", "ROOK_TRANSMISSION_URL", "\"${localProperties.rookTransmissionUrl}\"")
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../keystore.jks')
+            storePassword localProperties.storePassword
+            keyAlias localProperties.keyAlias
+            keyPassword  localProperties.keyPassword
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Rook
+    implementation 'com.rookmotion.android:rook-auth:0.2.0'
+    implementation 'com.rookmotion.android:rook-users:0.1.0'
+    implementation 'com.rookmotion.android:rook-health-connect:0.0.2'
+    implementation 'com.rookmotion.android:rook-transmission:0.2.0'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
