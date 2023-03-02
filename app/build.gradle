@@ -72,7 +72,7 @@ dependencies {
     // Rook
     implementation 'com.rookmotion.android:rook-auth:0.2.0'
     implementation 'com.rookmotion.android:rook-users:0.1.0'
-    implementation 'com.rookmotion.android:rook-health-connect:0.0.2'
+    implementation 'com.rookmotion.android:rook-health-connect:0.1.0'
     implementation 'com.rookmotion.android:rook-transmission:0.2.0'
 
     // Navigation
