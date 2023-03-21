@@ -46,12 +46,12 @@ class AuthViewModel(
         }
     }
 
-    fun registerUser(clientUUID: String, userID: String) {
+    fun registerUser(userID: String) {
         _user.tryEmit(BasicState.Loading)
 
         viewModelScope.launch {
             try {
-                manager.registerRookUser(clientUUID, userID, UserType.HEALTH_CONNECT)
+                manager.registerRookUser(userID, UserType.HEALTH_CONNECT)
 
                 _user.emit(BasicState.Success)
             } catch (e: Exception) {

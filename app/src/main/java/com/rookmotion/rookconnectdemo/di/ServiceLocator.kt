@@ -19,9 +19,20 @@ class ServiceLocator(context: Context) {
 
     val rookUsersManager: RookUsersManager by lazy {
         if (BuildConfig.DEBUG) {
-            RookUsersManager(context, BuildConfig.ROOK_USERS_URL, "ADVANCED")
+            RookUsersManager(
+                context,
+                BuildConfig.ROOK_USERS_URL,
+                BuildConfig.CLIENT_UUID,
+                BuildConfig.CLIENT_PASSWORD,
+                "ADVANCED"
+            )
         } else {
-            RookUsersManager(context, BuildConfig.ROOK_USERS_URL)
+            RookUsersManager(
+                context,
+                BuildConfig.ROOK_USERS_URL,
+                BuildConfig.CLIENT_UUID,
+                BuildConfig.CLIENT_PASSWORD,
+            )
         }
     }
 
@@ -33,7 +44,7 @@ class ServiceLocator(context: Context) {
                 BuildConfig.USER_ID,
                 BuildConfig.CLIENT_UUID,
                 BuildConfig.CLIENT_PASSWORD,
-                "ADVANCED"
+                "ADVANCED",
             )
         } else {
             RookTransmissionManager(

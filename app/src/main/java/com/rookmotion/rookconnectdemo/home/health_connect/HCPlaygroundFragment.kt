@@ -136,7 +136,7 @@ class HCPlaygroundFragment : Fragment() {
                 if (it.enqueued != null) {
                     binding.root.snackShort(
                         getString(
-                            R.string.palceholder_enqueued_placeholder,
+                            R.string.placeholder_enqueued_placeholder,
                             "sleep",
                             "${it.enqueued}"
                         )
@@ -172,7 +172,7 @@ class HCPlaygroundFragment : Fragment() {
                 if (it.enqueued != null) {
                     binding.root.snackShort(
                         getString(
-                            R.string.palceholder_enqueued_placeholder,
+                            R.string.placeholder_enqueued_placeholder,
                             "physical",
                             "${it.enqueued}"
                         )
@@ -208,7 +208,7 @@ class HCPlaygroundFragment : Fragment() {
                 if (it.enqueued != null) {
                     binding.root.snackShort(
                         getString(
-                            R.string.palceholder_enqueued_placeholder,
+                            R.string.placeholder_enqueued_placeholder,
                             "physical events",
                             "${it.enqueued}"
                         )
@@ -244,7 +244,7 @@ class HCPlaygroundFragment : Fragment() {
                 if (it.enqueued != null) {
                     binding.root.snackShort(
                         getString(
-                            R.string.palceholder_enqueued_placeholder,
+                            R.string.placeholder_enqueued_placeholder,
                             "body",
                             "${it.enqueued}"
                         )
@@ -258,21 +258,21 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.syncState.collect {
+            healthConnectViewModel.uploadState.collect {
                 when (it) {
                     is BasicState.None -> {
                         // Ignored
                     }
-                    BasicState.Loading -> binding.sync.isEnabled = false
+                    BasicState.Loading -> binding.upload.isEnabled = false
                     is BasicState.Error -> {
                         binding.root.snackLong(it.message, getString(R.string.retry)) {
-                            healthConnectViewModel.syncData()
+                            healthConnectViewModel.uploadData()
                         }
-                        binding.sync.isEnabled = true
+                        binding.upload.isEnabled = true
                     }
                     BasicState.Success -> {
-                        binding.root.snackShort("Synced")
-                        binding.sync.isEnabled = true
+                        binding.root.snackShort("uploaded")
+                        binding.upload.isEnabled = true
                     }
                 }
             }
@@ -301,7 +301,7 @@ class HCPlaygroundFragment : Fragment() {
     }
 
     private fun initWidgets() {
-        binding.sync.setOnClickListener { healthConnectViewModel.syncData() }
+        binding.upload.setOnClickListener { healthConnectViewModel.uploadData() }
         binding.clear.setOnClickListener { healthConnectViewModel.clearData() }
     }
 

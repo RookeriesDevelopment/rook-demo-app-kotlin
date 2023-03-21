@@ -51,8 +51,8 @@ class HealthConnectViewModel(
     private val _clearQueueState = MutableStateFlow<BasicState>(BasicState.None)
     val clearQueueState get() = _clearQueueState.asStateFlow()
 
-    private val _syncState = MutableStateFlow<BasicState>(BasicState.None)
-    val syncState get() = _syncState.asStateFlow()
+    private val _uploadState = MutableStateFlow<BasicState>(BasicState.None)
+    val uploadState get() = _uploadState.asStateFlow()
 
     fun checkAvailability() {
         _isAvailable.tryEmit(DataState.Loading)
@@ -378,18 +378,18 @@ class HealthConnectViewModel(
         }
     }
 
-    fun syncData() {
-        _syncState.tryEmit(BasicState.Loading)
+    fun uploadData() {
+        _uploadState.tryEmit(BasicState.Loading)
         viewModelScope.launch {
             try {
-                transmission.syncAll()
+                transmission.uploadAll()
 
-                _syncState.emit(BasicState.Success)
+                _uploadState.emit(BasicState.Success)
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) {
                     throw e
                 } else {
-                    _syncState.emit(BasicState.Error(e.toString()))
+                    _uploadState.emit(BasicState.Error(e.toString()))
                 }
             }
         }

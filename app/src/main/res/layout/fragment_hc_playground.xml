@@ -160,12 +160,12 @@
             android:background="?attr/colorOnSurface" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/sync"
+            android:id="@+id/upload"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="@string/sync_all" />
+            android:text="@string/upload_all" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/clear"

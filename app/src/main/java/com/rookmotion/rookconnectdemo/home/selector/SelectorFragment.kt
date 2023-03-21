@@ -17,7 +17,7 @@ import com.rookmotion.rookconnectdemo.home.selector.SelectorFragmentDirections.C
 import com.rookmotion.rookconnectdemo.utils.repeatOnResume
 import com.rookmotion.rookconnectdemo.utils.serviceLocator
 import com.rookmotion.rookconnectdemo.utils.setNavigateOnClick
-import com.rookmotion.rookconnectdemo.utils.toRookDateTimeString
+import java.time.format.DateTimeFormatter
 
 class SelectorFragment : Fragment() {
 
@@ -66,16 +66,15 @@ class SelectorFragment : Fragment() {
                         val icon = if (it.data.authorization.isNotExpired) R.drawable.ic_verified
                         else R.drawable.ic_not_verified
 
+                        val date = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(it.data.authorization.authorizedUntil)
+
                         binding.auth.authorizedUntil.setCompoundDrawablesWithIntrinsicBounds(
                             icon, 0, 0, 0
                         )
 
                         binding.auth.authorizedUntil.text = it.data.origin.name.plus(" > ").plus(
-                            getString(
-                                R.string.authorized_until_placeholder,
-                                it.data.authorization.authorizedUntil.toRookDateTimeString()
-                            )
-                        ).plus(" (UTC)")
+                            getString(R.string.authorized_until_placeholder, date)
+                        )
 
                         val features = it.data.authorization.features.flatMap { entry ->
                             listOf("${entry.key} ➞ ${entry.value}")
@@ -88,7 +87,7 @@ class SelectorFragment : Fragment() {
                         binding.auth.retry.isVisible = false
 
                         if (authViewModel.user.value !is BasicState.Success) {
-                            authViewModel.registerUser(BuildConfig.CLIENT_UUID, BuildConfig.USER_ID)
+                            authViewModel.registerUser(BuildConfig.USER_ID)
                         }
                     }
                 }
@@ -131,7 +130,7 @@ class SelectorFragment : Fragment() {
         }
 
         binding.users.retry.setOnClickListener {
-            authViewModel.registerUser(BuildConfig.CLIENT_UUID, BuildConfig.USER_ID)
+            authViewModel.registerUser(BuildConfig.USER_ID)
         }
 
         binding.healthConnectSdk.setNavigateOnClick(actionSelectorFragmentToHCAvailabilityFragment())

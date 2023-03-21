@@ -27,7 +27,7 @@
     <string name="body">Body</string>
     <string name="physical_events">Physical events</string>
     <string name="enqueue_this">Enqueue this</string>
-    <string name="sync_all">Sync all</string>
+    <string name="upload_all">upload all</string>
     <string name="clear_all">Clear all</string>
-    <string name="palceholder_enqueued_placeholder">%1$s enqueued? %2$s</string>
+    <string name="placeholder_enqueued_placeholder">%1$s enqueued? %2$s</string>
 </resources>
