@@ -14,6 +14,8 @@ import com.rookmotion.rookconnectdemo.home.common.BasicState
 import com.rookmotion.rookconnectdemo.home.common.DataState
 import com.rookmotion.rookconnectdemo.utils.toItem
 import com.rookmotion.rookconnectdemo.utils.toItems
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,6 +27,7 @@ import java.time.ZonedDateTime
 class HealthConnectViewModel(
     private val transmission: RookTransmissionManager,
     private val healthConnect: RookHealthConnectManager,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _isAvailable = MutableStateFlow<DataState<AvailabilityStatus>>(DataState.None)
@@ -73,7 +76,7 @@ class HealthConnectViewModel(
     fun checkPermissions() {
         _hasPermissions.tryEmit(DataState.Loading)
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = healthConnect.hasAllPermissions()
 
@@ -136,7 +139,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = healthConnect.getSleepSummary(date)
 
@@ -160,7 +163,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = transmission.enqueueSleepSummary(sleepSummary.toItem())
 
@@ -193,7 +196,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = healthConnect.getPhysicalSummary(date)
 
@@ -222,7 +225,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = transmission.enqueuePhysicalSummary(physicalSummary.toItem())
 
@@ -260,7 +263,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = healthConnect.getPhysicalEvents(date)
 
@@ -289,7 +292,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val results = mutableListOf<Boolean>()
 
@@ -333,7 +336,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = healthConnect.getBodySummary(date)
 
@@ -357,7 +360,7 @@ class HealthConnectViewModel(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 val result = transmission.enqueueBodySummary(bodySummary.toItem())
 
@@ -380,7 +383,7 @@ class HealthConnectViewModel(
 
     fun uploadData() {
         _uploadState.tryEmit(BasicState.Loading)
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 transmission.uploadAll()
 
@@ -398,7 +401,7 @@ class HealthConnectViewModel(
     fun clearData() {
         _clearQueueState.tryEmit(BasicState.Loading)
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             try {
                 transmission.clearQueuedSleepSummaries()
                 transmission.clearQueuedPhysicalSummaries()
