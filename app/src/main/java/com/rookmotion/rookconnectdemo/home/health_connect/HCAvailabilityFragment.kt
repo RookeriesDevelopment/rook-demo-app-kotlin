@@ -9,13 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.button.MaterialButton
 import com.rookmotion.rook.health_connect.domain.enums.AvailabilityStatus
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcAvailabilityBinding
 import com.rookmotion.rookconnectdemo.home.common.DataState
-import com.rookmotion.rookconnectdemo.home.common.ViewModelFactory
 import com.rookmotion.rookconnectdemo.utils.repeatOnResume
-import com.rookmotion.rookconnectdemo.utils.serviceLocator
 import com.rookmotion.rookconnectdemo.utils.snackLong
 
 class HCAvailabilityFragment : Fragment() {
@@ -23,9 +22,7 @@ class HCAvailabilityFragment : Fragment() {
     private var _binding: FragmentHcAvailabilityBinding? = null
     private val binding get() = _binding!!
 
-    private val healthConnectViewModel by viewModels<HealthConnectViewModel> {
-        ViewModelFactory(requireActivity().serviceLocator)
-    }
+    private val healthConnectAvailabilityViewModel by viewModels<HealthConnectAvailabilityViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +42,7 @@ class HCAvailabilityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            healthConnectViewModel.isAvailable.collect {
+            healthConnectAvailabilityViewModel.isAvailable.collect {
                 when (it) {
                     DataState.None -> binding.action.isEnabled = false
                     DataState.Loading -> {
@@ -55,7 +52,7 @@ class HCAvailabilityFragment : Fragment() {
                         message = it.message,
                         action = getString(R.string.retry),
                         onClick = {
-                            healthConnectViewModel.checkAvailability()
+                            healthConnectAvailabilityViewModel.checkAvailability(requireContext())
                         },
                     )
                     is DataState.Success -> {
@@ -63,6 +60,7 @@ class HCAvailabilityFragment : Fragment() {
                             AvailabilityStatus.NOT_SUPPORTED -> {
                                 binding.action.text = getString(R.string.go_back)
                                 binding.action.setIconResource(R.drawable.ic_arrow_back)
+                                binding.action.iconGravity = MaterialButton.ICON_GRAVITY_START
                                 binding.action.setOnClickListener { findNavController().navigateUp() }
                             }
                             AvailabilityStatus.NOT_INSTALLED -> {
@@ -90,7 +88,7 @@ class HCAvailabilityFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        healthConnectViewModel.checkAvailability()
+        healthConnectAvailabilityViewModel.checkAvailability(requireContext())
     }
 
     private fun openPlayStore() {

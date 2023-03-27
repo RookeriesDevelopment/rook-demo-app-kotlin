@@ -2,16 +2,14 @@ package com.rookmotion.rookconnectdemo.utils
 
 import com.rookmotion.rook.health_connect.domain.model.*
 import com.rookmotion.rook.transmission.domain.model.*
-import com.rookmotion.rookconnectdemo.utils.RookDateTimeUtils.stringToLocalDate
-import com.rookmotion.rookconnectdemo.utils.RookDateTimeUtils.stringToZonedDateTime
 
 fun SleepSummary.toItem(): SleepSummaryItem {
     return SleepSummaryItem(
         sourceOfData = sourceOfData,
-        dateTime = stringToZonedDateTime(dateTime),
-        sleepStartDatetime = stringToZonedDateTime(sleepStartDatetime),
-        sleepEndDatetime = stringToZonedDateTime(sleepEndDatetime),
-        sleepDate = stringToLocalDate(sleepDate),
+        dateTime = toUTCZonedDateTime(dateTime),
+        sleepStartDatetime = toUTCZonedDateTime(sleepStartDatetime),
+        sleepEndDatetime = toUTCZonedDateTime(sleepEndDatetime),
+        sleepDate = toLocalDate(sleepDate),
         sleepDurationSeconds = sleepDurationSeconds,
         timeInBedSeconds = timeInBedSeconds,
         lightSleepDurationSeconds = lightSleepDurationSeconds,
@@ -24,7 +22,7 @@ fun SleepSummary.toItem(): SleepSummaryItem {
 fun PhysicalSummary.toItem(): PhysicalSummaryItem {
     return PhysicalSummaryItem(
         sourceOfData = sourceOfData,
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         stepsPerDay = stepsPerDay,
         stepsGranularDataStepsPerHr = stepsGranularDataStepsPerHr.map { it.toItem() },
         traveledDistanceMeters = traveledDistanceMeters,
@@ -58,9 +56,9 @@ fun PhysicalEvents.toItems(): List<PhysicalEventItem> {
 fun PhysicalEvent.toItem(): PhysicalEventItem {
     return PhysicalEventItem(
         sourceOfData = sourceOfData,
-        dateTime = stringToZonedDateTime(dateTime),
-        activityStartDatetime = stringToZonedDateTime(activityStartDatetime),
-        activityEndDatetime = stringToZonedDateTime(activityEndDatetime),
+        dateTime = toUTCZonedDateTime(dateTime),
+        activityStartDatetime = toUTCZonedDateTime(activityStartDatetime),
+        activityEndDatetime = toUTCZonedDateTime(activityEndDatetime),
         activityDurationSeconds = activityDurationSeconds,
         activityTypeName = activityTypeName,
         caloriesExpenditureKilocalories = caloriesExpenditureKilocalories,
@@ -97,7 +95,7 @@ fun PhysicalEvent.toItem(): PhysicalEventItem {
 fun BodySummary.toItem(): BodySummaryItem {
     return BodySummaryItem(
         sourceOfData = sourceOfData,
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         weightKg = weightKg,
         heightCm = heightCm,
         bloodGlucoseDayAvgMgPerDl = bloodGlucoseDayAvgMgPerDl,
@@ -125,7 +123,7 @@ fun BodySummary.toItem(): BodySummaryItem {
 
 fun StepsGranularDataStepsPerHr.toItem(): StepsGranularDataStepsPerHrItem {
     return StepsGranularDataStepsPerHrItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         steps = steps,
     )
@@ -133,7 +131,7 @@ fun StepsGranularDataStepsPerHr.toItem(): StepsGranularDataStepsPerHrItem {
 
 fun TraveledDistanceGranularDataMeters.toItem(): TraveledDistanceGranularDataMetersItem {
     return TraveledDistanceGranularDataMetersItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         traveledDistanceMeters = traveledDistanceMeters,
     )
@@ -141,7 +139,7 @@ fun TraveledDistanceGranularDataMeters.toItem(): TraveledDistanceGranularDataMet
 
 fun FloorsClimbedGranularData.toItem(): FloorsClimbedGranularDataItem {
     return FloorsClimbedGranularDataItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         floorsClimbed = floorsClimbed,
     )
@@ -149,7 +147,7 @@ fun FloorsClimbedGranularData.toItem(): FloorsClimbedGranularDataItem {
 
 fun ElevationGranularDataMeters.toItem(): ElevationGranularDataMetersItem {
     return ElevationGranularDataMetersItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         elevationChange = elevationChange,
     )
@@ -157,35 +155,35 @@ fun ElevationGranularDataMeters.toItem(): ElevationGranularDataMetersItem {
 
 fun SaturationGranularDataPercentage.toItem(): SaturationGranularDataPercentageItem {
     return SaturationGranularDataPercentageItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         saturationPercentage = saturationPercentage,
     )
 }
 
 fun Vo2MaxGranularDataMlPerMinPerKg.toItem(): Vo2GranularDataLiterPerMinItem {
     return Vo2GranularDataLiterPerMinItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         vo2MlPerMinPerKg = vo2MaxMlPerMinPerKg,
     )
 }
 
 fun HrGranularDataBpm.toItem(): HrGranularDataBpmItem {
     return HrGranularDataBpmItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         hrBpm = hrBpm,
     )
 }
 
 fun HrvRmssdGranularData.toItem(): HrvRmssdGranularDataItem {
     return HrvRmssdGranularDataItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         hrvRmssd = hrvRmssd,
     )
 }
 
 fun SpeedGranularDataMetersPerSecond.toItem(): SpeedGranularDataMetersPerSecondItem {
     return SpeedGranularDataMetersPerSecondItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         speedMetersPerSecond = speedMetersPerSecond,
     )
@@ -193,7 +191,7 @@ fun SpeedGranularDataMetersPerSecond.toItem(): SpeedGranularDataMetersPerSecondI
 
 fun CadenceGranularDataRpm.toItem(): CadenceGranularDataRpmItem {
     return CadenceGranularDataRpmItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         cadenceRpm = cadenceRpm,
     )
@@ -201,7 +199,7 @@ fun CadenceGranularDataRpm.toItem(): CadenceGranularDataRpmItem {
 
 fun BloodGlucoseGranularDataMgPerDL.toItem(): BloodGlucoseGranularDataMgPerDLItem {
     return BloodGlucoseGranularDataMgPerDLItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         bloodGlucoseMgPerDL = bloodGlucoseMgPerDl,
     )
 }
@@ -215,7 +213,7 @@ fun BloodPressureSystolicDiastolic.toItem(): BloodPressureSystolicDiastolicItem 
 
 fun BloodPressureGranularDataSystolicDiastolic.toItem(): BloodPressureGranularDataSystolicDiastolicItem {
     return BloodPressureGranularDataSystolicDiastolicItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         systolicBp = bloodPressureSystolicDiastolic.systolicBp,
         diastolicBp = bloodPressureSystolicDiastolic.diastolicBp
     )
@@ -223,7 +221,7 @@ fun BloodPressureGranularDataSystolicDiastolic.toItem(): BloodPressureGranularDa
 
 fun HydrationAmountGranularDataMl.toItem(): HydrationAmountGranularDataMlItem {
     return HydrationAmountGranularDataMlItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         intervalDurationSeconds = 0,
         hydrationAmountMl = hydrationAmountMl,
     )
@@ -231,7 +229,7 @@ fun HydrationAmountGranularDataMl.toItem(): HydrationAmountGranularDataMlItem {
 
 fun TemperatureGranularDataCelsius.toItem(): TemperatureGranularDataCelsiusItem {
     return TemperatureGranularDataCelsiusItem(
-        dateTime = stringToZonedDateTime(dateTime),
+        dateTime = toUTCZonedDateTime(dateTime),
         temperatureCelsius = temperatureCelsius,
     )
 }

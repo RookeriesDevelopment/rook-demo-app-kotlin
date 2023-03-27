@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.*
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcPlaygroundBinding
 import com.rookmotion.rookconnectdemo.home.common.BasicState
@@ -307,9 +305,14 @@ class HCPlaygroundFragment : Fragment() {
 
     private fun showCalendar(date: ZonedDateTime, onSelected: (ZonedDateTime) -> Unit) {
         val now = ZonedDateTime.now().truncatedTo(ChronoUnit.HOURS)
-        val minimumSeconds = now.minusDays(29).toEpochSecond() * 1000
+        val minimumSeconds = now.minusDays(30).toEpochSecond() * 1000
         val maximumSeconds = now.minusDays(1).toEpochSecond() * 1000
         val currentSeconds = date.toEpochSecond() * 1000
+
+        val dateValidators = listOf(
+            DateValidatorPointForward.from(minimumSeconds),
+            DateValidatorPointBackward.before(maximumSeconds),
+        )
 
         MaterialDatePicker.Builder
             .datePicker()
@@ -319,7 +322,8 @@ class HCPlaygroundFragment : Fragment() {
             .setCalendarConstraints(
                 CalendarConstraints.Builder()
                     .setStart(minimumSeconds)
-                    .setValidator(DateValidatorPointBackward.before(maximumSeconds))
+                    .setEnd(maximumSeconds)
+                    .setValidator(CompositeDateValidator.allOf(dateValidators))
                     .build()
             )
             .build()

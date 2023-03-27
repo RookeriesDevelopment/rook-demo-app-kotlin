@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.health_connect.RookHealthConnectManager
-import com.rookmotion.rook.health_connect.domain.enums.AvailabilityStatus
 import com.rookmotion.rook.health_connect.domain.model.BodySummary
 import com.rookmotion.rook.health_connect.domain.model.PhysicalEvents
 import com.rookmotion.rook.health_connect.domain.model.PhysicalSummary
@@ -30,9 +29,6 @@ class HealthConnectViewModel(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
-    private val _isAvailable = MutableStateFlow<DataState<AvailabilityStatus>>(DataState.None)
-    val isAvailable get() = _isAvailable.asStateFlow()
-
     private val _hasPermissions = MutableStateFlow<DataState<Boolean>>(DataState.None)
     val hasPermissions get() = _hasPermissions.asStateFlow()
 
@@ -56,18 +52,6 @@ class HealthConnectViewModel(
 
     private val _uploadState = MutableStateFlow<BasicState>(BasicState.None)
     val uploadState get() = _uploadState.asStateFlow()
-
-    fun checkAvailability() {
-        _isAvailable.tryEmit(DataState.Loading)
-
-        try {
-            val result = healthConnect.checkAvailability()
-
-            _isAvailable.tryEmit(DataState.Success(result))
-        } catch (e: Exception) {
-            _isAvailable.tryEmit(DataState.Error(e.toString()))
-        }
-    }
 
     fun openHealthConnectSettings() {
         healthConnect.openHealthConnectSettings()
