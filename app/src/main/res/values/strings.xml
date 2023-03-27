@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rook Connect Demo</string>
+    <string name="app_name">Rook Demo</string>
     <string name="menu">Menu</string>
     <string name="authorized_until_placeholder">Authorized until: %1$s</string>
     <string name="hc_placeholder_registered">Health Connect User: %1$s is registered!</string>
