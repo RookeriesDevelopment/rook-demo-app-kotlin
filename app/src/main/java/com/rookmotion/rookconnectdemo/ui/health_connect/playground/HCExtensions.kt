@@ -1,7 +1,9 @@
-package com.rookmotion.rookconnectdemo.utils
+package com.rookmotion.rookconnectdemo.ui.health_connect
 
 import com.rookmotion.rook.health_connect.domain.model.*
 import com.rookmotion.rook.transmission.domain.model.*
+import com.rookmotion.rookconnectdemo.utils.toLocalDate
+import com.rookmotion.rookconnectdemo.utils.toUTCZonedDateTime
 
 fun SleepSummary.toItem(): SleepSummaryItem {
     return SleepSummaryItem(

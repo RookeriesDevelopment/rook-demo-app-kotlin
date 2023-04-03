@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.common
+package com.rookmotion.rookconnectdemo.ui.common
 
 sealed class BasicState {
     object None : BasicState()

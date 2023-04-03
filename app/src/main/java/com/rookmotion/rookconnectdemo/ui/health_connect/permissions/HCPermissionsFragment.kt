@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.permissions
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcPermissionsBinding
-import com.rookmotion.rookconnectdemo.home.common.DataState
-import com.rookmotion.rookconnectdemo.home.common.ViewModelFactory
+import com.rookmotion.rookconnectdemo.di.ViewModelFactory
+import com.rookmotion.rookconnectdemo.ui.common.DataState
 import com.rookmotion.rookconnectdemo.utils.repeatOnResume
 import com.rookmotion.rookconnectdemo.utils.serviceLocator
 import com.rookmotion.rookconnectdemo.utils.snackLong
@@ -21,7 +21,7 @@ class HCPermissionsFragment : Fragment() {
     private var _binding: FragmentHcPermissionsBinding? = null
     private val binding get() = _binding!!
 
-    private val healthConnectViewModel by viewModels<HealthConnectViewModel> {
+    private val hcPermissionsViewModel by viewModels<HCPermissionsViewModel> {
         ViewModelFactory(requireActivity().serviceLocator)
     }
 
@@ -43,7 +43,7 @@ class HCPermissionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            healthConnectViewModel.hasPermissions.collect {
+            hcPermissionsViewModel.hasPermissions.collect {
                 when (it) {
                     DataState.None -> binding.action.isEnabled = false
                     DataState.Loading -> {
@@ -53,7 +53,7 @@ class HCPermissionsFragment : Fragment() {
                         message = it.message,
                         action = getString(R.string.retry),
                         onClick = {
-                            healthConnectViewModel.checkPermissions()
+                            hcPermissionsViewModel.checkPermissions()
                         },
                     )
                     is DataState.Success -> {
@@ -65,7 +65,7 @@ class HCPermissionsFragment : Fragment() {
                             binding.action.text = getString(R.string.request_permissions)
                             binding.action.icon = null
                             binding.action.setOnClickListener {
-                                healthConnectViewModel.requestPermissions(requireActivity())
+                                hcPermissionsViewModel.requestPermissions(requireActivity())
                             }
                         }
 
@@ -82,12 +82,12 @@ class HCPermissionsFragment : Fragment() {
             }
         }
 
-        binding.openHealthConnect.setOnClickListener { healthConnectViewModel.openHealthConnectSettings() }
+        binding.openHealthConnect.setOnClickListener { hcPermissionsViewModel.openHealthConnectSettings() }
     }
 
     override fun onResume() {
         super.onResume()
-        healthConnectViewModel.checkPermissions()
+        hcPermissionsViewModel.checkPermissions()
     }
 
     private fun toPlayground() {

@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.playground
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.*
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcPlaygroundBinding
-import com.rookmotion.rookconnectdemo.home.common.BasicState
-import com.rookmotion.rookconnectdemo.home.common.DataState
-import com.rookmotion.rookconnectdemo.home.common.ViewModelFactory
+import com.rookmotion.rookconnectdemo.ui.common.BasicState
+import com.rookmotion.rookconnectdemo.ui.common.DataState
+import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.utils.repeatOnResume
 import com.rookmotion.rookconnectdemo.utils.serviceLocator
 import com.rookmotion.rookconnectdemo.utils.snackLong
@@ -28,7 +28,7 @@ class HCPlaygroundFragment : Fragment() {
     private var _binding: FragmentHcPlaygroundBinding? = null
     private val binding get() = _binding!!
 
-    private val healthConnectViewModel by viewModels<HealthConnectViewModel> {
+    private val HCPlaygroundViewModel by viewModels<HCPlaygroundViewModel> {
         ViewModelFactory(requireActivity().serviceLocator)
     }
 
@@ -55,12 +55,12 @@ class HCPlaygroundFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        healthConnectViewModel.getDataLastDate()
+        HCPlaygroundViewModel.getDataLastDate()
     }
 
     private fun initListeners() {
         repeatOnResume {
-            healthConnectViewModel.dataLastDate.collect {
+            HCPlaygroundViewModel.dataLastDate.collect {
                 when (it) {
                     DataState.None -> {
                         binding.sleepSummaryDate.isVisible = false
@@ -75,31 +75,31 @@ class HCPlaygroundFragment : Fragment() {
                         message = it.message,
                         action = getString(R.string.retry),
                         onClick = {
-                            healthConnectViewModel.getDataLastDate()
+                            HCPlaygroundViewModel.getDataLastDate()
                         },
                     )
                     is DataState.Success -> {
                         binding.sleepSummaryDate.setOnClickListener { _ ->
                             showCalendar(it.data.sleepSummaryDate) { date ->
-                                healthConnectViewModel.getSleep(date)
+                                HCPlaygroundViewModel.getSleep(date)
                             }
                         }
 
                         binding.physicalSummaryDate.setOnClickListener { _ ->
                             showCalendar(it.data.physicalSummaryDate) { date ->
-                                healthConnectViewModel.getPhysical(date)
+                                HCPlaygroundViewModel.getPhysical(date)
                             }
                         }
 
                         binding.physicalEventsDate.setOnClickListener { _ ->
                             showCalendar(it.data.physicalEventsDate) { date ->
-                                healthConnectViewModel.getPhysicalEvents(date)
+                                HCPlaygroundViewModel.getPhysicalEvents(date)
                             }
                         }
 
                         binding.bodySummaryDate.setOnClickListener { _ ->
                             showCalendar(it.data.bodySummaryDate) { date ->
-                                healthConnectViewModel.getBody(date)
+                                HCPlaygroundViewModel.getBody(date)
                             }
                         }
                         binding.sleepSummaryDate.isVisible = true
@@ -112,14 +112,14 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.sleepState.collect {
+            HCPlaygroundViewModel.sleepState.collect {
                 binding.sleepSummaryDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
                     binding.sleepSummary.text = it.extracted.toString()
 
                     binding.enqueueSleep.setOnClickListener { _ ->
-                        healthConnectViewModel.enqueueSleep(it.extracted)
+                        HCPlaygroundViewModel.enqueueSleep(it.extracted)
                     }
                 } else {
                     binding.sleepSummary.text = ""
@@ -148,14 +148,14 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.physicalState.collect {
+            HCPlaygroundViewModel.physicalState.collect {
                 binding.physicalSummaryDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
                     binding.physicalSummary.text = it.extracted.toString()
 
                     binding.enqueuePhysical.setOnClickListener { _ ->
-                        healthConnectViewModel.enqueuePhysical(it.extracted)
+                        HCPlaygroundViewModel.enqueuePhysical(it.extracted)
                     }
                 } else {
                     binding.physicalSummary.text = ""
@@ -184,14 +184,14 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.physicalEventsState.collect {
+            HCPlaygroundViewModel.physicalEventsState.collect {
                 binding.physicalEventsDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
                     binding.physicalEvents.text = it.extracted.toString()
 
                     binding.enqueuePhysicalEvents.setOnClickListener { _ ->
-                        healthConnectViewModel.enqueuePhysicalEvents(it.extracted)
+                        HCPlaygroundViewModel.enqueuePhysicalEvents(it.extracted)
                     }
                 } else {
                     binding.physicalEvents.text = ""
@@ -220,14 +220,14 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.bodyState.collect {
+            HCPlaygroundViewModel.bodyState.collect {
                 binding.bodySummaryDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
                     binding.bodySummary.text = it.extracted.toString()
 
                     binding.enqueueBody.setOnClickListener { _ ->
-                        healthConnectViewModel.enqueueBody(it.extracted)
+                        HCPlaygroundViewModel.enqueueBody(it.extracted)
                     }
                 } else {
                     binding.bodySummary.text = ""
@@ -256,7 +256,7 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.uploadState.collect {
+            HCPlaygroundViewModel.uploadState.collect {
                 when (it) {
                     is BasicState.None -> {
                         // Ignored
@@ -264,7 +264,7 @@ class HCPlaygroundFragment : Fragment() {
                     BasicState.Loading -> binding.upload.isEnabled = false
                     is BasicState.Error -> {
                         binding.root.snackLong(it.message, getString(R.string.retry)) {
-                            healthConnectViewModel.uploadData()
+                            HCPlaygroundViewModel.uploadData()
                         }
                         binding.upload.isEnabled = true
                     }
@@ -277,7 +277,7 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            healthConnectViewModel.clearQueueState.collect {
+            HCPlaygroundViewModel.clearQueueState.collect {
                 when (it) {
                     BasicState.None -> {
                         // Ignored
@@ -285,7 +285,7 @@ class HCPlaygroundFragment : Fragment() {
                     BasicState.Loading -> binding.clear.isEnabled = false
                     is BasicState.Error -> {
                         binding.root.snackLong(it.message, getString(R.string.retry)) {
-                            healthConnectViewModel.clearData()
+                            HCPlaygroundViewModel.clearData()
                         }
                         binding.clear.isEnabled = true
                     }
@@ -299,8 +299,8 @@ class HCPlaygroundFragment : Fragment() {
     }
 
     private fun initWidgets() {
-        binding.upload.setOnClickListener { healthConnectViewModel.uploadData() }
-        binding.clear.setOnClickListener { healthConnectViewModel.clearData() }
+        binding.upload.setOnClickListener { HCPlaygroundViewModel.uploadData() }
+        binding.clear.setOnClickListener { HCPlaygroundViewModel.clearData() }
     }
 
     private fun showCalendar(date: ZonedDateTime, onSelected: (ZonedDateTime) -> Unit) {

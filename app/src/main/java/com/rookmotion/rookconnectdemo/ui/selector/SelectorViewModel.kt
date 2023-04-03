@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.selector
+package com.rookmotion.rookconnectdemo.ui.selector
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,13 +7,13 @@ import com.rookmotion.rook.auth.domain.model.AuthorizationResult
 import com.rookmotion.rook.users.RookUsersManager
 import com.rookmotion.rook.users.domain.enums.UserType
 import com.rookmotion.rookconnectdemo.BuildConfig
-import com.rookmotion.rookconnectdemo.home.common.BasicState
-import com.rookmotion.rookconnectdemo.home.common.DataState
+import com.rookmotion.rookconnectdemo.ui.common.BasicState
+import com.rookmotion.rookconnectdemo.ui.common.DataState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(
+class SelectorViewModel(
     private val provider: AuthorizationProvider,
     private val manager: RookUsersManager,
 ) : ViewModel() {

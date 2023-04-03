@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.playground
 
 data class HCDataState<T>(
     val extracting: Boolean = false,

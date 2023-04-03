@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.playground
 
 import android.app.Activity
 import androidx.lifecycle.ViewModel
@@ -9,10 +9,10 @@ import com.rookmotion.rook.health_connect.domain.model.PhysicalEvents
 import com.rookmotion.rook.health_connect.domain.model.PhysicalSummary
 import com.rookmotion.rook.health_connect.domain.model.SleepSummary
 import com.rookmotion.rook.transmission.RookTransmissionManager
-import com.rookmotion.rookconnectdemo.home.common.BasicState
-import com.rookmotion.rookconnectdemo.home.common.DataState
-import com.rookmotion.rookconnectdemo.utils.toItem
-import com.rookmotion.rookconnectdemo.utils.toItems
+import com.rookmotion.rookconnectdemo.ui.common.BasicState
+import com.rookmotion.rookconnectdemo.ui.common.DataState
+import com.rookmotion.rookconnectdemo.ui.health_connect.toItem
+import com.rookmotion.rookconnectdemo.ui.health_connect.toItems
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,16 +23,13 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class HealthConnectViewModel(
+class HCPlaygroundViewModel(
     private val transmission: RookTransmissionManager,
     private val healthConnect: RookHealthConnectManager,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
-    private val _hasPermissions = MutableStateFlow<DataState<Boolean>>(DataState.None)
-    val hasPermissions get() = _hasPermissions.asStateFlow()
-
-    private val _dataLastDate = MutableStateFlow<DataState<HCLastDateState>>(DataState.None)
+    private val _dataLastDate = MutableStateFlow<DataState<HCLastDate>>(DataState.None)
     val dataLastDate get() = _dataLastDate.asStateFlow()
 
     private val _sleepState = MutableStateFlow<HCDataState<SleepSummary>>(HCDataState())
@@ -53,32 +50,6 @@ class HealthConnectViewModel(
     private val _uploadState = MutableStateFlow<BasicState>(BasicState.None)
     val uploadState get() = _uploadState.asStateFlow()
 
-    fun openHealthConnectSettings() {
-        healthConnect.openHealthConnectSettings()
-    }
-
-    fun checkPermissions() {
-        _hasPermissions.tryEmit(DataState.Loading)
-
-        viewModelScope.launch(dispatcher) {
-            try {
-                val result = healthConnect.hasAllPermissions()
-
-                _hasPermissions.emit(DataState.Success(result))
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _hasPermissions.emit(DataState.Error(e.toString()))
-                }
-            }
-        }
-    }
-
-    fun requestPermissions(activity: Activity) {
-        healthConnect.requestAllPermissions(activity)
-    }
-
     fun getDataLastDate() {
         _dataLastDate.tryEmit(DataState.Loading)
 
@@ -93,7 +64,7 @@ class HealthConnectViewModel(
 
         _dataLastDate.tryEmit(
             DataState.Success(
-                HCLastDateState(
+                HCLastDate(
                     sleepSummaryDate,
                     physicalSummaryDate,
                     physicalEventsDate,

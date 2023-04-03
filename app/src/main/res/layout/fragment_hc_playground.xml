@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
-        tools:context=".home.health_connect.HCPlaygroundFragment">
+        tools:context=".ui.health_connect.playground.HCPlaygroundFragment">
 
         <TextView
             android:layout_width="match_parent"

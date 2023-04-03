@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.selector
+package com.rookmotion.rookconnectdemo.ui.selector
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,10 @@ import androidx.fragment.app.viewModels
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentSelectorBinding
-import com.rookmotion.rookconnectdemo.home.common.BasicState
-import com.rookmotion.rookconnectdemo.home.common.DataState
-import com.rookmotion.rookconnectdemo.home.common.ViewModelFactory
-import com.rookmotion.rookconnectdemo.home.selector.SelectorFragmentDirections.Companion.actionSelectorFragmentToHCAvailabilityFragment
+import com.rookmotion.rookconnectdemo.ui.common.BasicState
+import com.rookmotion.rookconnectdemo.ui.common.DataState
+import com.rookmotion.rookconnectdemo.di.ViewModelFactory
+import com.rookmotion.rookconnectdemo.ui.selector.SelectorFragmentDirections.Companion.actionSelectorFragmentToHCAvailabilityFragment
 import com.rookmotion.rookconnectdemo.utils.repeatOnResume
 import com.rookmotion.rookconnectdemo.utils.serviceLocator
 import com.rookmotion.rookconnectdemo.utils.setNavigateOnClick
@@ -24,7 +24,7 @@ class SelectorFragment : Fragment() {
     private var _binding: FragmentSelectorBinding? = null
     private val binding get() = _binding!!
 
-    private val authViewModel by viewModels<AuthViewModel> {
+    private val selectorViewModel by viewModels<SelectorViewModel> {
         ViewModelFactory(requireActivity().serviceLocator)
     }
 
@@ -46,7 +46,7 @@ class SelectorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            authViewModel.authorization.collect {
+            selectorViewModel.authorization.collect {
                 when (it) {
                     DataState.None -> {
                         // Ignored
@@ -86,8 +86,8 @@ class SelectorFragment : Fragment() {
                         binding.auth.root.isVisible = true
                         binding.auth.retry.isVisible = false
 
-                        if (authViewModel.user.value !is BasicState.Success) {
-                            authViewModel.registerUser(BuildConfig.USER_ID)
+                        if (selectorViewModel.user.value !is BasicState.Success) {
+                            selectorViewModel.registerUser(BuildConfig.USER_ID)
                         }
                     }
                 }
@@ -95,7 +95,7 @@ class SelectorFragment : Fragment() {
         }
 
         repeatOnResume {
-            authViewModel.user.collect {
+            selectorViewModel.user.collect {
                 when (it) {
                     BasicState.None -> {
                         // Ignored
@@ -126,11 +126,11 @@ class SelectorFragment : Fragment() {
         }
 
         binding.auth.retry.setOnClickListener {
-            authViewModel.getAuthorization(BuildConfig.CLIENT_UUID)
+            selectorViewModel.getAuthorization(BuildConfig.CLIENT_UUID)
         }
 
         binding.users.retry.setOnClickListener {
-            authViewModel.registerUser(BuildConfig.USER_ID)
+            selectorViewModel.registerUser(BuildConfig.USER_ID)
         }
 
         binding.healthConnectSdk.setNavigateOnClick(actionSelectorFragmentToHCAvailabilityFragment())

@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.home.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.availability
 
 import android.content.Intent
 import android.net.Uri
@@ -13,7 +13,7 @@ import com.google.android.material.button.MaterialButton
 import com.rookmotion.rook.health_connect.domain.enums.AvailabilityStatus
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcAvailabilityBinding
-import com.rookmotion.rookconnectdemo.home.common.DataState
+import com.rookmotion.rookconnectdemo.ui.common.DataState
 import com.rookmotion.rookconnectdemo.utils.repeatOnResume
 import com.rookmotion.rookconnectdemo.utils.snackLong
 
@@ -22,7 +22,7 @@ class HCAvailabilityFragment : Fragment() {
     private var _binding: FragmentHcAvailabilityBinding? = null
     private val binding get() = _binding!!
 
-    private val healthConnectAvailabilityViewModel by viewModels<HealthConnectAvailabilityViewModel>()
+    private val hcAvailabilityViewModel by viewModels<HCAvailabilityViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +42,7 @@ class HCAvailabilityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            healthConnectAvailabilityViewModel.isAvailable.collect {
+            hcAvailabilityViewModel.isAvailable.collect {
                 when (it) {
                     DataState.None -> binding.action.isEnabled = false
                     DataState.Loading -> {
@@ -52,7 +52,7 @@ class HCAvailabilityFragment : Fragment() {
                         message = it.message,
                         action = getString(R.string.retry),
                         onClick = {
-                            healthConnectAvailabilityViewModel.checkAvailability(requireContext())
+                            hcAvailabilityViewModel.checkAvailability(requireContext())
                         },
                     )
                     is DataState.Success -> {
@@ -88,7 +88,7 @@ class HCAvailabilityFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        healthConnectAvailabilityViewModel.checkAvailability(requireContext())
+        hcAvailabilityViewModel.checkAvailability(requireContext())
     }
 
     private fun openPlayStore() {

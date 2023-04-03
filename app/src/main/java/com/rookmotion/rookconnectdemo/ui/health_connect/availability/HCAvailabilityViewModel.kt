@@ -1,14 +1,14 @@
-package com.rookmotion.rookconnectdemo.home.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.availability
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.rookmotion.rook.health_connect.RookHealthConnectAvailability
 import com.rookmotion.rook.health_connect.domain.enums.AvailabilityStatus
-import com.rookmotion.rookconnectdemo.home.common.DataState
+import com.rookmotion.rookconnectdemo.ui.common.DataState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class HealthConnectAvailabilityViewModel: ViewModel() {
+class HCAvailabilityViewModel: ViewModel() {
 
     private val _isAvailable = MutableStateFlow<DataState<AvailabilityStatus>>(DataState.None)
     val isAvailable get() = _isAvailable.asStateFlow()
