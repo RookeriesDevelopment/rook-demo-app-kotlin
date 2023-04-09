@@ -37,11 +37,7 @@ class SelectorViewModel(
 
                 _authorization.emit(DataState.Success(result))
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _authorization.emit(DataState.Error(e.toString()))
-                }
+                _authorization.emit(DataState.Error(e.toString()))
             }
         }
     }
@@ -55,11 +51,7 @@ class SelectorViewModel(
 
                 _user.emit(BasicState.Success)
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _user.emit(BasicState.Error(e.toString()))
-                }
+                _authorization.emit(DataState.Error(e.toString()))
             }
         }
     }

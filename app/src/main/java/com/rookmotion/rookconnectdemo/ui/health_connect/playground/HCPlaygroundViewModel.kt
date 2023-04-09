@@ -1,6 +1,5 @@
 package com.rookmotion.rookconnectdemo.ui.health_connect.playground
 
-import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.health_connect.RookHealthConnectManager
@@ -100,11 +99,7 @@ class HCPlaygroundViewModel(
 
                 _sleepState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _sleepState.update { it.copy(extracting = false, extractError = e.toString()) }
-                }
+                _sleepState.update { it.copy(extracting = false, extractError = e.toString()) }
             }
         }
     }
@@ -130,11 +125,7 @@ class HCPlaygroundViewModel(
                     )
                 }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _sleepState.update { it.copy(enqueueing = false, enqueueError = e.toString()) }
-                }
+                _sleepState.update { it.copy(enqueueing = false, enqueueError = e.toString()) }
             }
         }
     }
@@ -157,15 +148,11 @@ class HCPlaygroundViewModel(
 
                 _physicalState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _physicalState.update {
-                        it.copy(
-                            extracting = false,
-                            extractError = e.toString()
-                        )
-                    }
+                _physicalState.update {
+                    it.copy(
+                        extracting = false,
+                        extractError = e.toString()
+                    )
                 }
             }
         }
@@ -192,15 +179,11 @@ class HCPlaygroundViewModel(
                     )
                 }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _physicalState.update {
-                        it.copy(
-                            enqueueing = false,
-                            enqueueError = e.toString()
-                        )
-                    }
+                _physicalState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
                 }
             }
         }
@@ -224,15 +207,11 @@ class HCPlaygroundViewModel(
 
                 _physicalEventsState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _physicalEventsState.update {
-                        it.copy(
-                            extracting = false,
-                            extractError = e.toString()
-                        )
-                    }
+                _physicalEventsState.update {
+                    it.copy(
+                        extracting = false,
+                        extractError = e.toString()
+                    )
                 }
             }
         }
@@ -265,15 +244,11 @@ class HCPlaygroundViewModel(
                     )
                 }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _physicalEventsState.update {
-                        it.copy(
-                            enqueueing = false,
-                            enqueueError = e.toString()
-                        )
-                    }
+                _physicalEventsState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
                 }
             }
         }
@@ -297,11 +272,7 @@ class HCPlaygroundViewModel(
 
                 _bodyState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _bodyState.update { it.copy(extracting = false, extractError = e.toString()) }
-                }
+                _bodyState.update { it.copy(extracting = false, extractError = e.toString()) }
             }
         }
     }
@@ -327,11 +298,7 @@ class HCPlaygroundViewModel(
                     )
                 }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _bodyState.update { it.copy(enqueueing = false, enqueueError = e.toString()) }
-                }
+                _bodyState.update { it.copy(enqueueing = false, enqueueError = e.toString()) }
             }
         }
     }
@@ -344,11 +311,7 @@ class HCPlaygroundViewModel(
 
                 _uploadState.emit(BasicState.Success)
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _uploadState.emit(BasicState.Error(e.toString()))
-                }
+                _uploadState.emit(BasicState.Error(e.toString()))
             }
         }
     }
@@ -365,11 +328,7 @@ class HCPlaygroundViewModel(
 
                 _clearQueueState.emit(BasicState.Success)
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _clearQueueState.emit(BasicState.Error(e.toString()))
-                }
+                _clearQueueState.emit(BasicState.Error(e.toString()))
             }
         }
     }

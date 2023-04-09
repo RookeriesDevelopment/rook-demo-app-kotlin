@@ -32,11 +32,7 @@ class HCPermissionsViewModel(
 
                 _hasPermissions.emit(DataState.Success(result))
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    throw e
-                } else {
-                    _hasPermissions.emit(DataState.Error(e.toString()))
-                }
+                _hasPermissions.emit(DataState.Error(e.toString()))
             }
         }
     }
