@@ -10,8 +10,7 @@ userID=USER_ID
 clientUUID=CLIENT_UUID
 clientPassword=PASSWORD
 rookAuthUrl=URL
-rookUsersUrl=URL
-rookTransmissionUrl=URL
+rookUrl=URL
 ```
 
 3. Sync and run the project.

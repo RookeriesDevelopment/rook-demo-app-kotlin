@@ -1,17 +1,52 @@
-package com.rookmotion.rookconnectdemo.ui.health_connect
+package com.rookmotion.rookconnectdemo.ui.health_connect.playground
 
-import com.rookmotion.rook.health_connect.domain.model.*
-import com.rookmotion.rook.transmission.domain.model.*
-import com.rookmotion.rookconnectdemo.utils.toLocalDate
-import com.rookmotion.rookconnectdemo.utils.toUTCZonedDateTime
+import com.rookmotion.rook.health_connect.domain.model.HCBloodGlucoseGranularDataMgPerDL
+import com.rookmotion.rook.health_connect.domain.model.HCBloodPressureGranularDataSystolicDiastolic
+import com.rookmotion.rook.health_connect.domain.model.HCBloodPressureSystolicDiastolic
+import com.rookmotion.rook.health_connect.domain.model.HCBodySummary
+import com.rookmotion.rook.health_connect.domain.model.HCCadenceGranularDataRpm
+import com.rookmotion.rook.health_connect.domain.model.HCElevationGranularDataMeters
+import com.rookmotion.rook.health_connect.domain.model.HCFloorsClimbedGranularData
+import com.rookmotion.rook.health_connect.domain.model.HCHrGranularDataBpm
+import com.rookmotion.rook.health_connect.domain.model.HCHrvRmssdGranularData
+import com.rookmotion.rook.health_connect.domain.model.HCHydrationAmountGranularDataMl
+import com.rookmotion.rook.health_connect.domain.model.HCPhysicalEvent
+import com.rookmotion.rook.health_connect.domain.model.HCPhysicalEvents
+import com.rookmotion.rook.health_connect.domain.model.HCPhysicalSummary
+import com.rookmotion.rook.health_connect.domain.model.HCSaturationGranularDataPercentage
+import com.rookmotion.rook.health_connect.domain.model.HCSleepSummary
+import com.rookmotion.rook.health_connect.domain.model.HCSpeedGranularDataMetersPerSecond
+import com.rookmotion.rook.health_connect.domain.model.HCStepsGranularDataStepsPerHr
+import com.rookmotion.rook.health_connect.domain.model.HCTemperatureGranularDataCelsius
+import com.rookmotion.rook.health_connect.domain.model.HCTraveledDistanceGranularDataMeters
+import com.rookmotion.rook.health_connect.domain.model.HCVo2MaxGranularDataMlPerMinPerKg
+import com.rookmotion.rook.transmission.domain.model.BloodGlucoseGranularDataMgPerDLItem
+import com.rookmotion.rook.transmission.domain.model.BloodPressureGranularDataSystolicDiastolicItem
+import com.rookmotion.rook.transmission.domain.model.BloodPressureSystolicDiastolicItem
+import com.rookmotion.rook.transmission.domain.model.BodySummaryItem
+import com.rookmotion.rook.transmission.domain.model.CadenceGranularDataRpmItem
+import com.rookmotion.rook.transmission.domain.model.ElevationGranularDataMetersItem
+import com.rookmotion.rook.transmission.domain.model.FloorsClimbedGranularDataItem
+import com.rookmotion.rook.transmission.domain.model.HrGranularDataBpmItem
+import com.rookmotion.rook.transmission.domain.model.HrvRmssdGranularDataItem
+import com.rookmotion.rook.transmission.domain.model.HydrationAmountGranularDataMlItem
+import com.rookmotion.rook.transmission.domain.model.PhysicalEventItem
+import com.rookmotion.rook.transmission.domain.model.PhysicalSummaryItem
+import com.rookmotion.rook.transmission.domain.model.SaturationGranularDataPercentageItem
+import com.rookmotion.rook.transmission.domain.model.SleepSummaryItem
+import com.rookmotion.rook.transmission.domain.model.SpeedGranularDataMetersPerSecondItem
+import com.rookmotion.rook.transmission.domain.model.StepsGranularDataStepsPerHrItem
+import com.rookmotion.rook.transmission.domain.model.TemperatureGranularDataCelsiusItem
+import com.rookmotion.rook.transmission.domain.model.TraveledDistanceGranularDataMetersItem
+import com.rookmotion.rook.transmission.domain.model.Vo2GranularDataLiterPerMinItem
 
-fun SleepSummary.toItem(): SleepSummaryItem {
+fun HCSleepSummary.toItem(): SleepSummaryItem {
     return SleepSummaryItem(
         sourceOfData = sourceOfData,
-        dateTime = toUTCZonedDateTime(dateTime),
-        sleepStartDatetime = toUTCZonedDateTime(sleepStartDatetime),
-        sleepEndDatetime = toUTCZonedDateTime(sleepEndDatetime),
-        sleepDate = toLocalDate(sleepDate),
+        dateTime = dateTime,
+        sleepStartDatetime = sleepStartDatetime,
+        sleepEndDatetime = sleepEndDatetime,
+        sleepDate = sleepDate,
         sleepDurationSeconds = sleepDurationSeconds,
         timeInBedSeconds = timeInBedSeconds,
         lightSleepDurationSeconds = lightSleepDurationSeconds,
@@ -21,10 +56,10 @@ fun SleepSummary.toItem(): SleepSummaryItem {
     )
 }
 
-fun PhysicalSummary.toItem(): PhysicalSummaryItem {
+fun HCPhysicalSummary.toItem(): PhysicalSummaryItem {
     return PhysicalSummaryItem(
         sourceOfData = sourceOfData,
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         stepsPerDay = stepsPerDay,
         stepsGranularDataStepsPerHr = stepsGranularDataStepsPerHr.map { it.toItem() },
         traveledDistanceMeters = traveledDistanceMeters,
@@ -51,16 +86,16 @@ fun PhysicalSummary.toItem(): PhysicalSummaryItem {
     )
 }
 
-fun PhysicalEvents.toItems(): List<PhysicalEventItem> {
+fun HCPhysicalEvents.toItems(): List<PhysicalEventItem> {
     return events.map { it.toItem() }
 }
 
-fun PhysicalEvent.toItem(): PhysicalEventItem {
+fun HCPhysicalEvent.toItem(): PhysicalEventItem {
     return PhysicalEventItem(
         sourceOfData = sourceOfData,
-        dateTime = toUTCZonedDateTime(dateTime),
-        activityStartDatetime = toUTCZonedDateTime(activityStartDatetime),
-        activityEndDatetime = toUTCZonedDateTime(activityEndDatetime),
+        dateTime = dateTime,
+        activityStartDatetime = activityStartDatetime,
+        activityEndDatetime = activityEndDatetime,
         activityDurationSeconds = activityDurationSeconds,
         activityTypeName = activityTypeName,
         caloriesExpenditureKilocalories = caloriesExpenditureKilocalories,
@@ -94,10 +129,10 @@ fun PhysicalEvent.toItem(): PhysicalEventItem {
     )
 }
 
-fun BodySummary.toItem(): BodySummaryItem {
+fun HCBodySummary.toItem(): BodySummaryItem {
     return BodySummaryItem(
         sourceOfData = sourceOfData,
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         weightKg = weightKg,
         heightCm = heightCm,
         bloodGlucoseDayAvgMgPerDl = bloodGlucoseDayAvgMgPerDl,
@@ -123,115 +158,115 @@ fun BodySummary.toItem(): BodySummaryItem {
     )
 }
 
-fun StepsGranularDataStepsPerHr.toItem(): StepsGranularDataStepsPerHrItem {
+fun HCStepsGranularDataStepsPerHr.toItem(): StepsGranularDataStepsPerHrItem {
     return StepsGranularDataStepsPerHrItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         steps = steps,
     )
 }
 
-fun TraveledDistanceGranularDataMeters.toItem(): TraveledDistanceGranularDataMetersItem {
+fun HCTraveledDistanceGranularDataMeters.toItem(): TraveledDistanceGranularDataMetersItem {
     return TraveledDistanceGranularDataMetersItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         traveledDistanceMeters = traveledDistanceMeters,
     )
 }
 
-fun FloorsClimbedGranularData.toItem(): FloorsClimbedGranularDataItem {
+fun HCFloorsClimbedGranularData.toItem(): FloorsClimbedGranularDataItem {
     return FloorsClimbedGranularDataItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         floorsClimbed = floorsClimbed,
     )
 }
 
-fun ElevationGranularDataMeters.toItem(): ElevationGranularDataMetersItem {
+fun HCElevationGranularDataMeters.toItem(): ElevationGranularDataMetersItem {
     return ElevationGranularDataMetersItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         elevationChange = elevationChange,
     )
 }
 
-fun SaturationGranularDataPercentage.toItem(): SaturationGranularDataPercentageItem {
+fun HCSaturationGranularDataPercentage.toItem(): SaturationGranularDataPercentageItem {
     return SaturationGranularDataPercentageItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         saturationPercentage = saturationPercentage,
     )
 }
 
-fun Vo2MaxGranularDataMlPerMinPerKg.toItem(): Vo2GranularDataLiterPerMinItem {
+fun HCVo2MaxGranularDataMlPerMinPerKg.toItem(): Vo2GranularDataLiterPerMinItem {
     return Vo2GranularDataLiterPerMinItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         vo2MlPerMinPerKg = vo2MaxMlPerMinPerKg,
     )
 }
 
-fun HrGranularDataBpm.toItem(): HrGranularDataBpmItem {
+fun HCHrGranularDataBpm.toItem(): HrGranularDataBpmItem {
     return HrGranularDataBpmItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         hrBpm = hrBpm,
     )
 }
 
-fun HrvRmssdGranularData.toItem(): HrvRmssdGranularDataItem {
+fun HCHrvRmssdGranularData.toItem(): HrvRmssdGranularDataItem {
     return HrvRmssdGranularDataItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         hrvRmssd = hrvRmssd,
     )
 }
 
-fun SpeedGranularDataMetersPerSecond.toItem(): SpeedGranularDataMetersPerSecondItem {
+fun HCSpeedGranularDataMetersPerSecond.toItem(): SpeedGranularDataMetersPerSecondItem {
     return SpeedGranularDataMetersPerSecondItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         speedMetersPerSecond = speedMetersPerSecond,
     )
 }
 
-fun CadenceGranularDataRpm.toItem(): CadenceGranularDataRpmItem {
+fun HCCadenceGranularDataRpm.toItem(): CadenceGranularDataRpmItem {
     return CadenceGranularDataRpmItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         cadenceRpm = cadenceRpm,
     )
 }
 
-fun BloodGlucoseGranularDataMgPerDL.toItem(): BloodGlucoseGranularDataMgPerDLItem {
+fun HCBloodGlucoseGranularDataMgPerDL.toItem(): BloodGlucoseGranularDataMgPerDLItem {
     return BloodGlucoseGranularDataMgPerDLItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         bloodGlucoseMgPerDL = bloodGlucoseMgPerDl,
     )
 }
 
-fun BloodPressureSystolicDiastolic.toItem(): BloodPressureSystolicDiastolicItem {
+fun HCBloodPressureSystolicDiastolic.toItem(): BloodPressureSystolicDiastolicItem {
     return BloodPressureSystolicDiastolicItem(
         systolicBp = systolicBp,
         diastolicBp = diastolicBp
     )
 }
 
-fun BloodPressureGranularDataSystolicDiastolic.toItem(): BloodPressureGranularDataSystolicDiastolicItem {
+fun HCBloodPressureGranularDataSystolicDiastolic.toItem(): BloodPressureGranularDataSystolicDiastolicItem {
     return BloodPressureGranularDataSystolicDiastolicItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         systolicBp = bloodPressureSystolicDiastolic.systolicBp,
         diastolicBp = bloodPressureSystolicDiastolic.diastolicBp
     )
 }
 
-fun HydrationAmountGranularDataMl.toItem(): HydrationAmountGranularDataMlItem {
+fun HCHydrationAmountGranularDataMl.toItem(): HydrationAmountGranularDataMlItem {
     return HydrationAmountGranularDataMlItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         intervalDurationSeconds = 0,
         hydrationAmountMl = hydrationAmountMl,
     )
 }
 
-fun TemperatureGranularDataCelsius.toItem(): TemperatureGranularDataCelsiusItem {
+fun HCTemperatureGranularDataCelsius.toItem(): TemperatureGranularDataCelsiusItem {
     return TemperatureGranularDataCelsiusItem(
-        dateTime = toUTCZonedDateTime(dateTime),
+        dateTime = dateTime,
         temperatureCelsius = temperatureCelsius,
     )
 }

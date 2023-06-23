@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
-import com.rookmotion.rook.health_connect.domain.enums.AvailabilityStatus
+import com.rookmotion.rook.health_connect.domain.enums.HCAvailabilityStatus
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcAvailabilityBinding
 import com.rookmotion.rookconnectdemo.ui.common.DataState
@@ -57,18 +57,18 @@ class HCAvailabilityFragment : Fragment() {
                     )
                     is DataState.Success -> {
                         when (it.data) {
-                            AvailabilityStatus.NOT_SUPPORTED -> {
+                            HCAvailabilityStatus.NOT_SUPPORTED -> {
                                 binding.action.text = getString(R.string.go_back)
                                 binding.action.setIconResource(R.drawable.ic_arrow_back)
                                 binding.action.iconGravity = MaterialButton.ICON_GRAVITY_START
                                 binding.action.setOnClickListener { findNavController().navigateUp() }
                             }
-                            AvailabilityStatus.NOT_INSTALLED -> {
+                            HCAvailabilityStatus.NOT_INSTALLED -> {
                                 binding.action.text = getString(R.string.install_now)
                                 binding.action.setIconResource(R.drawable.ic_download)
                                 binding.action.setOnClickListener { openPlayStore() }
                             }
-                            AvailabilityStatus.INSTALLED -> {
+                            HCAvailabilityStatus.INSTALLED -> {
                                 binding.action.text = getString(R.string.continue_text)
                                 binding.action.setIconResource(R.drawable.ic_arrow_forward)
                                 binding.action.setOnClickListener { toPermissions() }

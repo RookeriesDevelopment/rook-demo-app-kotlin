@@ -27,7 +27,7 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
         if (modelClass.isAssignableFrom(HCPlaygroundViewModel::class.java)) {
             return HCPlaygroundViewModel(
                 transmission = serviceLocator.rookTransmissionManager,
-                healthConnect = serviceLocator.rookHealthConnectManager,
+                manager = serviceLocator.rookHealthConnectManager,
             ) as T
         }
 

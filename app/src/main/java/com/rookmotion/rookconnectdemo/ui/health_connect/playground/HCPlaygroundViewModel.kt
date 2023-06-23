@@ -3,15 +3,15 @@ package com.rookmotion.rookconnectdemo.ui.health_connect.playground
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.health_connect.RookHealthConnectManager
-import com.rookmotion.rook.health_connect.domain.model.BodySummary
-import com.rookmotion.rook.health_connect.domain.model.PhysicalEvents
-import com.rookmotion.rook.health_connect.domain.model.PhysicalSummary
-import com.rookmotion.rook.health_connect.domain.model.SleepSummary
+import com.rookmotion.rook.health_connect.domain.enums.HCRookDataType
+import com.rookmotion.rook.health_connect.domain.model.HCBodySummary
+import com.rookmotion.rook.health_connect.domain.model.HCPhysicalEvents
+import com.rookmotion.rook.health_connect.domain.model.HCPhysicalSummary
+import com.rookmotion.rook.health_connect.domain.model.HCSleepSummary
 import com.rookmotion.rook.transmission.RookTransmissionManager
 import com.rookmotion.rookconnectdemo.ui.common.BasicState
 import com.rookmotion.rookconnectdemo.ui.common.DataState
-import com.rookmotion.rookconnectdemo.ui.health_connect.toItem
-import com.rookmotion.rookconnectdemo.ui.health_connect.toItems
+import com.rookmotion.rookconnectdemo.ui.health_connect.playground.toItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,23 +24,24 @@ import java.time.ZonedDateTime
 
 class HCPlaygroundViewModel(
     private val transmission: RookTransmissionManager,
-    private val healthConnect: RookHealthConnectManager,
+    private val manager: RookHealthConnectManager,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _dataLastDate = MutableStateFlow<DataState<HCLastDate>>(DataState.None)
     val dataLastDate get() = _dataLastDate.asStateFlow()
 
-    private val _sleepState = MutableStateFlow<HCDataState<SleepSummary>>(HCDataState())
+    private val _sleepState = MutableStateFlow<HCDataState<HCSleepSummary>>(HCDataState())
     val sleepState get() = _sleepState.asStateFlow()
 
-    private val _physicalState = MutableStateFlow<HCDataState<PhysicalSummary>>(HCDataState())
+    private val _physicalState = MutableStateFlow<HCDataState<HCPhysicalSummary>>(HCDataState())
     val physicalState get() = _physicalState.asStateFlow()
 
-    private val _physicalEventsState = MutableStateFlow<HCDataState<PhysicalEvents>>(HCDataState())
+    private val _physicalEventsState =
+        MutableStateFlow<HCDataState<HCPhysicalEvents>>(HCDataState())
     val physicalEventsState get() = _physicalEventsState.asStateFlow()
 
-    private val _bodyState = MutableStateFlow<HCDataState<BodySummary>>(HCDataState())
+    private val _bodyState = MutableStateFlow<HCDataState<HCBodySummary>>(HCDataState())
     val bodyState get() = _bodyState.asStateFlow()
 
     private val _clearQueueState = MutableStateFlow<BasicState>(BasicState.None)
@@ -52,14 +53,18 @@ class HCPlaygroundViewModel(
     fun getDataLastDate() {
         _dataLastDate.tryEmit(DataState.Loading)
 
-        val sleepSummaryDate = getLastDateOrYesterday { healthConnect.getSleepSummaryLastDate() }
+        val sleepSummaryDate = getLastDateOrYesterday {
+            manager.getLastExtractionDate(HCRookDataType.SLEEP_SUMMARY)
+        }
         val physicalSummaryDate = getLastDateOrYesterday {
-            healthConnect.getPhysicalSummaryLastDate()
+            manager.getLastExtractionDate(HCRookDataType.PHYSICAL_SUMMARY)
         }
         val physicalEventsDate = getLastDateOrYesterday {
-            healthConnect.getPhysicalEventsLastDate()
+            manager.getLastExtractionDate(HCRookDataType.PHYSICAL_EVENT)
         }
-        val bodySummaryDate = getLastDateOrYesterday { healthConnect.getBodySummaryLastDate() }
+        val bodySummaryDate = getLastDateOrYesterday {
+            manager.getLastExtractionDate(HCRookDataType.BODY_SUMMARY)
+        }
 
         _dataLastDate.tryEmit(
             DataState.Success(
@@ -67,7 +72,7 @@ class HCPlaygroundViewModel(
                     sleepSummaryDate,
                     physicalSummaryDate,
                     physicalEventsDate,
-                    bodySummaryDate
+                    bodySummaryDate,
                 )
             )
         )
@@ -95,7 +100,7 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch(dispatcher) {
             try {
-                val result = healthConnect.getSleepSummary(date)
+                val result = manager.getSleepSummary(date)
 
                 _sleepState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
@@ -104,7 +109,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueSleep(sleepSummary: SleepSummary) {
+    fun enqueueSleep(sleepSummary: HCSleepSummary) {
         _sleepState.update {
             it.copy(
                 enqueueing = true,
@@ -144,7 +149,7 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch(dispatcher) {
             try {
-                val result = healthConnect.getPhysicalSummary(date)
+                val result = manager.getPhysicalSummary(date)
 
                 _physicalState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
@@ -158,7 +163,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueuePhysical(physicalSummary: PhysicalSummary) {
+    fun enqueuePhysical(physicalSummary: HCPhysicalSummary) {
         _physicalState.update {
             it.copy(
                 enqueueing = true,
@@ -203,7 +208,7 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch(dispatcher) {
             try {
-                val result = healthConnect.getPhysicalEvents(date)
+                val result = manager.getPhysicalEvents(date)
 
                 _physicalEventsState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
@@ -217,7 +222,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueuePhysicalEvents(physicalEvents: PhysicalEvents) {
+    fun enqueuePhysicalEvents(physicalEvents: HCPhysicalEvents) {
         _physicalEventsState.update {
             it.copy(
                 enqueueing = true,
@@ -268,7 +273,7 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch(dispatcher) {
             try {
-                val result = healthConnect.getBodySummary(date)
+                val result = manager.getBodySummary(date)
 
                 _bodyState.update { it.copy(extracting = false, extracted = result) }
             } catch (e: Exception) {
@@ -277,7 +282,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueBody(bodySummary: BodySummary) {
+    fun enqueueBody(bodySummary: HCBodySummary) {
         _bodyState.update {
             it.copy(
                 enqueueing = true,

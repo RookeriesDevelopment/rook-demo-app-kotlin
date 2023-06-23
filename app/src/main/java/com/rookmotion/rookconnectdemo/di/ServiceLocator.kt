@@ -21,7 +21,7 @@ class ServiceLocator(context: Context) {
         if (BuildConfig.DEBUG) {
             RookUsersManager(
                 context,
-                BuildConfig.ROOK_USERS_URL,
+                BuildConfig.ROOK_URL,
                 BuildConfig.CLIENT_UUID,
                 BuildConfig.CLIENT_PASSWORD,
                 "ADVANCED"
@@ -29,7 +29,7 @@ class ServiceLocator(context: Context) {
         } else {
             RookUsersManager(
                 context,
-                BuildConfig.ROOK_USERS_URL,
+                BuildConfig.ROOK_URL,
                 BuildConfig.CLIENT_UUID,
                 BuildConfig.CLIENT_PASSWORD,
             )
@@ -40,7 +40,7 @@ class ServiceLocator(context: Context) {
         if (BuildConfig.DEBUG) {
             RookTransmissionManager(
                 context,
-                BuildConfig.ROOK_TRANSMISSION_URL,
+                BuildConfig.ROOK_URL,
                 BuildConfig.USER_ID,
                 BuildConfig.CLIENT_UUID,
                 BuildConfig.CLIENT_PASSWORD,
@@ -49,7 +49,7 @@ class ServiceLocator(context: Context) {
         } else {
             RookTransmissionManager(
                 context,
-                BuildConfig.ROOK_TRANSMISSION_URL,
+                BuildConfig.ROOK_URL,
                 BuildConfig.USER_ID,
                 BuildConfig.CLIENT_UUID,
                 BuildConfig.CLIENT_PASSWORD
