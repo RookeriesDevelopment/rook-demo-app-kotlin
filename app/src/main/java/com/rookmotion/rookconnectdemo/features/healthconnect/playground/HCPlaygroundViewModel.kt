@@ -5,8 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.health_connect.RookHealthConnectManager
 import com.rookmotion.rook.health_connect.domain.enums.HCRookDataType
 import com.rookmotion.rook.health_connect.domain.exception.DateNotFoundException
+import com.rookmotion.rook.health_connect.domain.model.event.HCBloodGlucoseEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCBloodPressureEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCBodyMetricsEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCHeartRateEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCHydrationEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCMoodEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCNutritionEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCOxygenationEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCPhysicalEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCStressEvent
+import com.rookmotion.rook.health_connect.domain.model.event.HCTemperatureEvent
 import com.rookmotion.rook.health_connect.domain.model.summary.HCBodySummary
 import com.rookmotion.rook.health_connect.domain.model.summary.HCPhysicalSummary
 import com.rookmotion.rook.health_connect.domain.model.summary.HCSleepSummary
@@ -45,10 +54,67 @@ class HCPlaygroundViewModel(
     private val _bodyState = MutableStateFlow<HealthDataState<HCBodySummary>>(HealthDataState())
     val bodyState get() = _bodyState.asStateFlow()
 
-    private val _heartRatePhysicalState = MutableStateFlow<HealthDataState<List<HCHeartRateEvent>>>(
+    private val _bloodGlucoseEventState = MutableStateFlow<HealthDataState<HCBloodGlucoseEvent>>(
         HealthDataState()
     )
-    val heartRatePhysicalState get() = _heartRatePhysicalState.asStateFlow()
+    val bloodGlucoseEventState get() = _bloodGlucoseEventState.asStateFlow()
+
+    private val _bloodPressureEventState = MutableStateFlow<HealthDataState<HCBloodPressureEvent>>(
+        HealthDataState()
+    )
+    val bloodPressureEventState get() = _bloodPressureEventState.asStateFlow()
+
+    private val _bodyMetricsEventState = MutableStateFlow<HealthDataState<HCBodyMetricsEvent>>(
+        HealthDataState()
+    )
+    val bodyMetricsEventState get() = _bodyMetricsEventState.asStateFlow()
+
+    private val _heartRateBodyEventState = MutableStateFlow<HealthDataState<HCHeartRateEvent>>(
+        HealthDataState()
+    )
+    val heartRateBodyEventState get() = _heartRateBodyEventState.asStateFlow()
+
+    private val _heartRatePhysicalEventState =
+        MutableStateFlow<HealthDataState<List<HCHeartRateEvent>>>(
+            HealthDataState()
+        )
+    val heartRatePhysicalEventState get() = _heartRatePhysicalEventState.asStateFlow()
+
+    private val _hydrationEventState = MutableStateFlow<HealthDataState<HCHydrationEvent>>(
+        HealthDataState()
+    )
+    val hydrationEventState get() = _hydrationEventState.asStateFlow()
+
+    private val _moodEventState = MutableStateFlow<HealthDataState<HCMoodEvent>>(
+        HealthDataState()
+    )
+    val moodEventState get() = _moodEventState.asStateFlow()
+
+    private val _nutritionEventState = MutableStateFlow<HealthDataState<HCNutritionEvent>>(
+        HealthDataState()
+    )
+    val nutritionEventState get() = _nutritionEventState.asStateFlow()
+
+    private val _oxygenationBodyEventState = MutableStateFlow<HealthDataState<HCOxygenationEvent>>(
+        HealthDataState()
+    )
+    val oxygenationBodyEventState get() = _oxygenationBodyEventState.asStateFlow()
+
+    private val _oxygenationPhysicalEventState =
+        MutableStateFlow<HealthDataState<List<HCOxygenationEvent>>>(
+            HealthDataState()
+        )
+    val oxygenationPhysicalEventState get() = _oxygenationPhysicalEventState.asStateFlow()
+
+    private val _stressEventState = MutableStateFlow<HealthDataState<List<HCStressEvent>>>(
+        HealthDataState()
+    )
+    val stressEventState get() = _stressEventState.asStateFlow()
+
+    private val _temperatureEventState = MutableStateFlow<HealthDataState<HCTemperatureEvent>>(
+        HealthDataState()
+    )
+    val temperatureEventState get() = _temperatureEventState.asStateFlow()
 
     private val _uploadState = MutableStateFlow<UploadState>(UploadState.Ready)
     val uploadState get() = _uploadState.asStateFlow()
@@ -144,9 +210,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result = rookHealthConnectManager.getSleepSummary(date)
+                val extracted = rookHealthConnectManager.getSleepSummary(date)
 
-                _sleepState.update { it.copy(extracting = false, extracted = result) }
+                _sleepState.update { it.copy(extracting = false, extracted = extracted) }
             } catch (e: Exception) {
                 _sleepState.update { it.copy(extracting = false, extractError = e.toString()) }
             }
@@ -164,13 +230,13 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result = rookTransmissionManager.enqueueSleepSummary(sleepSummary.toItem())
+                rookTransmissionManager.enqueueSleepSummary(sleepSummary.toItem())
 
                 _sleepState.update {
                     it.copy(
                         extracted = null,
                         enqueueing = false,
-                        enqueued = result
+                        enqueued = true,
                     )
                 }
             } catch (e: Exception) {
@@ -193,9 +259,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result = rookHealthConnectManager.getPhysicalSummary(date)
+                val extracted = rookHealthConnectManager.getPhysicalSummary(date)
 
-                _physicalState.update { it.copy(extracting = false, extracted = result) }
+                _physicalState.update { it.copy(extracting = false, extracted = extracted) }
             } catch (e: Exception) {
                 _physicalState.update {
                     it.copy(
@@ -218,14 +284,13 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result =
-                    rookTransmissionManager.enqueuePhysicalSummary(physicalSummary.toItem())
+                rookTransmissionManager.enqueuePhysicalSummary(physicalSummary.toItem())
 
                 _physicalState.update {
                     it.copy(
                         extracted = null,
                         enqueueing = false,
-                        enqueued = result
+                        enqueued = true,
                     )
                 }
             } catch (e: Exception) {
@@ -253,9 +318,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result = rookHealthConnectManager.getPhysicalEvents(date)
+                val extracted = rookHealthConnectManager.getPhysicalEvents(date)
 
-                _physicalEventState.update { it.copy(extracting = false, extracted = result) }
+                _physicalEventState.update { it.copy(extracting = false, extracted = extracted) }
             } catch (e: Exception) {
                 _physicalEventState.update {
                     it.copy(
@@ -314,9 +379,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result = rookHealthConnectManager.getBodySummary(date)
+                val extracted = rookHealthConnectManager.getBodySummary(date)
 
-                _bodyState.update { it.copy(extracting = false, extracted = result) }
+                _bodyState.update { it.copy(extracting = false, extracted = extracted) }
             } catch (e: Exception) {
                 _bodyState.update { it.copy(extracting = false, extractError = e.toString()) }
             }
@@ -334,13 +399,13 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val result = rookTransmissionManager.enqueueBodySummary(bodySummary.toItem())
+                rookTransmissionManager.enqueueBodySummary(bodySummary.toItem())
 
                 _bodyState.update {
                     it.copy(
                         extracted = null,
                         enqueueing = false,
-                        enqueued = result
+                        enqueued = true,
                     )
                 }
             } catch (e: Exception) {
@@ -350,7 +415,7 @@ class HCPlaygroundViewModel(
     }
 
     fun getHeartRatePhysicalEvent(date: ZonedDateTime) {
-        _heartRatePhysicalState.update {
+        _heartRatePhysicalEventState.update {
             it.copy(
                 extracting = true,
                 extracted = null,
@@ -363,14 +428,13 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                val heartRatePhysicalEvent =
-                    rookHealthConnectManager.getPhysicalHeartRateEvents(date)
+                val extracted = rookHealthConnectManager.getPhysicalHeartRateEvents(date)
 
-                _heartRatePhysicalState.update {
-                    it.copy(extracting = false, extracted = heartRatePhysicalEvent)
+                _heartRatePhysicalEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
                 }
             } catch (e: Exception) {
-                _heartRatePhysicalState.update {
+                _heartRatePhysicalEventState.update {
                     it.copy(extracting = false, extractError = e.toString())
                 }
             }
@@ -378,7 +442,7 @@ class HCPlaygroundViewModel(
     }
 
     fun enqueueHeartRatePhysicalEvent(heartRatePhysicalEvent: List<HCHeartRateEvent>) {
-        _heartRatePhysicalState.update {
+        _heartRatePhysicalEventState.update {
             it.copy(
                 enqueueing = true,
                 enqueued = false,
@@ -392,7 +456,7 @@ class HCPlaygroundViewModel(
                     rookTransmissionManager.enqueueHeartRateEvent(it.toItem())
                 }
 
-                _heartRatePhysicalState.update {
+                _heartRatePhysicalEventState.update {
                     it.copy(
                         extracted = null,
                         enqueueing = false,
@@ -400,7 +464,7 @@ class HCPlaygroundViewModel(
                     )
                 }
             } catch (e: Exception) {
-                _heartRatePhysicalState.update {
+                _heartRatePhysicalEventState.update {
                     it.copy(
                         enqueueing = false,
                         enqueueError = e.toString()
@@ -416,7 +480,16 @@ class HCPlaygroundViewModel(
 
             try {
                 rookTransmissionManager.uploadAll()
+                rookTransmissionManager.uploadBloodGlucoseEvents()
+                rookTransmissionManager.uploadBloodPressureEvents()
+                rookTransmissionManager.uploadBodyMetricsEvents()
                 rookTransmissionManager.uploadHeartRateEvents()
+                rookTransmissionManager.uploadHydrationEvents()
+                rookTransmissionManager.uploadMoodEvents()
+                rookTransmissionManager.uploadNutritionEvents()
+                rookTransmissionManager.uploadOxygenationEvents()
+                rookTransmissionManager.uploadStressEvents()
+                rookTransmissionManager.uploadTemperatureEvents()
 
                 _uploadState.emit(UploadState.Uploaded)
             } catch (e: Exception) {
@@ -434,7 +507,16 @@ class HCPlaygroundViewModel(
                 rookTransmissionManager.clearQueuedPhysicalSummaries()
                 rookTransmissionManager.clearQueuedPhysicalEvents()
                 rookTransmissionManager.clearQueuedBodySummaries()
+                rookTransmissionManager.clearQueuedBloodGlucoseEvents()
+                rookTransmissionManager.clearQueuedBloodPressureEvents()
+                rookTransmissionManager.clearQueuedBodyMetricsEvents()
                 rookTransmissionManager.clearQueuedHeartRateEvents()
+                rookTransmissionManager.clearQueuedHydrationEvents()
+                rookTransmissionManager.clearQueuedMoodEvents()
+                rookTransmissionManager.clearQueuedNutritionEvents()
+                rookTransmissionManager.clearQueuedOxygenationEvents()
+                rookTransmissionManager.clearQueuedStressEvents()
+                rookTransmissionManager.clearQueuedTemperatureEvents()
 
                 _clearQueueState.emit(ClearState.Cleared)
             } catch (e: Exception) {

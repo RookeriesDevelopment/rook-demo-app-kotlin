@@ -70,7 +70,7 @@ class HCPlaygroundFragment : Fragment() {
                         binding.physicalSummaryDate.isVisible = false
                         binding.physicalEventDate.isVisible = false
                         binding.bodySummaryDate.isVisible = false
-                        binding.heartRatePhysicalEvent.isVisible = false
+                        binding.heartRatePhysicalEventDate.isVisible = false
                     }
 
                     is LastExtractionDateState.Error -> binding.root.snackLong(
@@ -116,7 +116,7 @@ class HCPlaygroundFragment : Fragment() {
                         binding.physicalSummaryDate.isVisible = true
                         binding.physicalEventDate.isVisible = true
                         binding.bodySummaryDate.isVisible = true
-                        binding.heartRatePhysicalEvent.isVisible = true
+                        binding.heartRatePhysicalEventDate.isVisible = true
                     }
                 }
             }
@@ -243,8 +243,8 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            hcPlaygroundViewModel.heartRatePhysicalState.collect {
-                binding.heartRatePhysicalEvent.isEnabled = !it.extracting
+            hcPlaygroundViewModel.heartRatePhysicalEventState.collect {
+                binding.heartRatePhysicalEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
                     binding.heartRatePhysicalEvent.text = it.extracted.joinToString("\n\n")
