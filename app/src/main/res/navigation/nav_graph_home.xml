@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/selectorFragment"
-        android:name="com.rookmotion.rookconnectdemo.ui.selector.SelectorFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.selector.SelectorFragment"
         android:label="@string/menu"
         tools:layout="@layout/fragment_selector" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/HCAvailabilityFragment"
-        android:name="com.rookmotion.rookconnectdemo.ui.health_connect.availability.HCAvailabilityFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.healthconnect.availability.HCAvailabilityFragment"
         android:label="@string/health_connect_availability"
         tools:layout="@layout/fragment_hc_availability">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/HCPermissionsFragment"
-        android:name="com.rookmotion.rookconnectdemo.ui.health_connect.permissions.HCPermissionsFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsFragment"
         android:label="@string/health_connect_permissions"
         tools:layout="@layout/fragment_hc_permissions">
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/HCPlaygroundFragment"
-        android:name="com.rookmotion.rookconnectdemo.ui.health_connect.playground.HCPlaygroundFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundFragment"
         android:label="@string/health_connect"
         tools:layout="@layout/fragment_hc_playground" />
 </navigation>

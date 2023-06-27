@@ -25,9 +25,12 @@
     <string name="sleep">Sleep</string>
     <string name="physical">Physical</string>
     <string name="body">Body</string>
-    <string name="physical_events">Physical events</string>
+    <string name="physical_event">Physical event</string>
     <string name="enqueue_this">Enqueue this</string>
-    <string name="upload_all">upload all</string>
-    <string name="clear_all">Clear all</string>
-    <string name="placeholder_enqueued_placeholder">%1$s enqueued? %2$s</string>
+    <string name="upload_queued">upload queued</string>
+    <string name="clear_queued">Clear queued</string>
+    <string name="health_data_enqueued">Health data enqueued</string>
+    <string name="clearing">Clearing…</string>
+    <string name="uploading">Uploading…</string>
+    <string name="heart_rate_physical_event">Heart rate physical event</string>
 </resources>

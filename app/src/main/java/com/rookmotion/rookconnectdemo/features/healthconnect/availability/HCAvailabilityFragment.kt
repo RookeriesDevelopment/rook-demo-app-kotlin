@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.ui.health_connect.availability
+package com.rookmotion.rookconnectdemo.features.healthconnect.availability
 
 import android.content.Intent
 import android.net.Uri
@@ -13,9 +13,9 @@ import com.google.android.material.button.MaterialButton
 import com.rookmotion.rook.health_connect.domain.enums.HCAvailabilityStatus
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcAvailabilityBinding
-import com.rookmotion.rookconnectdemo.ui.common.DataState
-import com.rookmotion.rookconnectdemo.utils.repeatOnResume
-import com.rookmotion.rookconnectdemo.utils.snackLong
+import com.rookmotion.rookconnectdemo.extension.repeatOnResume
+import com.rookmotion.rookconnectdemo.extension.setNavigateOnClick
+import com.rookmotion.rookconnectdemo.extension.snackLong
 
 class HCAvailabilityFragment : Fragment() {
 
@@ -44,40 +44,46 @@ class HCAvailabilityFragment : Fragment() {
         repeatOnResume {
             hcAvailabilityViewModel.isAvailable.collect {
                 when (it) {
-                    DataState.None -> binding.action.isEnabled = false
-                    DataState.Loading -> {
+                    AvailabilityState.None -> binding.action.isEnabled = false
+                    AvailabilityState.Loading -> {
                         // Ignored
                     }
-                    is DataState.Error -> binding.root.snackLong(
+
+                    is AvailabilityState.Error -> binding.root.snackLong(
                         message = it.message,
                         action = getString(R.string.retry),
                         onClick = {
                             hcAvailabilityViewModel.checkAvailability(requireContext())
                         },
                     )
-                    is DataState.Success -> {
-                        when (it.data) {
+
+                    is AvailabilityState.Success -> {
+                        when (it.availabilityStatus) {
                             HCAvailabilityStatus.NOT_SUPPORTED -> {
                                 binding.action.text = getString(R.string.go_back)
                                 binding.action.setIconResource(R.drawable.ic_arrow_back)
                                 binding.action.iconGravity = MaterialButton.ICON_GRAVITY_START
                                 binding.action.setOnClickListener { findNavController().navigateUp() }
                             }
+
                             HCAvailabilityStatus.NOT_INSTALLED -> {
                                 binding.action.text = getString(R.string.install_now)
                                 binding.action.setIconResource(R.drawable.ic_download)
                                 binding.action.setOnClickListener { openPlayStore() }
                             }
+
                             HCAvailabilityStatus.INSTALLED -> {
                                 binding.action.text = getString(R.string.continue_text)
                                 binding.action.setIconResource(R.drawable.ic_arrow_forward)
-                                binding.action.setOnClickListener { toPermissions() }
+                                binding.action.setNavigateOnClick(
+                                    HCAvailabilityFragmentDirections.actionHCAvailabilityFragmentToHCPermissionsFragment()
+                                )
                             }
                         }
 
                         binding.message.text = getString(
                             R.string.health_connect_placeholder,
-                            it.data.name
+                            it.availabilityStatus.name
                         )
                         binding.action.isEnabled = true
                     }
@@ -97,12 +103,6 @@ class HCAvailabilityFragment : Fragment() {
                 Intent.ACTION_VIEW,
                 Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata")
             )
-        )
-    }
-
-    private fun toPermissions() {
-        findNavController().navigate(
-            HCAvailabilityFragmentDirections.actionHCAvailabilityFragmentToHCPermissionsFragment()
         )
     }
 }

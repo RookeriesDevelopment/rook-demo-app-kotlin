@@ -2,32 +2,34 @@ package com.rookmotion.rookconnectdemo.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rookmotion.rookconnectdemo.ui.health_connect.permissions.HCPermissionsViewModel
-import com.rookmotion.rookconnectdemo.ui.health_connect.playground.HCPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.ui.selector.SelectorViewModel
+import com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsViewModel
+import com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundViewModel
+import com.rookmotion.rookconnectdemo.features.selector.AuthViewModel
+import com.rookmotion.rookconnectdemo.features.selector.UserViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
-        if (modelClass.isAssignableFrom(SelectorViewModel::class.java)) {
-            return SelectorViewModel(
-                provider = serviceLocator.authorizationProvider,
-                manager = serviceLocator.rookUsersManager,
-            ) as T
+        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+            return AuthViewModel(serviceLocator.authorizationProvider) as T
+        }
+
+        if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
+            return UserViewModel(serviceLocator.rookUsersManager) as T
         }
 
         if (modelClass.isAssignableFrom(HCPermissionsViewModel::class.java)) {
             return HCPermissionsViewModel(
-                healthConnect = serviceLocator.rookHealthConnectManager,
+                rookHealthConnectManager = serviceLocator.rookHealthConnectManager,
             ) as T
         }
 
         if (modelClass.isAssignableFrom(HCPlaygroundViewModel::class.java)) {
             return HCPlaygroundViewModel(
-                transmission = serviceLocator.rookTransmissionManager,
-                manager = serviceLocator.rookHealthConnectManager,
+                rookTransmissionManager = serviceLocator.rookTransmissionManager,
+                rookHealthConnectManager = serviceLocator.rookHealthConnectManager,
             ) as T
         }
 

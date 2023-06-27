@@ -9,12 +9,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
-        tools:context=".ui.health_connect.playground.HCPlaygroundFragment">
+        tools:context=".features.healthconnect.playground.HCPlaygroundFragment">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginVertical="20dp"
             android:text="@string/sleep"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
@@ -24,8 +24,15 @@
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/select_a_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/enqueue_sleep"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/enqueue_this" />
 
         <TextView
             android:id="@+id/sleep_summary"
@@ -34,24 +41,10 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/enqueue_sleep"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/enqueue_this" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="20dp"
-            android:background="?attr/colorOnSurface" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginVertical="20dp"
             android:text="@string/physical"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
@@ -61,8 +54,15 @@
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/select_a_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/enqueue_physical"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/enqueue_this" />
 
         <TextView
             android:id="@+id/physical_summary"
@@ -71,61 +71,40 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/enqueue_physical"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/enqueue_this" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="20dp"
-            android:background="?attr/colorOnSurface" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/physical_events"
+            android:layout_marginVertical="20dp"
+            android:text="@string/physical_event"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/physical_events_date"
+            android:id="@+id/physical_event_date"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/select_a_date" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/enqueue_physical_event"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/enqueue_this" />
+
         <TextView
-            android:id="@+id/physical_events"
+            android:id="@+id/physical_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/enqueue_physical_events"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/enqueue_this" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="20dp"
-            android:background="?attr/colorOnSurface" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginVertical="20dp"
             android:text="@string/body"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
@@ -135,8 +114,15 @@
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/select_a_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/enqueue_body"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/enqueue_this" />
 
         <TextView
             android:id="@+id/body_summary"
@@ -145,34 +131,49 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:text="@string/heart_rate_physical_event"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/enqueue_body"
+            android:id="@+id/heart_rate_physical_event_date"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:text="@string/select_a_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/enqueue_heart_rate_physical_event"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
             android:text="@string/enqueue_this" />
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/heart_rate_physical_event"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="20dp"
-            android:background="?attr/colorOnSurface" />
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/upload"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/upload_all" />
+            android:layout_marginTop="20dp"
+            android:text="@string/upload_queued" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/clear"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/clear_all" />
+            android:text="@string/clear_queued" />
     </LinearLayout>
 </ScrollView>

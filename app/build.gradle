@@ -71,8 +71,8 @@ dependencies {
     // Rook
     implementation 'com.rookmotion.android:rook-auth:0.3.1'
     implementation 'com.rookmotion.android:rook-users:0.3.1'
-    implementation 'com.rookmotion.android:rook-health-connect:0.4.2'
-    implementation 'com.rookmotion.android:rook-transmission:0.3.5'
+    implementation 'com.rookmotion.android:rook-health-connect:0.5.1'
+    implementation 'com.rookmotion.android:rook-transmission:0.4.1'
 
     // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'

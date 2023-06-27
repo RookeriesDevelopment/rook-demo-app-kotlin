@@ -1,6 +1,5 @@
-package com.rookmotion.rookconnectdemo.utils
+package com.rookmotion.rookconnectdemo.extension
 
-import android.app.Activity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -9,8 +8,7 @@ import com.rookmotion.rookconnectdemo.RookConnectDemoApplication
 import com.rookmotion.rookconnectdemo.di.ServiceLocator
 import kotlinx.coroutines.launch
 
-val Activity.rook: RookConnectDemoApplication get() = application as RookConnectDemoApplication
-val Activity.serviceLocator: ServiceLocator get() = (application as RookConnectDemoApplication).serviceLocator
+val Fragment.serviceLocator: ServiceLocator get() = (requireActivity().application as RookConnectDemoApplication).serviceLocator
 
 fun Fragment.repeatOnResume(block: suspend () -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {

@@ -1,10 +1,10 @@
-package com.rookmotion.rookconnectdemo.ui.health_connect.playground
+package com.rookmotion.rookconnectdemo.features.healthconnect.playground
 
-data class HCDataState<T>(
+data class HealthDataState<T>(
     val extracting: Boolean = false,
     val extracted: T? = null,
     val extractError: String? = null,
     val enqueueing: Boolean = false,
-    val enqueued: Boolean? = null,
+    val enqueued: Boolean = false,
     val enqueueError: String? = null,
 )

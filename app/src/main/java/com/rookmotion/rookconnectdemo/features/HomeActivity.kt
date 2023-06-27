@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.ui
+package com.rookmotion.rookconnectdemo.features
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

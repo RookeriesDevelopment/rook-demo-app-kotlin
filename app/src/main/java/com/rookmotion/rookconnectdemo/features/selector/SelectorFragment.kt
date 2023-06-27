@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.ui.selector
+package com.rookmotion.rookconnectdemo.features.selector
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,13 +10,10 @@ import androidx.fragment.app.viewModels
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentSelectorBinding
-import com.rookmotion.rookconnectdemo.ui.common.BasicState
-import com.rookmotion.rookconnectdemo.ui.common.DataState
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
-import com.rookmotion.rookconnectdemo.ui.selector.SelectorFragmentDirections.Companion.actionSelectorFragmentToHCAvailabilityFragment
-import com.rookmotion.rookconnectdemo.utils.repeatOnResume
-import com.rookmotion.rookconnectdemo.utils.serviceLocator
-import com.rookmotion.rookconnectdemo.utils.setNavigateOnClick
+import com.rookmotion.rookconnectdemo.extension.repeatOnResume
+import com.rookmotion.rookconnectdemo.extension.serviceLocator
+import com.rookmotion.rookconnectdemo.extension.setNavigateOnClick
 import java.time.format.DateTimeFormatter
 
 class SelectorFragment : Fragment() {
@@ -24,9 +21,8 @@ class SelectorFragment : Fragment() {
     private var _binding: FragmentSelectorBinding? = null
     private val binding get() = _binding!!
 
-    private val selectorViewModel by viewModels<SelectorViewModel> {
-        ViewModelFactory(requireActivity().serviceLocator)
-    }
+    private val authViewModel by viewModels<AuthViewModel> { ViewModelFactory(serviceLocator) }
+    private val userViewModel by viewModels<UserViewModel> { ViewModelFactory(serviceLocator) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,39 +42,46 @@ class SelectorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            selectorViewModel.authorization.collect {
+            authViewModel.authState.collect {
                 when (it) {
-                    DataState.None -> {
+                    AuthState.NotAuthorized -> {
                         // Ignored
                     }
-                    DataState.Loading -> {
+
+                    AuthState.Loading -> {
                         binding.progress.root.isVisible = true
                         binding.auth.root.isVisible = false
                     }
-                    is DataState.Error -> {
+
+                    is AuthState.Error -> {
                         binding.auth.authorizedUntil.text = it.message
 
                         binding.progress.root.isVisible = false
                         binding.auth.root.isVisible = true
                         binding.auth.retry.isVisible = true
                     }
-                    is DataState.Success -> {
-                        val icon = if (it.data.authorization.isNotExpired) R.drawable.ic_verified
-                        else R.drawable.ic_not_verified
 
-                        val date = DateTimeFormatter.ISO_ZONED_DATE_TIME.format(it.data.authorization.authorizedUntil)
+                    is AuthState.Authorized -> {
+                        val icon =
+                            if (it.authorizationResult.authorization.isNotExpired) R.drawable.ic_verified
+                            else R.drawable.ic_not_verified
+
+                        val date =
+                            DateTimeFormatter.ISO_ZONED_DATE_TIME.format(it.authorizationResult.authorization.authorizedUntil)
 
                         binding.auth.authorizedUntil.setCompoundDrawablesWithIntrinsicBounds(
                             icon, 0, 0, 0
                         )
 
-                        binding.auth.authorizedUntil.text = it.data.origin.name.plus(" > ").plus(
-                            getString(R.string.authorized_until_placeholder, date)
-                        )
+                        binding.auth.authorizedUntil.text =
+                            it.authorizationResult.origin.name.plus(" > ").plus(
+                                getString(R.string.authorized_until_placeholder, date)
+                            )
 
-                        val features = it.data.authorization.features.flatMap { entry ->
-                            listOf("${entry.key} ➞ ${entry.value}")
-                        }
+                        val features =
+                            it.authorizationResult.authorization.features.flatMap { entry ->
+                                listOf("${entry.key} ➞ ${entry.value}")
+                            }
 
                         binding.auth.features.text = features.joinToString("\n")
 
@@ -86,8 +89,8 @@ class SelectorFragment : Fragment() {
                         binding.auth.root.isVisible = true
                         binding.auth.retry.isVisible = false
 
-                        if (selectorViewModel.user.value !is BasicState.Success) {
-                            selectorViewModel.registerUser(BuildConfig.USER_ID)
+                        if (userViewModel.userState.value !is UserState.Registered) {
+                            userViewModel.registerUser(BuildConfig.USER_ID)
                         }
                     }
                 }
@@ -95,23 +98,26 @@ class SelectorFragment : Fragment() {
         }
 
         repeatOnResume {
-            selectorViewModel.user.collect {
+            userViewModel.userState.collect {
                 when (it) {
-                    BasicState.None -> {
+                    UserState.None -> {
                         // Ignored
                     }
-                    BasicState.Loading -> {
+
+                    UserState.Loading -> {
                         binding.progress.root.isVisible = true
                         binding.users.root.isVisible = false
                     }
-                    is BasicState.Error -> {
+
+                    is UserState.Error -> {
                         binding.users.hcUser.text = it.message
 
                         binding.progress.root.isVisible = false
                         binding.users.root.isVisible = true
                         binding.users.retry.isVisible = true
                     }
-                    is BasicState.Success -> {
+
+                    is UserState.Registered -> {
                         binding.users.hcUser.text = getString(
                             R.string.hc_placeholder_registered,
                             BuildConfig.USER_ID
@@ -126,13 +132,15 @@ class SelectorFragment : Fragment() {
         }
 
         binding.auth.retry.setOnClickListener {
-            selectorViewModel.getAuthorization(BuildConfig.CLIENT_UUID)
+            authViewModel.getAuthorization(BuildConfig.CLIENT_UUID)
         }
 
         binding.users.retry.setOnClickListener {
-            selectorViewModel.registerUser(BuildConfig.USER_ID)
+            userViewModel.registerUser(BuildConfig.USER_ID)
         }
 
-        binding.healthConnectSdk.setNavigateOnClick(actionSelectorFragmentToHCAvailabilityFragment())
+        binding.healthConnectSdk.setNavigateOnClick(
+            SelectorFragmentDirections.actionSelectorFragmentToHCAvailabilityFragment()
+        )
     }
 }
