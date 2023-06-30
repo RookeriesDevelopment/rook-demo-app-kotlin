@@ -69,10 +69,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Rook
-    implementation 'com.rookmotion.android:rook-auth:0.3.1'
-    implementation 'com.rookmotion.android:rook-users:0.3.1'
-    implementation 'com.rookmotion.android:rook-health-connect:0.5.2'
-    implementation 'com.rookmotion.android:rook-transmission:0.4.1'
+    implementation platform("com.rookmotion.android:rook-bom:0.0.2")
+    implementation 'com.rookmotion.android:rook-auth'
+    implementation 'com.rookmotion.android:rook-users'
+    implementation 'com.rookmotion.android:rook-health-connect'
+    implementation 'com.rookmotion.android:rook-transmission'
 
     // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
