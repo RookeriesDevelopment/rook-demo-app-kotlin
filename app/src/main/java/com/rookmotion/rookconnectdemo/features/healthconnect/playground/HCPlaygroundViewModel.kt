@@ -128,10 +128,10 @@ class HCPlaygroundViewModel(
             val physicalSummaryDate = getLastExtractionDate(HCRookDataType.PHYSICAL_SUMMARY)
             val physicalEventDate = getLastExtractionDate(HCRookDataType.PHYSICAL_EVENT)
             val bodySummaryDate = getLastExtractionDate(HCRookDataType.BODY_SUMMARY)
-            val bloodGlucoseBodyEventDate = getLastExtractionDate(
+            val bloodGlucoseEventDate = getLastExtractionDate(
                 HCRookDataType.BLOOD_GLUCOSE_BODY_EVENT
             )
-            val bloodPressureBodyEventDate = getLastExtractionDate(
+            val bloodPressureEventDate = getLastExtractionDate(
                 HCRookDataType.BLOOD_PRESSURE_BODY_EVENT
             )
             val bodyMetricsEventDate = getLastExtractionDate(
@@ -143,13 +143,13 @@ class HCPlaygroundViewModel(
             val heartRatePhysicalEventDate = getLastExtractionDate(
                 HCRookDataType.HEART_RATE_PHYSICAL_EVENT
             )
-            val hydrationBodyDate = getLastExtractionDate(
+            val hydrationEventDate = getLastExtractionDate(
                 HCRookDataType.HYDRATION_BODY_EVENT
             )
-            val moodBodyDate = getLastExtractionDate(
+            val moodEventDate = getLastExtractionDate(
                 HCRookDataType.MOOD_BODY_EVENT
             )
-            val nutritionBodyEventDate = getLastExtractionDate(
+            val nutritionEventDate = getLastExtractionDate(
                 HCRookDataType.NUTRITION_BODY_EVENT
             )
             val oxygenationBodyEventDate = getLastExtractionDate(
@@ -158,10 +158,10 @@ class HCPlaygroundViewModel(
             val oxygenationPhysicalEventDate = getLastExtractionDate(
                 HCRookDataType.OXYGENATION_PHYSICAL_EVENT
             )
-            val stressPhysicalEventDate = getLastExtractionDate(
+            val stressEventDate = getLastExtractionDate(
                 HCRookDataType.STRESS_PHYSICAL_EVENT
             )
-            val temperatureBodyEventDate = getLastExtractionDate(
+            val temperatureEventDate = getLastExtractionDate(
                 HCRookDataType.TEMPERATURE_BODY_EVENT
             )
 
@@ -170,18 +170,18 @@ class HCPlaygroundViewModel(
                 physicalSummaryDate = physicalSummaryDate,
                 physicalEventDate = physicalEventDate,
                 bodySummaryDate = bodySummaryDate,
-                bloodGlucoseBodyEventDate = bloodGlucoseBodyEventDate,
-                bloodPressureBodyEventDate = bloodPressureBodyEventDate,
+                bloodGlucoseEventDate = bloodGlucoseEventDate,
+                bloodPressureEventDate = bloodPressureEventDate,
                 bodyMetricsEventDate = bodyMetricsEventDate,
                 heartRateBodyEventDate = heartRateBodyEventDate,
                 heartRatePhysicalEventDate = heartRatePhysicalEventDate,
-                hydrationBodyDate = hydrationBodyDate,
-                moodBodyDate = moodBodyDate,
-                nutritionBodyEventDate = nutritionBodyEventDate,
+                hydrationEventDate = hydrationEventDate,
+                moodEventDate = moodEventDate,
+                nutritionEventDate = nutritionEventDate,
                 oxygenationBodyEventDate = oxygenationBodyEventDate,
                 oxygenationPhysicalEventDate = oxygenationPhysicalEventDate,
-                stressPhysicalEventDate = stressPhysicalEventDate,
-                temperatureBodyEventDate = temperatureBodyEventDate,
+                stressEventDate = stressEventDate,
+                temperatureEventDate = temperatureEventDate,
             )
 
             _dataLastDate.emit(state)
@@ -414,6 +414,238 @@ class HCPlaygroundViewModel(
         }
     }
 
+    fun getBloodGlucoseEvent(date: ZonedDateTime) {
+        _bloodGlucoseEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyBloodGlucoseEvents(date)
+
+                _bloodGlucoseEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _bloodGlucoseEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueBloodGlucoseEvent(bloodGlucoseEvent: HCBloodGlucoseEvent) {
+        _bloodGlucoseEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueBloodGlucoseEvent(bloodGlucoseEvent.toItem())
+
+                _bloodGlucoseEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _bloodGlucoseEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getBloodPressureEvent(date: ZonedDateTime) {
+        _bloodPressureEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyBloodPressureEvents(date)
+
+                _bloodPressureEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _bloodPressureEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueBloodPressureEvent(bloodPressureEvent: HCBloodPressureEvent) {
+        _bloodPressureEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueBloodPressureEvent(bloodPressureEvent.toItem())
+
+                _bloodPressureEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _bloodPressureEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getBodyMetricsEvent(date: ZonedDateTime) {
+        _bodyMetricsEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyMetricsEvents(date)
+
+                _bodyMetricsEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _bodyMetricsEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueBodyMetricsEvent(bodyMetricsEvent: HCBodyMetricsEvent) {
+        _bodyMetricsEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueBodyMetricsEvent(bodyMetricsEvent.toItem())
+
+                _bodyMetricsEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _bodyMetricsEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getHeartRateBodyEvent(date: ZonedDateTime) {
+        _heartRateBodyEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyHeartRateEvents(date)
+
+                _heartRateBodyEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _heartRateBodyEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueHeartRateBodyEvent(heartRateBodyEvent: HCHeartRateEvent) {
+        _heartRateBodyEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueHeartRateEvent(heartRateBodyEvent.toItem())
+
+                _heartRateBodyEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _heartRateBodyEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
     fun getHeartRatePhysicalEvent(date: ZonedDateTime) {
         _heartRatePhysicalEventState.update {
             it.copy(
@@ -474,12 +706,425 @@ class HCPlaygroundViewModel(
         }
     }
 
+    fun getHydrationEvent(date: ZonedDateTime) {
+        _hydrationEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyHydrationEvents(date)
+
+                _hydrationEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _hydrationEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueHydrationEvent(hydrationEvent: HCHydrationEvent) {
+        _hydrationEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueHydrationEvent(hydrationEvent.toItem())
+
+                _hydrationEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _hydrationEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getMoodEvent(date: ZonedDateTime) {
+        _moodEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyMoodEvents(date)
+
+                _moodEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _moodEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueMoodEvent(moodEvent: HCMoodEvent) {
+        _moodEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueMoodEvent(moodEvent.toItem())
+
+                _moodEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _moodEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getNutritionEvent(date: ZonedDateTime) {
+        _nutritionEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyNutritionEvents(date)
+
+                _nutritionEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _nutritionEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueNutritionEvent(nutritionEvent: HCNutritionEvent) {
+        _nutritionEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueNutritionEvent(nutritionEvent.toItem())
+
+                _nutritionEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _nutritionEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getOxygenationBodyEvent(date: ZonedDateTime) {
+        _oxygenationBodyEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyOxygenationEvents(date)
+
+                _oxygenationBodyEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _oxygenationBodyEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueOxygenationBodyEvent(oxygenationBodyEvent: HCOxygenationEvent) {
+        _oxygenationBodyEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueOxygenationEvent(oxygenationBodyEvent.toItem())
+
+                _oxygenationBodyEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _oxygenationBodyEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getOxygenationPhysicalEvent(date: ZonedDateTime) {
+        _oxygenationPhysicalEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getPhysicalOxygenationEvents(date)
+
+                _oxygenationPhysicalEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _oxygenationPhysicalEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueOxygenationPhysicalEvent(oxygenationPhysicalEvent: List<HCOxygenationEvent>) {
+        _oxygenationPhysicalEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                oxygenationPhysicalEvent.forEach {
+                    rookTransmissionManager.enqueueOxygenationEvent(it.toItem())
+                }
+
+                _oxygenationPhysicalEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _oxygenationPhysicalEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getStressEvent(date: ZonedDateTime) {
+        _stressEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getPhysicalStressEvents(date)
+
+                _stressEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _stressEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueStressEvent(stressEvent: List<HCStressEvent>) {
+        _stressEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                stressEvent.forEach {
+                    rookTransmissionManager.enqueueStressEvent(it.toItem())
+                }
+
+                _stressEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _stressEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun getTemperatureEvent(date: ZonedDateTime) {
+        _temperatureEventState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                enqueueing = false,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getBodyTemperatureEvents(date)
+
+                _temperatureEventState.update {
+                    it.copy(extracting = false, extracted = extracted)
+                }
+            } catch (e: Exception) {
+                _temperatureEventState.update {
+                    it.copy(extracting = false, extractError = e.toString())
+                }
+            }
+        }
+    }
+
+    fun enqueueTemperatureEvent(temperatureEvent: HCTemperatureEvent) {
+        _temperatureEventState.update {
+            it.copy(
+                enqueueing = true,
+                enqueued = false,
+                enqueueError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.enqueueTemperatureEvent(temperatureEvent.toItem())
+
+                _temperatureEventState.update {
+                    it.copy(
+                        extracted = null,
+                        enqueueing = false,
+                        enqueued = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _temperatureEventState.update {
+                    it.copy(
+                        enqueueing = false,
+                        enqueueError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
     fun uploadData() {
         viewModelScope.launch {
             _uploadState.emit(UploadState.Uploading)
 
             try {
-                rookTransmissionManager.uploadAll()
+                rookTransmissionManager.uploadSleepSummaries()
+                rookTransmissionManager.uploadPhysicalSummaries()
+                rookTransmissionManager.uploadPhysicalEvents()
+                rookTransmissionManager.uploadBodySummaries()
                 rookTransmissionManager.uploadBloodGlucoseEvents()
                 rookTransmissionManager.uploadBloodPressureEvents()
                 rookTransmissionManager.uploadBodyMetricsEvents()
