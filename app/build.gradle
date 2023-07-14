@@ -69,7 +69,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Rook
-    implementation platform("com.rookmotion.android:rook-bom:0.0.2")
+    implementation platform("com.rookmotion.android:rook-bom:0.0.3")
     implementation 'com.rookmotion.android:rook-auth'
     implementation 'com.rookmotion.android:rook-users'
     implementation 'com.rookmotion.android:rook-health-connect'
