@@ -275,7 +275,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.physicalEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.physicalEvent.text = it.extracted.toString()
+                    binding.physicalEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueuePhysicalEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueuePhysicalEvents(it.extracted)
@@ -335,7 +335,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.bloodGlucoseEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.bloodGlucoseEvent.text = it.extracted.toString()
+                    binding.bloodGlucoseEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueBloodGlucoseEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueBloodGlucoseEvent(it.extracted)
@@ -366,7 +366,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.bloodPressureEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.bloodPressureEvent.text = it.extracted.toString()
+                    binding.bloodPressureEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueBloodPressureEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueBloodPressureEvent(it.extracted)
@@ -397,7 +397,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.bodyMetricsEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.bodyMetricsEvent.text = it.extracted.toString()
+                    binding.bodyMetricsEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueBodyMetricsEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueBodyMetricsEvent(it.extracted)
@@ -428,7 +428,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.heartRateBodyEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.heartRateBodyEvent.text = it.extracted.toString()
+                    binding.heartRateBodyEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueHeartRateBodyEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueHeartRateBodyEvent(it.extracted)
@@ -490,7 +490,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.hydrationEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.hydrationEvent.text = it.extracted.toString()
+                    binding.hydrationEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueHydrationEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueHydrationEvent(it.extracted)
@@ -521,7 +521,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.moodEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.moodEvent.text = it.extracted.toString()
+                    binding.moodEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueMoodEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueMoodEvent(it.extracted)
@@ -552,7 +552,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.nutritionEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.nutritionEvent.text = it.extracted.toString()
+                    binding.nutritionEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueNutritionEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueNutritionEvent(it.extracted)
@@ -583,7 +583,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.oxygenationBodyEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.oxygenationBodyEvent.text = it.extracted.toString()
+                    binding.oxygenationBodyEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueOxygenationBodyEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueOxygenationBodyEvent(it.extracted)
@@ -676,7 +676,7 @@ class HCPlaygroundFragment : Fragment() {
                 binding.temperatureEventDate.isEnabled = !it.extracting
 
                 if (it.extracted != null) {
-                    binding.temperatureEvent.text = it.extracted.toString()
+                    binding.temperatureEvent.text = it.extracted.joinToString("\n\n")
 
                     binding.enqueueTemperatureEvent.setOnClickListener { _ ->
                         hcPlaygroundViewModel.enqueueTemperatureEvent(it.extracted)

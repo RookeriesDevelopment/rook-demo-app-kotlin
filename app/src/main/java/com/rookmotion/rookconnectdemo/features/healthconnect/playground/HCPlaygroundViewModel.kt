@@ -54,24 +54,28 @@ class HCPlaygroundViewModel(
     private val _bodyState = MutableStateFlow<HealthDataState<HCBodySummary>>(HealthDataState())
     val bodyState get() = _bodyState.asStateFlow()
 
-    private val _bloodGlucoseEventState = MutableStateFlow<HealthDataState<HCBloodGlucoseEvent>>(
-        HealthDataState()
-    )
+    private val _bloodGlucoseEventState =
+        MutableStateFlow<HealthDataState<List<HCBloodGlucoseEvent>>>(
+            HealthDataState()
+        )
     val bloodGlucoseEventState get() = _bloodGlucoseEventState.asStateFlow()
 
-    private val _bloodPressureEventState = MutableStateFlow<HealthDataState<HCBloodPressureEvent>>(
-        HealthDataState()
-    )
+    private val _bloodPressureEventState =
+        MutableStateFlow<HealthDataState<List<HCBloodPressureEvent>>>(
+            HealthDataState()
+        )
     val bloodPressureEventState get() = _bloodPressureEventState.asStateFlow()
 
-    private val _bodyMetricsEventState = MutableStateFlow<HealthDataState<HCBodyMetricsEvent>>(
-        HealthDataState()
-    )
+    private val _bodyMetricsEventState =
+        MutableStateFlow<HealthDataState<List<HCBodyMetricsEvent>>>(
+            HealthDataState()
+        )
     val bodyMetricsEventState get() = _bodyMetricsEventState.asStateFlow()
 
-    private val _heartRateBodyEventState = MutableStateFlow<HealthDataState<HCHeartRateEvent>>(
-        HealthDataState()
-    )
+    private val _heartRateBodyEventState =
+        MutableStateFlow<HealthDataState<List<HCHeartRateEvent>>>(
+            HealthDataState()
+        )
     val heartRateBodyEventState get() = _heartRateBodyEventState.asStateFlow()
 
     private val _heartRatePhysicalEventState =
@@ -80,24 +84,25 @@ class HCPlaygroundViewModel(
         )
     val heartRatePhysicalEventState get() = _heartRatePhysicalEventState.asStateFlow()
 
-    private val _hydrationEventState = MutableStateFlow<HealthDataState<HCHydrationEvent>>(
+    private val _hydrationEventState = MutableStateFlow<HealthDataState<List<HCHydrationEvent>>>(
         HealthDataState()
     )
     val hydrationEventState get() = _hydrationEventState.asStateFlow()
 
-    private val _moodEventState = MutableStateFlow<HealthDataState<HCMoodEvent>>(
+    private val _moodEventState = MutableStateFlow<HealthDataState<List<HCMoodEvent>>>(
         HealthDataState()
     )
     val moodEventState get() = _moodEventState.asStateFlow()
 
-    private val _nutritionEventState = MutableStateFlow<HealthDataState<HCNutritionEvent>>(
+    private val _nutritionEventState = MutableStateFlow<HealthDataState<List<HCNutritionEvent>>>(
         HealthDataState()
     )
     val nutritionEventState get() = _nutritionEventState.asStateFlow()
 
-    private val _oxygenationBodyEventState = MutableStateFlow<HealthDataState<HCOxygenationEvent>>(
-        HealthDataState()
-    )
+    private val _oxygenationBodyEventState =
+        MutableStateFlow<HealthDataState<List<HCOxygenationEvent>>>(
+            HealthDataState()
+        )
     val oxygenationBodyEventState get() = _oxygenationBodyEventState.asStateFlow()
 
     private val _oxygenationPhysicalEventState =
@@ -111,9 +116,8 @@ class HCPlaygroundViewModel(
     )
     val stressEventState get() = _stressEventState.asStateFlow()
 
-    private val _temperatureEventState = MutableStateFlow<HealthDataState<HCTemperatureEvent>>(
-        HealthDataState()
-    )
+    private val _temperatureEventState =
+        MutableStateFlow<HealthDataState<List<HCTemperatureEvent>>>(HealthDataState())
     val temperatureEventState get() = _temperatureEventState.asStateFlow()
 
     private val _uploadState = MutableStateFlow<UploadState>(UploadState.Ready)
@@ -441,7 +445,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueBloodGlucoseEvent(bloodGlucoseEvent: HCBloodGlucoseEvent) {
+    fun enqueueBloodGlucoseEvent(bloodGlucoseEvent: List<HCBloodGlucoseEvent>) {
         _bloodGlucoseEventState.update {
             it.copy(
                 enqueueing = true,
@@ -452,7 +456,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueBloodGlucoseEvent(bloodGlucoseEvent.toItem())
+                bloodGlucoseEvent.forEach {
+                    rookTransmissionManager.enqueueBloodGlucoseEvent(it.toItem())
+                }
 
                 _bloodGlucoseEventState.update {
                     it.copy(
@@ -499,7 +505,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueBloodPressureEvent(bloodPressureEvent: HCBloodPressureEvent) {
+    fun enqueueBloodPressureEvent(bloodPressureEvent: List<HCBloodPressureEvent>) {
         _bloodPressureEventState.update {
             it.copy(
                 enqueueing = true,
@@ -510,7 +516,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueBloodPressureEvent(bloodPressureEvent.toItem())
+                bloodPressureEvent.forEach {
+                    rookTransmissionManager.enqueueBloodPressureEvent(it.toItem())
+                }
 
                 _bloodPressureEventState.update {
                     it.copy(
@@ -557,7 +565,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueBodyMetricsEvent(bodyMetricsEvent: HCBodyMetricsEvent) {
+    fun enqueueBodyMetricsEvent(bodyMetricsEvent: List<HCBodyMetricsEvent>) {
         _bodyMetricsEventState.update {
             it.copy(
                 enqueueing = true,
@@ -568,7 +576,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueBodyMetricsEvent(bodyMetricsEvent.toItem())
+                bodyMetricsEvent.forEach {
+                    rookTransmissionManager.enqueueBodyMetricsEvent(it.toItem())
+                }
 
                 _bodyMetricsEventState.update {
                     it.copy(
@@ -615,7 +625,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueHeartRateBodyEvent(heartRateBodyEvent: HCHeartRateEvent) {
+    fun enqueueHeartRateBodyEvent(heartRateBodyEvent: List<HCHeartRateEvent>) {
         _heartRateBodyEventState.update {
             it.copy(
                 enqueueing = true,
@@ -626,7 +636,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueHeartRateEvent(heartRateBodyEvent.toItem())
+                heartRateBodyEvent.forEach {
+                    rookTransmissionManager.enqueueHeartRateEvent(it.toItem())
+                }
 
                 _heartRateBodyEventState.update {
                     it.copy(
@@ -733,7 +745,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueHydrationEvent(hydrationEvent: HCHydrationEvent) {
+    fun enqueueHydrationEvent(hydrationEvent: List<HCHydrationEvent>) {
         _hydrationEventState.update {
             it.copy(
                 enqueueing = true,
@@ -744,7 +756,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueHydrationEvent(hydrationEvent.toItem())
+                hydrationEvent.forEach {
+                    rookTransmissionManager.enqueueHydrationEvent(it.toItem())
+                }
 
                 _hydrationEventState.update {
                     it.copy(
@@ -791,7 +805,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueMoodEvent(moodEvent: HCMoodEvent) {
+    fun enqueueMoodEvent(moodEvent: List<HCMoodEvent>) {
         _moodEventState.update {
             it.copy(
                 enqueueing = true,
@@ -802,7 +816,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueMoodEvent(moodEvent.toItem())
+                moodEvent.forEach {
+                    rookTransmissionManager.enqueueMoodEvent(it.toItem())
+                }
 
                 _moodEventState.update {
                     it.copy(
@@ -849,7 +865,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueNutritionEvent(nutritionEvent: HCNutritionEvent) {
+    fun enqueueNutritionEvent(nutritionEvent: List<HCNutritionEvent>) {
         _nutritionEventState.update {
             it.copy(
                 enqueueing = true,
@@ -860,7 +876,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueNutritionEvent(nutritionEvent.toItem())
+                nutritionEvent.forEach {
+                    rookTransmissionManager.enqueueNutritionEvent(it.toItem())
+                }
 
                 _nutritionEventState.update {
                     it.copy(
@@ -907,7 +925,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueOxygenationBodyEvent(oxygenationBodyEvent: HCOxygenationEvent) {
+    fun enqueueOxygenationBodyEvent(oxygenationBodyEvent: List<HCOxygenationEvent>) {
         _oxygenationBodyEventState.update {
             it.copy(
                 enqueueing = true,
@@ -918,7 +936,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueOxygenationEvent(oxygenationBodyEvent.toItem())
+                oxygenationBodyEvent.forEach {
+                    rookTransmissionManager.enqueueOxygenationEvent(it.toItem())
+                }
 
                 _oxygenationBodyEventState.update {
                     it.copy(
@@ -1085,7 +1105,7 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun enqueueTemperatureEvent(temperatureEvent: HCTemperatureEvent) {
+    fun enqueueTemperatureEvent(temperatureEvent: List<HCTemperatureEvent>) {
         _temperatureEventState.update {
             it.copy(
                 enqueueing = true,
@@ -1096,7 +1116,9 @@ class HCPlaygroundViewModel(
 
         viewModelScope.launch {
             try {
-                rookTransmissionManager.enqueueTemperatureEvent(temperatureEvent.toItem())
+                temperatureEvent.forEach {
+                    rookTransmissionManager.enqueueTemperatureEvent(it.toItem())
+                }
 
                 _temperatureEventState.update {
                     it.copy(
