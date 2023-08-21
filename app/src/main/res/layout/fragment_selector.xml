@@ -44,6 +44,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="@string/health_connect" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/connections_page"
+                style="@style/Widget.Material3.Button.UnelevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/connections_page" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

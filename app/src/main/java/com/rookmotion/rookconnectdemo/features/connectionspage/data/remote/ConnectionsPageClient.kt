@@ -1,0 +1,39 @@
+package com.rookmotion.rookconnectdemo.features.connectionspage.data.remote
+
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+
+class ConnectionsPageClient(baseUrl: String) {
+    private val requestInterceptor = Interceptor { chain ->
+        val request = chain
+            .request()
+            .newBuilder()
+
+        request.addHeader(CONTENT_TYPE, DEFAULT_CONTENT_TYPE)
+        request.addHeader(ACCEPT, DEFAULT_ACCEPT)
+
+        return@Interceptor chain.proceed(request.build())
+    }
+
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(requestInterceptor)
+        .build()
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
+
+    val connectionsPageApiService: ConnectionsPageApiService = retrofit.create(
+        ConnectionsPageApiService::class.java
+    )
+}
+
+private const val CONTENT_TYPE = "Content-Type"
+private const val ACCEPT = "Accept"
+
+private const val DEFAULT_CONTENT_TYPE = "application/json"
+private const val DEFAULT_ACCEPT = "Accept"

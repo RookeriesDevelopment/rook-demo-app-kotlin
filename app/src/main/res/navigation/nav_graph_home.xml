@@ -9,10 +9,13 @@
         android:id="@+id/selectorFragment"
         android:name="com.rookmotion.rookconnectdemo.features.selector.SelectorFragment"
         android:label="@string/menu"
-        tools:layout="@layout/fragment_selector" >
+        tools:layout="@layout/fragment_selector">
         <action
             android:id="@+id/action_selectorFragment_to_HCAvailabilityFragment"
             app:destination="@id/HCAvailabilityFragment" />
+        <action
+            android:id="@+id/action_selectorFragment_to_connectionsPageFragment"
+            app:destination="@id/connectionsPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/HCAvailabilityFragment"
@@ -37,4 +40,9 @@
         android:name="com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundFragment"
         android:label="@string/health_connect"
         tools:layout="@layout/fragment_hc_playground" />
+    <fragment
+        android:id="@+id/connectionsPageFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageFragment"
+        android:label="@string/connections_page"
+        tools:layout="@layout/fragment_connections_page" />
 </navigation>

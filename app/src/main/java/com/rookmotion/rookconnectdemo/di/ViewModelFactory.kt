@@ -2,6 +2,8 @@ package com.rookmotion.rookconnectdemo.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.rookmotion.rookconnectdemo.BuildConfig
+import com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageViewModel
 import com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsViewModel
 import com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundViewModel
 import com.rookmotion.rookconnectdemo.features.selector.AuthViewModel
@@ -30,6 +32,16 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
             return HCPlaygroundViewModel(
                 rookTransmissionManager = serviceLocator.rookTransmissionManager,
                 rookHealthConnectManager = serviceLocator.rookHealthConnectManager,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(ConnectionsPageViewModel::class.java)) {
+            return ConnectionsPageViewModel(
+                dispatcher = serviceLocator.defaultDispatcher,
+                clientUUID = BuildConfig.CLIENT_UUID,
+                userID = "AndroidUserID2",
+                connectionsPageUrl = serviceLocator.connectionsPageUrl,
+                dataSourceRepository = serviceLocator.dataSourceRepository,
             ) as T
         }
 
