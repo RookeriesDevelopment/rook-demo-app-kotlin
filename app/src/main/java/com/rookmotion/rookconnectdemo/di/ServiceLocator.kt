@@ -11,9 +11,9 @@ class ServiceLocator(context: Context) {
 
     val authorizationProvider: AuthorizationProvider by lazy {
         if (BuildConfig.DEBUG) {
-            AuthorizationProvider(context, BuildConfig.ROOK_AUTH_URL, "ADVANCED")
+            AuthorizationProvider(context, "ADVANCED")
         } else {
-            AuthorizationProvider(context, BuildConfig.ROOK_AUTH_URL)
+            AuthorizationProvider(context)
         }
     }
 

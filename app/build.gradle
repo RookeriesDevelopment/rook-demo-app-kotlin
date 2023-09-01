@@ -24,7 +24,6 @@ android {
         buildConfigField("String", "USER_ID", "\"${localProperties.userID}\"")
         buildConfigField("String", "CLIENT_UUID", "\"${localProperties.clientUUID}\"")
         buildConfigField("String", "CLIENT_PASSWORD", "\"${localProperties.clientPassword}\"")
-        buildConfigField("String", "ROOK_AUTH_URL", "\"${localProperties.rookAuthUrl}\"")
         buildConfigField("String", "ROOK_URL", "\"${localProperties.rookUrl}\"")
     }
 
@@ -33,7 +32,7 @@ android {
             storeFile file('../keystore.jks')
             storePassword localProperties.storePassword
             keyAlias localProperties.keyAlias
-            keyPassword  localProperties.keyPassword
+            keyPassword localProperties.keyPassword
         }
     }
 
@@ -69,7 +68,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Rook
-    implementation platform("com.rookmotion.android:rook-bom:0.0.6")
+    implementation platform("com.rookmotion.android:rook-bom:0.0.7")
     implementation 'com.rookmotion.android:rook-auth'
     implementation 'com.rookmotion.android:rook-users'
     implementation 'com.rookmotion.android:rook-health-connect'
