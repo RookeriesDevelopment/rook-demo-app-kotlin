@@ -25,6 +25,7 @@ android {
         buildConfigField("String", "CLIENT_UUID", "\"${localProperties.clientUUID}\"")
         buildConfigField("String", "CLIENT_PASSWORD", "\"${localProperties.clientPassword}\"")
         buildConfigField("String", "ROOK_URL", "\"${localProperties.rookUrl}\"")
+        buildConfigField("String", "CONNECTIONS_PAGE", "\"${localProperties.connectionsPageUrl}\"")
     }
 
     signingConfigs {
@@ -40,8 +41,8 @@ android {
         release {
             signingConfig signingConfigs.release
 
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -67,16 +68,20 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    // Rook
     implementation platform("com.rookmotion.android:rook-bom:0.0.7")
     implementation 'com.rookmotion.android:rook-auth'
     implementation 'com.rookmotion.android:rook-users'
     implementation 'com.rookmotion.android:rook-health-connect'
     implementation 'com.rookmotion.android:rook-transmission'
 
-    // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
+    implementation 'io.coil-kt:coil:2.4.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

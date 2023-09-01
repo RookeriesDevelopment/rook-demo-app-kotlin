@@ -142,5 +142,9 @@ class SelectorFragment : Fragment() {
         binding.healthConnectSdk.setNavigateOnClick(
             SelectorFragmentDirections.actionSelectorFragmentToHCAvailabilityFragment()
         )
+
+        binding.connectionsPage.setNavigateOnClick(
+            SelectorFragmentDirections.actionSelectorFragmentToConnectionsPageFragment()
+        )
     }
 }

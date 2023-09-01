@@ -45,4 +45,11 @@
     <string name="stress_event">Stress event</string>
     <string name="temperature_event">Temperature event</string>
     <string name="uploaded">Uploaded</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="connect">Connect</string>
+    <string name="try_again">Try again</string>
+    <string name="connections_page">Connections page</string>
+    <string name="no_data_sources_found">No data sources found</string>
+    <string name="connected">Connected</string>
 </resources>

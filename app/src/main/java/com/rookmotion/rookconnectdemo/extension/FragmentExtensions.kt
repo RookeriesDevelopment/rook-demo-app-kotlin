@@ -1,5 +1,6 @@
 package com.rookmotion.rookconnectdemo.extension
 
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,4 +17,15 @@ fun Fragment.repeatOnResume(block: suspend () -> Unit) {
             block()
         }
     }
+}
+
+fun Fragment.overrideOnBackPressed(block: () -> Unit) {
+    requireActivity().onBackPressedDispatcher.addCallback(
+        viewLifecycleOwner,
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                block()
+            }
+        },
+    )
 }
