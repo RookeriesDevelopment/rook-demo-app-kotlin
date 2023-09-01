@@ -8,9 +8,9 @@
 ```properties
 userID=USER_ID
 clientUUID=CLIENT_UUID
-clientPassword=PASSWORD
-rookAuthUrl=URL
-rookUrl=URL
+clientPassword=CLIENT_PASSWORD
+rookUrl=ROOK_API_URL
+connectionsPageUrl=CONNECTIONS_PAGE_URL
 ```
 
 3. Sync and run the project.

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentConnectionsPageBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
@@ -62,6 +63,8 @@ class ConnectionsPageFragment : Fragment() {
 
         observers()
         bindings()
+
+        connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, BuildConfig.USER_ID)
     }
 
     private fun observers() {
@@ -89,7 +92,9 @@ class ConnectionsPageFragment : Fragment() {
     }
 
     private fun bindings() {
-        binding.error.retry.setOnClickListener { connectionsPageViewModel.getDataSources() }
+        binding.error.retry.setOnClickListener {
+            connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, BuildConfig.USER_ID)
+        }
         binding.items.setHasFixedSize(true)
         binding.items.adapter = dataSourceAdapter
     }
@@ -123,12 +128,14 @@ class ConnectionsPageFragment : Fragment() {
             connectionsPageViewModel.isHomePageUrl(request.url.toString()).also {
                 if (it) {
                     connectionsPageViewModel.closeConnectionUrl()
-                    connectionsPageViewModel.getDataSources()
+                    connectionsPageViewModel.getDataSources(
+                        BuildConfig.CLIENT_UUID,
+                        BuildConfig.USER_ID,
+                    )
                 }
             }
         }
 
-//        binding.webView.loadUrl("https://webbrowsertools.com/timezone/")
         binding.webView.loadUrl(url)
 
         binding.progress.root.isVisible = false

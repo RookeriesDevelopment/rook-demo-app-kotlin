@@ -11,8 +11,6 @@ import kotlinx.coroutines.launch
 
 class ConnectionsPageViewModel(
     private val dispatcher: CoroutineDispatcher,
-    private val clientUUID: String,
-    private val userID: String,
     private val connectionsPageUrl: String,
     private val dataSourceRepository: DataSourceRepository,
 ) : ViewModel() {
@@ -20,11 +18,7 @@ class ConnectionsPageViewModel(
     private val _uiState = MutableStateFlow(ConnectionsPageState())
     val uiState get() = _uiState.asStateFlow()
 
-    init {
-        getDataSources()
-    }
-
-    fun getDataSources() {
+    fun getDataSources(clientUUID: String, userID: String) {
         viewModelScope.launch(dispatcher) {
             _uiState.update { it.copy(loading = true) }
 
