@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.selector
+package com.rookmotion.rookconnectdemo.features.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -11,11 +11,14 @@
         android:label="@string/menu"
         tools:layout="@layout/fragment_selector">
         <action
-            android:id="@+id/action_selectorFragment_to_HCAvailabilityFragment"
-            app:destination="@id/HCAvailabilityFragment" />
-        <action
             android:id="@+id/action_selectorFragment_to_connectionsPageFragment"
             app:destination="@id/connectionsPageFragment" />
+        <action
+            android:id="@+id/action_selectorFragment_to_modulesFragment"
+            app:destination="@id/modulesFragment" />
+        <action
+            android:id="@+id/action_selectorFragment_to_SDKFragment"
+            app:destination="@id/SDKFragment" />
     </fragment>
     <fragment
         android:id="@+id/HCAvailabilityFragment"
@@ -45,4 +48,18 @@
         android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageFragment"
         android:label="@string/connections_page"
         tools:layout="@layout/fragment_connections_page" />
+    <fragment
+        android:id="@+id/modulesFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.modules.ModulesFragment"
+        android:label="@string/modules"
+        tools:layout="@layout/fragment_modules">
+        <action
+            android:id="@+id/action_modulesFragment_to_HCAvailabilityFragment"
+            app:destination="@id/HCAvailabilityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SDKFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.sdk.SDKFragment"
+        android:label="@string/sdk"
+        tools:layout="@layout/fragment_sdk" />
 </navigation>

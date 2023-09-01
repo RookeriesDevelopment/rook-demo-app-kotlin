@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.selector
+package com.rookmotion.rookconnectdemo.features.modules
 
 import com.rookmotion.rook.auth.domain.model.AuthorizationResult
 

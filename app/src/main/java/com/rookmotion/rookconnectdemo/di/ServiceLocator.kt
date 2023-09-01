@@ -3,6 +3,7 @@ package com.rookmotion.rookconnectdemo.di
 import android.content.Context
 import com.rookmotion.rook.auth.AuthorizationProvider
 import com.rookmotion.rook.health_connect.RookHealthConnectManager
+import com.rookmotion.rook.sdk.RookConfigurationManager
 import com.rookmotion.rook.transmission.RookTransmissionManager
 import com.rookmotion.rook.users.RookUsersManager
 import com.rookmotion.rookconnectdemo.BuildConfig
@@ -81,5 +82,9 @@ class ServiceLocator(context: Context) {
 
     val dataSourceRepository: DataSourceRepository by lazy {
         DefaultDataSourceRepository(connectionsPageApiService)
+    }
+
+    val rookConfigurationManager: RookConfigurationManager by lazy {
+        RookConfigurationManager(context)
     }
 }

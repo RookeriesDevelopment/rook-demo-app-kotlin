@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageViewModel
 import com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsViewModel
 import com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.features.selector.AuthViewModel
-import com.rookmotion.rookconnectdemo.features.selector.UserViewModel
+import com.rookmotion.rookconnectdemo.features.modules.AuthViewModel
+import com.rookmotion.rookconnectdemo.features.modules.UserViewModel
+import com.rookmotion.rookconnectdemo.features.sdk.SDKViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
@@ -40,6 +41,10 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
                 connectionsPageUrl = serviceLocator.connectionsPageUrl,
                 dataSourceRepository = serviceLocator.dataSourceRepository,
             ) as T
+        }
+
+        if (modelClass.isAssignableFrom(SDKViewModel::class.java)) {
+            return SDKViewModel(serviceLocator.rookConfigurationManager) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")
