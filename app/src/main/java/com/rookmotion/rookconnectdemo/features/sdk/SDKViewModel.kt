@@ -15,6 +15,7 @@ import com.rookmotion.rook.sdk.domain.exception.HealthConnectNotInstalledExcepti
 import com.rookmotion.rook.sdk.domain.exception.HttpRequestException
 import com.rookmotion.rook.sdk.domain.exception.MissingConfigurationException
 import com.rookmotion.rook.sdk.domain.exception.MissingPermissionsException
+import com.rookmotion.rook.sdk.domain.exception.NotAuthorizedException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import com.rookmotion.rook.sdk.domain.exception.TimeoutException
 import com.rookmotion.rook.sdk.domain.exception.UserNotInitializedException
@@ -27,11 +28,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 
-class SDKViewModel(private val configurationManager: RookConfigurationManager) : ViewModel() {
+class SDKViewModel(private val rookConfigurationManager: RookConfigurationManager) : ViewModel() {
 
-    private val rookHealthPermissionsManager = RookHealthPermissionsManager(configurationManager)
-    private val rookSummaryManager = RookSummaryManager(configurationManager)
-    private val rookEventManager = RookEventManager(configurationManager)
+    private val rookHealthPermissionsManager =
+        RookHealthPermissionsManager(rookConfigurationManager)
+    private val rookSummaryManager = RookSummaryManager(rookConfigurationManager)
+    private val rookEventManager = RookEventManager(rookConfigurationManager)
 
     private val _configuration = MutableStateFlow("")
     val configuration get() = _configuration.asStateFlow()
@@ -71,8 +73,8 @@ class SDKViewModel(private val configurationManager: RookConfigurationManager) :
             stringBuilder.appendConsoleLine("$rookConfiguration")
             _configuration.emit(stringBuilder.toString())
 
-            configurationManager.setLocalLoggingLevel(LocalLoggingLevel.ADVANCED)
-            configurationManager.setConfiguration(rookConfiguration)
+            rookConfigurationManager.setLocalLoggingLevel(LocalLoggingLevel.ADVANCED)
+            rookConfigurationManager.setConfiguration(rookConfiguration)
 
             stringBuilder.appendConsoleLine("Configuration set successfully")
             _configuration.emit(stringBuilder.toString())
@@ -86,7 +88,7 @@ class SDKViewModel(private val configurationManager: RookConfigurationManager) :
             stringBuilder.appendConsoleLine("Initializing...")
             _initialize.emit(stringBuilder.toString())
 
-            val result = configurationManager.initRook()
+            val result = rookConfigurationManager.initRook()
 
             result.fold(
                 {
@@ -96,6 +98,7 @@ class SDKViewModel(private val configurationManager: RookConfigurationManager) :
                 {
                     val error = when (it) {
                         is MissingConfigurationException -> "MissingConfigurationException: ${it.message}"
+                        is NotAuthorizedException -> "NotAuthorizedException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
                         else -> it.localizedMessage
                     }
@@ -115,7 +118,7 @@ class SDKViewModel(private val configurationManager: RookConfigurationManager) :
             stringBuilder.appendConsoleLine("Updating userID...")
             _user.emit(stringBuilder.toString())
 
-            val result = configurationManager.updateUserID(userID)
+            val result = rookConfigurationManager.updateUserID(userID)
 
             result.fold(
                 {
