@@ -211,6 +211,36 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
+            hcPlaygroundViewModel.userTimeZoneState.collect {
+                binding.userTimeZoneExtract.isEnabled = !it.extracting
+
+                if (it.extracted != null) {
+                    binding.userTimeZone.text = it.extracted.toString()
+
+                    binding.userTimeZoneUpload.setOnClickListener { _ ->
+                        hcPlaygroundViewModel.uploadUserTimeZone(it.extracted)
+                    }
+                } else {
+                    binding.userTimeZone.text = ""
+                }
+
+                if (it.extractError != null) {
+                    binding.userTimeZone.text = it.extractError
+                }
+
+                binding.userTimeZoneUpload.isEnabled = (!it.uploading && it.extracted != null)
+
+                if (it.uploaded) {
+                    binding.userTimeZone.text = getString(R.string.uploaded)
+                }
+
+                if (it.uploadError != null) {
+                    binding.userTimeZone.text = it.uploadError
+                }
+            }
+        }
+
+        repeatOnResume {
             hcPlaygroundViewModel.sleepState.collect {
                 binding.sleepSummaryDate.isEnabled = !it.extracting
 
@@ -754,6 +784,7 @@ class HCPlaygroundFragment : Fragment() {
     }
 
     private fun initWidgets() {
+        binding.userTimeZoneExtract.setOnClickListener { hcPlaygroundViewModel.getUserTimeZone() }
         binding.upload.setOnClickListener { hcPlaygroundViewModel.uploadData() }
         binding.clear.setOnClickListener { hcPlaygroundViewModel.clearData() }
     }

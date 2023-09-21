@@ -79,4 +79,7 @@
     <string name="sync_health_data">Sync health data</string>
     <string name="_6_sync_health_data">6. Sync health data</string>
     <string name="connections_page_description">See a basic example on how to implement your own connections page inside your app with webview</string>
+    <string name="user_time_zone">User Time Zone</string>
+    <string name="extract">Extract</string>
+    <string name="upload_this">Upload this</string>
 </resources>

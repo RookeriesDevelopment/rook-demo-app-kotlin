@@ -19,6 +19,7 @@ import com.rookmotion.rook.health_connect.domain.model.event.HCTemperatureEvent
 import com.rookmotion.rook.health_connect.domain.model.summary.HCBodySummary
 import com.rookmotion.rook.health_connect.domain.model.summary.HCPhysicalSummary
 import com.rookmotion.rook.health_connect.domain.model.summary.HCSleepSummary
+import com.rookmotion.rook.health_connect.domain.time.UserTimeZone
 import com.rookmotion.rook.transmission.RookTransmissionManager
 import com.rookmotion.rookconnectdemo.extension.atStartOfDayUTC
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +31,11 @@ import java.time.ZonedDateTime
 
 class HCPlaygroundViewModel(
     private val rookTransmissionManager: RookTransmissionManager,
-    private val rookHealthConnectManager: RookHealthConnectManager
+    private val rookHealthConnectManager: RookHealthConnectManager,
 ) : ViewModel() {
+
+    private val _userTimeZoneState = MutableStateFlow(UserTimeZoneState())
+    val userTimeZoneState get() = _userTimeZoneState.asStateFlow()
 
     private val _dataLastDate = MutableStateFlow<LastExtractionDateState>(
         LastExtractionDateState.None
@@ -197,6 +201,63 @@ class HCPlaygroundViewModel(
             rookHealthConnectManager.getLastExtractionDate(hcRookDataType)
         } catch (e: DateNotFoundException) {
             LocalDate.now().minusDays(1).atStartOfDayUTC()
+        }
+    }
+
+    fun getUserTimeZone() {
+        _userTimeZoneState.update {
+            it.copy(
+                extracting = true,
+                extracted = null,
+                extractError = null,
+                uploading = false,
+                uploaded = false,
+                uploadError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                val extracted = rookHealthConnectManager.getUserTimeZone()
+
+                _userTimeZoneState.update { it.copy(extracting = false, extracted = extracted) }
+            } catch (e: Exception) {
+                _userTimeZoneState.update {
+                    it.copy(
+                        extracting = false,
+                        extractError = e.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    fun uploadUserTimeZone(userTimeZone: UserTimeZone) {
+        _userTimeZoneState.update {
+            it.copy(
+                uploading = true,
+                uploaded = false,
+                uploadError = null
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                rookTransmissionManager.uploadUserTimeZone(
+                    userTimeZone.timezone,
+                    userTimeZone.offset
+                )
+
+                _userTimeZoneState.update {
+                    it.copy(
+                        extracted = null,
+                        uploading = false,
+                        uploaded = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _userTimeZoneState.update { it.copy(uploading = false, uploadError = e.toString()) }
+            }
         }
     }
 
