@@ -140,6 +140,32 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
         }
     }
 
+    fun updateTimeZoneInformation() {
+        viewModelScope.launch {
+            Timber.i("Updating user timezone...")
+
+            val result = rookConfigurationManager.syncUserTimeZone()
+
+            result.fold(
+                {
+                    Timber.i("User timezone updated successfully")
+                },
+                {
+                    val error = when (it) {
+                        is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
+                        is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
+                        is TimeoutException -> "TimeoutException: ${it.message}"
+                        is HttpRequestException -> "HttpRequestException: ${it.message}"
+                        else -> it.localizedMessage
+                    }
+
+                    Timber.e("Error updating user timezone:")
+                    Timber.e(error)
+                }
+            )
+        }
+    }
+
     fun checkAvailability(context: Context) {
         val stringBuilder = StringBuilder()
 
