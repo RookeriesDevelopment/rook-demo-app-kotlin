@@ -2,6 +2,7 @@ package com.rookmotion.rookconnectdemo.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageViewModel
 import com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsViewModel
 import com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundViewModel
@@ -36,9 +37,14 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
         }
 
         if (modelClass.isAssignableFrom(ConnectionsPageViewModel::class.java)) {
+
+            val connectionsPageUrl =
+                if (BuildConfig.DEBUG) "https://connections.rook-connect.review/"
+                else "https://connections.rook-connect.com/"
+
             return ConnectionsPageViewModel(
                 dispatcher = serviceLocator.defaultDispatcher,
-                connectionsPageUrl = serviceLocator.connectionsPageUrl,
+                connectionsPageUrl = connectionsPageUrl,
                 dataSourceRepository = serviceLocator.dataSourceRepository,
             ) as T
         }

@@ -15,8 +15,6 @@ Demo app for ROOK modular packages:
 userID=USER_ID
 clientUUID=CLIENT_UUID
 clientPassword=CLIENT_PASSWORD
-rookUrl=ROOK_API_URL
-connectionsPageUrl=CONNECTIONS_PAGE_URL
 ```
 
 2. Sync gradle.

@@ -19,9 +19,6 @@ class ServiceLocator(context: Context) {
 
     val defaultDispatcher = Dispatchers.IO
 
-    val connectionsPageUrl get() = "https://connections.rook-connect.review/"
-    private val rookApiUrl get() = "https://api.rook-connect.review/"
-
     val rookUsersManager: RookUsersManager by lazy {
         if (BuildConfig.DEBUG) {
             RookUsersManager(
@@ -78,7 +75,7 @@ class ServiceLocator(context: Context) {
     }
 
     private val connectionsPageApiService: ConnectionsPageApiService by lazy {
-        ConnectionsPageClient(rookApiUrl).connectionsPageApiService
+        ConnectionsPageClient().connectionsPageApiService
     }
 
     val dataSourceRepository: DataSourceRepository by lazy {

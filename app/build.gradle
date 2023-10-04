@@ -24,8 +24,6 @@ android {
         buildConfigField("String", "USER_ID", "\"${localProperties.userID}\"")
         buildConfigField("String", "CLIENT_UUID", "\"${localProperties.clientUUID}\"")
         buildConfigField("String", "CLIENT_PASSWORD", "\"${localProperties.clientPassword}\"")
-        buildConfigField("String", "ROOK_URL", "\"${localProperties.rookUrl}\"")
-        buildConfigField("String", "CONNECTIONS_PAGE", "\"${localProperties.connectionsPageUrl}\"")
     }
 
     signingConfigs {

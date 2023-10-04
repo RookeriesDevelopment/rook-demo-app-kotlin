@@ -1,11 +1,20 @@
 package com.rookmotion.rookconnectdemo.features.connectionspage.data.remote
 
+import com.rookmotion.rookconnectdemo.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class ConnectionsPageClient(baseUrl: String) {
+class ConnectionsPageClient {
+    private val baseUrl = kotlin.run {
+        return@run if (BuildConfig.DEBUG) {
+            "https://api.rook-connect.review/"
+        } else {
+            "https://api.rook-connect.com/"
+        }
+    }
+
     private val requestInterceptor = Interceptor { chain ->
         val request = chain
             .request()
