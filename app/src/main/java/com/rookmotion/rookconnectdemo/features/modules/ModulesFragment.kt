@@ -11,10 +11,11 @@ import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentModulesBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
+import com.rookmotion.rookconnectdemo.extension.clearCompoundDrawablesWithIntrinsicBounds
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
 import com.rookmotion.rookconnectdemo.extension.setNavigateOnClick
-import java.time.format.DateTimeFormatter
+import com.rookmotion.rookconnectdemo.extension.setStartCompoundDrawableWithIntrinsicBounds
 
 class ModulesFragment : Fragment() {
 
@@ -42,56 +43,99 @@ class ModulesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            authViewModel.authState.collect {
+            authViewModel.transmissionAuthorization.collect {
                 when (it) {
-                    AuthState.NotAuthorized -> {
-                        // Ignored
+                    AuthorizationState.None -> {
+                        binding.auth.rookTransmission.isVisible = false
                     }
 
-                    AuthState.Loading -> {
-                        binding.progress.root.isVisible = true
-                        binding.auth.root.isVisible = false
+                    AuthorizationState.Loading -> {
+                        binding.auth.rookTransmission.setText(R.string.loading)
+                        binding.auth.rookTransmission.clearCompoundDrawablesWithIntrinsicBounds()
+                        binding.auth.rookTransmission.isVisible = true
                     }
 
-                    is AuthState.Error -> {
-                        binding.auth.authorizedUntil.text = it.message
-
-                        binding.progress.root.isVisible = false
-                        binding.auth.root.isVisible = true
-                        binding.auth.retry.isVisible = true
-                    }
-
-                    is AuthState.Authorized -> {
-                        val icon =
-                            if (it.authorizationResult.authorization.isNotExpired) R.drawable.ic_verified
-                            else R.drawable.ic_not_verified
-
-                        val date =
-                            DateTimeFormatter.ISO_ZONED_DATE_TIME.format(it.authorizationResult.authorization.authorizedUntil)
-
-                        binding.auth.authorizedUntil.setCompoundDrawablesWithIntrinsicBounds(
-                            icon, 0, 0, 0
+                    is AuthorizationState.Authorized -> {
+                        binding.auth.rookTransmission.text = "Transmission ➞ ${it.expirationDate}"
+                        binding.auth.rookTransmission.setStartCompoundDrawableWithIntrinsicBounds(
+                            R.drawable.ic_verified
                         )
+                        binding.auth.rookTransmission.isVisible = true
+                    }
 
-                        binding.auth.authorizedUntil.text =
-                            it.authorizationResult.origin.name.plus(" > ").plus(
-                                getString(R.string.authorized_until_placeholder, date)
-                            )
+                    is AuthorizationState.NotAuthorized -> {
+                        binding.auth.rookTransmission.text = it.message
+                        binding.auth.rookTransmission.setStartCompoundDrawableWithIntrinsicBounds(
+                            R.drawable.ic_not_verified
+                        )
+                        binding.auth.rookTransmission.isVisible = true
+                    }
+                }
+            }
+        }
 
-                        val features =
-                            it.authorizationResult.authorization.features.flatMap { entry ->
-                                listOf("${entry.key} ➞ ${entry.value}")
-                            }
+        repeatOnResume {
+            authViewModel.healthConnectAuthorization.collect {
+                when (it) {
+                    AuthorizationState.None -> {
+                        binding.auth.rookHealthConnect.isVisible = false
+                    }
 
-                        binding.auth.features.text = features.joinToString("\n")
+                    AuthorizationState.Loading -> {
+                        binding.auth.rookHealthConnect.setText(R.string.loading)
+                        binding.auth.rookHealthConnect.clearCompoundDrawablesWithIntrinsicBounds()
+                        binding.auth.rookHealthConnect.isVisible = true
+                    }
 
-                        binding.progress.root.isVisible = false
-                        binding.auth.root.isVisible = true
-                        binding.auth.retry.isVisible = false
+                    is AuthorizationState.Authorized -> {
+                        binding.auth.rookHealthConnect.text =
+                            "Health Connect ➞ ${it.expirationDate}"
+                        binding.auth.rookHealthConnect.setStartCompoundDrawableWithIntrinsicBounds(
+                            R.drawable.ic_verified
+                        )
+                        binding.auth.rookHealthConnect.isVisible = true
+                    }
 
-                        if (userViewModel.userState.value !is UserState.Registered) {
-                            userViewModel.registerUser(BuildConfig.USER_ID)
-                        }
+                    is AuthorizationState.NotAuthorized -> {
+                        binding.auth.rookHealthConnect.text = it.message
+                        binding.auth.rookHealthConnect.setStartCompoundDrawableWithIntrinsicBounds(
+                            R.drawable.ic_not_verified
+                        )
+                        binding.auth.rookHealthConnect.isVisible = true
+                    }
+                }
+            }
+        }
+
+        repeatOnResume {
+            authViewModel.usersAuthorization.collect {
+                when (it) {
+                    AuthorizationState.None -> {
+                        binding.auth.rookUsers.isVisible = false
+                    }
+
+                    AuthorizationState.Loading -> {
+                        binding.auth.rookUsers.setText(R.string.loading)
+                        binding.auth.rookUsers.clearCompoundDrawablesWithIntrinsicBounds()
+                        binding.auth.rookUsers.isVisible = true
+                    }
+
+                    is AuthorizationState.Authorized -> {
+                        binding.auth.rookUsers.text = "Users ➞ ${it.expirationDate}"
+                        binding.auth.rookUsers.setStartCompoundDrawableWithIntrinsicBounds(
+                            R.drawable.ic_verified
+                        )
+                        binding.auth.rookUsers.isVisible = true
+
+                        userViewModel.registerUser(BuildConfig.USER_ID)
+                    }
+
+                    is AuthorizationState.NotAuthorized -> {
+                        binding.auth.rookUsers.text = it.message
+                        binding.auth.rookUsers.setStartCompoundDrawableWithIntrinsicBounds(
+                            R.drawable.ic_not_verified
+                        )
+                        binding.auth.rookUsers.isVisible = true
                     }
                 }
             }
@@ -105,15 +149,13 @@ class ModulesFragment : Fragment() {
                     }
 
                     UserState.Loading -> {
-                        binding.progress.root.isVisible = true
-                        binding.users.root.isVisible = false
+                        binding.users.progress.isVisible = true
                     }
 
                     is UserState.Error -> {
                         binding.users.hcUser.text = it.message
 
-                        binding.progress.root.isVisible = false
-                        binding.users.root.isVisible = true
+                        binding.users.progress.isVisible = false
                         binding.users.retry.isVisible = true
                     }
 
@@ -123,8 +165,7 @@ class ModulesFragment : Fragment() {
                             BuildConfig.USER_ID
                         )
 
-                        binding.progress.root.isVisible = false
-                        binding.users.root.isVisible = true
+                        binding.users.progress.isVisible = false
                         binding.users.retry.isVisible = false
                     }
                 }
@@ -132,7 +173,9 @@ class ModulesFragment : Fragment() {
         }
 
         binding.auth.retry.setOnClickListener {
-            authViewModel.getAuthorization(BuildConfig.CLIENT_UUID)
+            authViewModel.authorizeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
+            authViewModel.authorizeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
+            authViewModel.authorizeUsers(requireContext(), BuildConfig.CLIENT_UUID)
         }
 
         binding.users.retry.setOnClickListener {
@@ -142,5 +185,9 @@ class ModulesFragment : Fragment() {
         binding.healthConnectSdk.setNavigateOnClick(
             ModulesFragmentDirections.actionModulesFragmentToHCAvailabilityFragment()
         )
+
+        authViewModel.authorizeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
+        authViewModel.authorizeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
+        authViewModel.authorizeUsers(requireContext(), BuildConfig.CLIENT_UUID)
     }
 }

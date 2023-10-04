@@ -70,8 +70,7 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:5.0.1"
 
-    implementation platform("com.rookmotion.android:rook-bom:0.0.9")
-    implementation 'com.rookmotion.android:rook-auth'
+    implementation platform("com.rookmotion.android:rook-bom:0.0.10")
     implementation 'com.rookmotion.android:rook-users'
     implementation 'com.rookmotion.android:rook-health-connect'
     implementation 'com.rookmotion.android:rook-transmission'

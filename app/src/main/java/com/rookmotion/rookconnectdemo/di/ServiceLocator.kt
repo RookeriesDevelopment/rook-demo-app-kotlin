@@ -1,11 +1,13 @@
 package com.rookmotion.rookconnectdemo.di
 
 import android.content.Context
-import com.rookmotion.rook.auth.AuthorizationProvider
 import com.rookmotion.rook.health_connect.RookHealthConnectManager
+import com.rookmotion.rook.health_connect.domain.environment.RookHealthConnectEnvironment
 import com.rookmotion.rook.sdk.RookConfigurationManager
 import com.rookmotion.rook.transmission.RookTransmissionManager
+import com.rookmotion.rook.transmission.domain.environment.RookTransmissionEnvironment
 import com.rookmotion.rook.users.RookUsersManager
+import com.rookmotion.rook.users.domain.environment.RookUsersEnvironment
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.features.connectionspage.data.remote.ConnectionsPageApiService
 import com.rookmotion.rookconnectdemo.features.connectionspage.data.remote.ConnectionsPageClient
@@ -17,32 +19,24 @@ class ServiceLocator(context: Context) {
 
     val defaultDispatcher = Dispatchers.IO
 
-    val connectionsPageUrl get() = "https://${BuildConfig.CONNECTIONS_PAGE}/"
-    private val rookApiUrl get() = "https://${BuildConfig.ROOK_URL}/"
-
-    val authorizationProvider: AuthorizationProvider by lazy {
-        if (BuildConfig.DEBUG) {
-            AuthorizationProvider(context, "ADVANCED")
-        } else {
-            AuthorizationProvider(context)
-        }
-    }
+    val connectionsPageUrl get() = "https://connections.rook-connect.review/"
+    private val rookApiUrl get() = "https://api.rook-connect.review/"
 
     val rookUsersManager: RookUsersManager by lazy {
         if (BuildConfig.DEBUG) {
             RookUsersManager(
-                context,
-                BuildConfig.ROOK_URL,
-                BuildConfig.CLIENT_UUID,
-                BuildConfig.CLIENT_PASSWORD,
-                "ADVANCED"
+                context = context,
+                clientUUID = BuildConfig.CLIENT_UUID,
+                clientPassword = BuildConfig.CLIENT_PASSWORD,
+                environment = RookUsersEnvironment.SANDBOX,
+                logLevel = "ADVANCED"
             )
         } else {
             RookUsersManager(
-                context,
-                BuildConfig.ROOK_URL,
-                BuildConfig.CLIENT_UUID,
-                BuildConfig.CLIENT_PASSWORD,
+                context = context,
+                clientUUID = BuildConfig.CLIENT_UUID,
+                clientPassword = BuildConfig.CLIENT_PASSWORD,
+                environment = RookUsersEnvironment.PRODUCTION,
             )
         }
     }
@@ -50,29 +44,36 @@ class ServiceLocator(context: Context) {
     val rookTransmissionManager: RookTransmissionManager by lazy {
         if (BuildConfig.DEBUG) {
             RookTransmissionManager(
-                context,
-                BuildConfig.ROOK_URL,
-                BuildConfig.USER_ID,
-                BuildConfig.CLIENT_UUID,
-                BuildConfig.CLIENT_PASSWORD,
-                "ADVANCED",
+                context = context,
+                userID = BuildConfig.USER_ID,
+                clientUUID = BuildConfig.CLIENT_UUID,
+                clientPassword = BuildConfig.CLIENT_PASSWORD,
+                environment = RookTransmissionEnvironment.SANDBOX,
+                logLevel = "ADVANCED",
             )
         } else {
             RookTransmissionManager(
-                context,
-                BuildConfig.ROOK_URL,
-                BuildConfig.USER_ID,
-                BuildConfig.CLIENT_UUID,
-                BuildConfig.CLIENT_PASSWORD
+                context = context,
+                userID = BuildConfig.USER_ID,
+                clientUUID = BuildConfig.CLIENT_UUID,
+                clientPassword = BuildConfig.CLIENT_PASSWORD,
+                environment = RookTransmissionEnvironment.PRODUCTION,
             )
         }
     }
 
     val rookHealthConnectManager: RookHealthConnectManager by lazy {
         if (BuildConfig.DEBUG) {
-            RookHealthConnectManager(context, "ADVANCED")
+            RookHealthConnectManager(
+                context = context,
+                environment = RookHealthConnectEnvironment.SANDBOX,
+                logLevel = "ADVANCED",
+            )
         } else {
-            RookHealthConnectManager(context)
+            RookHealthConnectManager(
+                context = context,
+                environment = RookHealthConnectEnvironment.PRODUCTION,
+            )
         }
     }
 

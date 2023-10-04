@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,18 +21,25 @@
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <TextView
-            android:id="@+id/authorized_until"
+            android:id="@+id/rook_transmission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            app:drawableStartCompat="@drawable/ic_verified"
-            tools:text="@string/authorized_until_placeholder" />
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
         <TextView
-            android:id="@+id/features"
+            android:id="@+id/rook_health_connect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+        <TextView
+            android:id="@+id/rook_users"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -43,10 +49,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/retry"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="@string/retry"
             android:visibility="gone" />
     </LinearLayout>

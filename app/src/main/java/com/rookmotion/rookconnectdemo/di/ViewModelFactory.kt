@@ -15,7 +15,7 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            return AuthViewModel(serviceLocator.authorizationProvider) as T
+            return AuthViewModel() as T
         }
 
         if (modelClass.isAssignableFrom(UserViewModel::class.java)) {

@@ -13,13 +13,6 @@
         android:padding="10dp">
 
         <include
-            android:id="@+id/progress"
-            layout="@layout/ui_progress_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
-
-        <include
             android:id="@+id/auth"
             layout="@layout/ui_auth"
             android:layout_width="match_parent"
