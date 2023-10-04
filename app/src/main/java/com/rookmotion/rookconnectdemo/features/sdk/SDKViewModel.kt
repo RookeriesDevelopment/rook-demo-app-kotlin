@@ -60,8 +60,10 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
     val pendingEvents get() = _pendingEvents.asStateFlow()
 
     fun setConfiguration() {
+        val apiUrl = if (BuildConfig.DEBUG) "api.rook-connect.review" else "api.rook-connect.com"
+
         val rookConfiguration = RookConfiguration(
-            BuildConfig.ROOK_URL,
+            apiUrl,
             BuildConfig.CLIENT_UUID,
             BuildConfig.CLIENT_PASSWORD,
         )
