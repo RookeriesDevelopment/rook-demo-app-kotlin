@@ -45,7 +45,7 @@ class AuthViewModel : ViewModel() {
                     _transmissionAuthorization.emit(AuthorizationState.Authorized(it))
                 },
                 {
-                    val error = "AuthorizationError: ${it.localizedMessage}"
+                    val error = "RookTransmissionAuthorization: ${it.localizedMessage}"
 
                     _transmissionAuthorization.emit(AuthorizationState.NotAuthorized(error))
                 }
@@ -71,7 +71,7 @@ class AuthViewModel : ViewModel() {
                     _healthConnectAuthorization.emit(AuthorizationState.Authorized(it))
                 },
                 {
-                    val error = "AuthorizationError: ${it.localizedMessage}"
+                    val error = "RookHealthConnectAuthorization: ${it.localizedMessage}"
 
                     _healthConnectAuthorization.emit(AuthorizationState.NotAuthorized(error))
                 }
@@ -97,7 +97,7 @@ class AuthViewModel : ViewModel() {
                     _usersAuthorization.emit(AuthorizationState.Authorized(it))
                 },
                 {
-                    val error = "AuthorizationError: ${it.localizedMessage}"
+                    val error = "RookUsersAuthorization: ${it.localizedMessage}"
 
                     _usersAuthorization.emit(AuthorizationState.NotAuthorized(error))
                 }
