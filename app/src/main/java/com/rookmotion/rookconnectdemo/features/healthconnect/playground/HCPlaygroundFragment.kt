@@ -76,11 +76,9 @@ class HCPlaygroundFragment : Fragment() {
                         binding.heartRateBodyEventDate.isVisible = false
                         binding.heartRatePhysicalEventDate.isVisible = false
                         binding.hydrationEventDate.isVisible = false
-                        binding.moodEventDate.isVisible = false
                         binding.nutritionEventDate.isVisible = false
                         binding.oxygenationBodyEventDate.isVisible = false
                         binding.oxygenationPhysicalEventDate.isVisible = false
-                        binding.stressEventDate.isVisible = false
                         binding.temperatureEventDate.isVisible = false
                     }
 
@@ -153,12 +151,6 @@ class HCPlaygroundFragment : Fragment() {
                             }
                         }
 
-                        binding.moodEventDate.setOnClickListener { _ ->
-                            showCalendar(it.moodEventDate) { date ->
-                                hcPlaygroundViewModel.getMoodEvent(date.toUTCSameInstant())
-                            }
-                        }
-
                         binding.nutritionEventDate.setOnClickListener { _ ->
                             showCalendar(it.nutritionEventDate) { date ->
                                 hcPlaygroundViewModel.getNutritionEvent(date.toUTCSameInstant())
@@ -174,12 +166,6 @@ class HCPlaygroundFragment : Fragment() {
                         binding.oxygenationPhysicalEventDate.setOnClickListener { _ ->
                             showCalendar(it.oxygenationPhysicalEventDate) { date ->
                                 hcPlaygroundViewModel.getOxygenationPhysicalEvent(date.toUTCSameInstant())
-                            }
-                        }
-
-                        binding.stressEventDate.setOnClickListener { _ ->
-                            showCalendar(it.stressEventDate) { date ->
-                                hcPlaygroundViewModel.getStressEvent(date.toUTCSameInstant())
                             }
                         }
 
@@ -199,11 +185,9 @@ class HCPlaygroundFragment : Fragment() {
                         binding.heartRateBodyEventDate.isVisible = true
                         binding.heartRatePhysicalEventDate.isVisible = true
                         binding.hydrationEventDate.isVisible = true
-                        binding.moodEventDate.isVisible = true
                         binding.nutritionEventDate.isVisible = true
                         binding.oxygenationBodyEventDate.isVisible = true
                         binding.oxygenationPhysicalEventDate.isVisible = true
-                        binding.stressEventDate.isVisible = true
                         binding.temperatureEventDate.isVisible = true
                     }
                 }
@@ -547,37 +531,6 @@ class HCPlaygroundFragment : Fragment() {
         }
 
         repeatOnResume {
-            hcPlaygroundViewModel.moodEventState.collect {
-                binding.moodEventDate.isEnabled = !it.extracting
-
-                if (it.extracted != null) {
-                    binding.moodEvent.text = it.extracted.joinToString("\n\n")
-
-                    binding.enqueueMoodEvent.setOnClickListener { _ ->
-                        hcPlaygroundViewModel.enqueueMoodEvent(it.extracted)
-                    }
-                } else {
-                    binding.moodEvent.text = ""
-                }
-
-                if (it.extractError != null) {
-                    binding.root.snackShort(it.extractError)
-                }
-
-                binding.enqueueMoodEvent.isEnabled =
-                    (!it.enqueueing && it.extracted != null)
-
-                if (it.enqueued) {
-                    binding.root.snackShort(getString(R.string.health_data_enqueued))
-                }
-
-                if (it.enqueueError != null) {
-                    binding.root.snackShort(it.enqueueError)
-                }
-            }
-        }
-
-        repeatOnResume {
             hcPlaygroundViewModel.nutritionEventState.collect {
                 binding.nutritionEventDate.isEnabled = !it.extracting
 
@@ -658,37 +611,6 @@ class HCPlaygroundFragment : Fragment() {
                 }
 
                 binding.enqueueOxygenationPhysicalEvent.isEnabled =
-                    (!it.enqueueing && it.extracted != null)
-
-                if (it.enqueued) {
-                    binding.root.snackShort(getString(R.string.health_data_enqueued))
-                }
-
-                if (it.enqueueError != null) {
-                    binding.root.snackShort(it.enqueueError)
-                }
-            }
-        }
-
-        repeatOnResume {
-            hcPlaygroundViewModel.stressEventState.collect {
-                binding.stressEventDate.isEnabled = !it.extracting
-
-                if (it.extracted != null) {
-                    binding.stressEvent.text = it.extracted.joinToString("\n\n")
-
-                    binding.enqueueStressEvent.setOnClickListener { _ ->
-                        hcPlaygroundViewModel.enqueueStressEvent(it.extracted)
-                    }
-                } else {
-                    binding.stressEvent.text = ""
-                }
-
-                if (it.extractError != null) {
-                    binding.root.snackShort(it.extractError)
-                }
-
-                binding.enqueueStressEvent.isEnabled =
                     (!it.enqueueing && it.extracted != null)
 
                 if (it.enqueued) {

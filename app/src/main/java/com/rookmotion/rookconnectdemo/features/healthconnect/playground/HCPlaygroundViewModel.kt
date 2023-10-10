@@ -10,11 +10,9 @@ import com.rookmotion.rook.health_connect.domain.model.event.HCBloodPressureEven
 import com.rookmotion.rook.health_connect.domain.model.event.HCBodyMetricsEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCHeartRateEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCHydrationEvent
-import com.rookmotion.rook.health_connect.domain.model.event.HCMoodEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCNutritionEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCOxygenationEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCPhysicalEvent
-import com.rookmotion.rook.health_connect.domain.model.event.HCStressEvent
 import com.rookmotion.rook.health_connect.domain.model.event.HCTemperatureEvent
 import com.rookmotion.rook.health_connect.domain.model.summary.HCBodySummary
 import com.rookmotion.rook.health_connect.domain.model.summary.HCPhysicalSummary
@@ -93,11 +91,6 @@ class HCPlaygroundViewModel(
     )
     val hydrationEventState get() = _hydrationEventState.asStateFlow()
 
-    private val _moodEventState = MutableStateFlow<HealthDataState<List<HCMoodEvent>>>(
-        HealthDataState()
-    )
-    val moodEventState get() = _moodEventState.asStateFlow()
-
     private val _nutritionEventState = MutableStateFlow<HealthDataState<List<HCNutritionEvent>>>(
         HealthDataState()
     )
@@ -114,11 +107,6 @@ class HCPlaygroundViewModel(
             HealthDataState()
         )
     val oxygenationPhysicalEventState get() = _oxygenationPhysicalEventState.asStateFlow()
-
-    private val _stressEventState = MutableStateFlow<HealthDataState<List<HCStressEvent>>>(
-        HealthDataState()
-    )
-    val stressEventState get() = _stressEventState.asStateFlow()
 
     private val _temperatureEventState =
         MutableStateFlow<HealthDataState<List<HCTemperatureEvent>>>(HealthDataState())
@@ -839,66 +827,6 @@ class HCPlaygroundViewModel(
         }
     }
 
-    fun getMoodEvent(date: ZonedDateTime) {
-        _moodEventState.update {
-            it.copy(
-                extracting = true,
-                extracted = null,
-                extractError = null,
-                enqueueing = false,
-                enqueued = false,
-                enqueueError = null
-            )
-        }
-
-        viewModelScope.launch {
-            try {
-                val extracted = rookHealthConnectManager.getBodyMoodEvents(date)
-
-                _moodEventState.update {
-                    it.copy(extracting = false, extracted = extracted)
-                }
-            } catch (e: Exception) {
-                _moodEventState.update {
-                    it.copy(extracting = false, extractError = e.toString())
-                }
-            }
-        }
-    }
-
-    fun enqueueMoodEvent(moodEvent: List<HCMoodEvent>) {
-        _moodEventState.update {
-            it.copy(
-                enqueueing = true,
-                enqueued = false,
-                enqueueError = null
-            )
-        }
-
-        viewModelScope.launch {
-            try {
-                moodEvent.forEach {
-                    rookTransmissionManager.enqueueMoodEvent(it.toItem())
-                }
-
-                _moodEventState.update {
-                    it.copy(
-                        extracted = null,
-                        enqueueing = false,
-                        enqueued = true,
-                    )
-                }
-            } catch (e: Exception) {
-                _moodEventState.update {
-                    it.copy(
-                        enqueueing = false,
-                        enqueueError = e.toString()
-                    )
-                }
-            }
-        }
-    }
-
     fun getNutritionEvent(date: ZonedDateTime) {
         _nutritionEventState.update {
             it.copy(
@@ -1070,66 +998,6 @@ class HCPlaygroundViewModel(
                 }
             } catch (e: Exception) {
                 _oxygenationPhysicalEventState.update {
-                    it.copy(
-                        enqueueing = false,
-                        enqueueError = e.toString()
-                    )
-                }
-            }
-        }
-    }
-
-    fun getStressEvent(date: ZonedDateTime) {
-        _stressEventState.update {
-            it.copy(
-                extracting = true,
-                extracted = null,
-                extractError = null,
-                enqueueing = false,
-                enqueued = false,
-                enqueueError = null
-            )
-        }
-
-        viewModelScope.launch {
-            try {
-                val extracted = rookHealthConnectManager.getPhysicalStressEvents(date)
-
-                _stressEventState.update {
-                    it.copy(extracting = false, extracted = extracted)
-                }
-            } catch (e: Exception) {
-                _stressEventState.update {
-                    it.copy(extracting = false, extractError = e.toString())
-                }
-            }
-        }
-    }
-
-    fun enqueueStressEvent(stressEvent: List<HCStressEvent>) {
-        _stressEventState.update {
-            it.copy(
-                enqueueing = true,
-                enqueued = false,
-                enqueueError = null
-            )
-        }
-
-        viewModelScope.launch {
-            try {
-                stressEvent.forEach {
-                    rookTransmissionManager.enqueueStressEvent(it.toItem())
-                }
-
-                _stressEventState.update {
-                    it.copy(
-                        extracted = null,
-                        enqueueing = false,
-                        enqueued = true,
-                    )
-                }
-            } catch (e: Exception) {
-                _stressEventState.update {
                     it.copy(
                         enqueueing = false,
                         enqueueError = e.toString()

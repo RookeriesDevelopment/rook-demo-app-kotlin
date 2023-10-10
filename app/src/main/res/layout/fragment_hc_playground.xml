@@ -345,36 +345,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
-            android:text="@string/mood_event"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/mood_event_date"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/select_a_date" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/enqueue_mood_event"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:text="@string/enqueue_this" />
-
-        <TextView
-            android:id="@+id/mood_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="20dp"
             android:text="@string/nutrition_event"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
@@ -456,36 +426,6 @@
 
         <TextView
             android:id="@+id/oxygenation_physical_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="20dp"
-            android:text="@string/stress_event"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/stress_event_date"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/select_a_date" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/enqueue_stress_event"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:text="@string/enqueue_this" />
-
-        <TextView
-            android:id="@+id/stress_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
