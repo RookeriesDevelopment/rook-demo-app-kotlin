@@ -3,103 +3,137 @@ package com.rookmotion.rookconnectdemo.features.modules
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rookmotion.rook.health_connect.RookHealthConnectAuthorization
-import com.rookmotion.rook.transmission.RookTransmissionAuthorization
-import com.rookmotion.rook.users.RookUsersAuthorization
+import com.rookmotion.rook.health_connect.RookHealthConnectConfiguration
+import com.rookmotion.rook.health_connect.domain.environment.RookHealthConnectEnvironment
+import com.rookmotion.rook.transmission.RookTransmissionConfiguration
+import com.rookmotion.rook.transmission.domain.environment.RookTransmissionEnvironment
+import com.rookmotion.rook.users.RookUsersConfiguration
+import com.rookmotion.rook.users.domain.environment.RookUsersEnvironment
+import com.rookmotion.rookconnectdemo.BuildConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
-    private val _transmissionAuthorization = MutableStateFlow<AuthorizationState>(
-        AuthorizationState.None
+    private val _transmissionInitialization = MutableStateFlow<InitializationState>(
+        InitializationState.None
     )
-    val transmissionAuthorization get() = _transmissionAuthorization.asStateFlow()
+    val transmissionInitialization get() = _transmissionInitialization.asStateFlow()
 
-    private val _healthConnectAuthorization = MutableStateFlow<AuthorizationState>(
-        AuthorizationState.None
+    private val _healthConnectInitialization = MutableStateFlow<InitializationState>(
+        InitializationState.None
     )
-    val healthConnectAuthorization get() = _healthConnectAuthorization.asStateFlow()
+    val healthConnectInitialization get() = _healthConnectInitialization.asStateFlow()
 
-    private val _usersAuthorization = MutableStateFlow<AuthorizationState>(
-        AuthorizationState.None
+    private val _usersInitialization = MutableStateFlow<InitializationState>(
+        InitializationState.None
     )
-    val usersAuthorization get() = _usersAuthorization.asStateFlow()
+    val usersInitialization get() = _usersInitialization.asStateFlow()
 
-    fun authorizeTransmission(context: Context, clientUUID: String) {
+    fun initializeTransmission(context: Context, clientUUID: String) {
         if (
-            transmissionAuthorization.value == AuthorizationState.Loading ||
-            transmissionAuthorization.value is AuthorizationState.Authorized
+            transmissionInitialization.value == InitializationState.Loading ||
+            transmissionInitialization.value is InitializationState.Success
         ) {
             return
         }
 
         viewModelScope.launch {
-            _transmissionAuthorization.emit(AuthorizationState.Loading)
+            _transmissionInitialization.emit(InitializationState.Loading)
 
-            val result = RookTransmissionAuthorization.authorize(context, clientUUID)
+            val environment = if (BuildConfig.DEBUG) RookTransmissionEnvironment.SANDBOX
+            else RookTransmissionEnvironment.PRODUCTION
+
+            val enableLogs = BuildConfig.DEBUG
+
+            val result = RookTransmissionConfiguration.initRookTransmission(
+                context = context,
+                clientUUID = clientUUID,
+                environment = environment,
+                enableLogs = enableLogs,
+            )
 
             result.fold(
                 {
-                    _transmissionAuthorization.emit(AuthorizationState.Authorized(it))
+                    _transmissionInitialization.emit(InitializationState.Success(it))
                 },
                 {
-                    val error = "RookTransmissionAuthorization: ${it.localizedMessage}"
+                    val error = "RookTransmissionConfiguration: ${it.localizedMessage}"
 
-                    _transmissionAuthorization.emit(AuthorizationState.NotAuthorized(error))
+                    _transmissionInitialization.emit(InitializationState.Error(error))
                 }
             )
         }
     }
 
-    fun authorizeHealthConnect(context: Context, clientUUID: String) {
+    fun initializeHealthConnect(context: Context, clientUUID: String) {
         if (
-            healthConnectAuthorization.value == AuthorizationState.Loading ||
-            healthConnectAuthorization.value is AuthorizationState.Authorized
+            healthConnectInitialization.value == InitializationState.Loading ||
+            healthConnectInitialization.value is InitializationState.Success
         ) {
             return
         }
 
         viewModelScope.launch {
-            _healthConnectAuthorization.emit(AuthorizationState.Loading)
+            _healthConnectInitialization.emit(InitializationState.Loading)
 
-            val result = RookHealthConnectAuthorization.authorize(context, clientUUID)
+            val environment = if (BuildConfig.DEBUG) RookHealthConnectEnvironment.SANDBOX
+            else RookHealthConnectEnvironment.PRODUCTION
+
+            val enableLogs = BuildConfig.DEBUG
+
+            val result = RookHealthConnectConfiguration.initRookHealthConnect(
+                context = context,
+                clientUUID = clientUUID,
+                environment = environment,
+                enableLogs = enableLogs,
+            )
 
             result.fold(
                 {
-                    _healthConnectAuthorization.emit(AuthorizationState.Authorized(it))
+                    _healthConnectInitialization.emit(InitializationState.Success(it))
                 },
                 {
-                    val error = "RookHealthConnectAuthorization: ${it.localizedMessage}"
+                    val error = "RookHealthConnectConfiguration: ${it.localizedMessage}"
 
-                    _healthConnectAuthorization.emit(AuthorizationState.NotAuthorized(error))
+                    _healthConnectInitialization.emit(InitializationState.Error(error))
                 }
             )
         }
     }
 
-    fun authorizeUsers(context: Context, clientUUID: String) {
+    fun initializeUsers(context: Context, clientUUID: String) {
         if (
-            usersAuthorization.value == AuthorizationState.Loading ||
-            usersAuthorization.value is AuthorizationState.Authorized
+            usersInitialization.value == InitializationState.Loading ||
+            usersInitialization.value is InitializationState.Success
         ) {
             return
         }
 
         viewModelScope.launch {
-            _usersAuthorization.emit(AuthorizationState.Loading)
+            _usersInitialization.emit(InitializationState.Loading)
 
-            val result = RookUsersAuthorization.authorize(context, clientUUID)
+            val environment = if (BuildConfig.DEBUG) RookUsersEnvironment.SANDBOX
+            else RookUsersEnvironment.PRODUCTION
+
+            val enableLogs = BuildConfig.DEBUG
+
+            val result = RookUsersConfiguration.initRookUsers(
+                context = context,
+                clientUUID = clientUUID,
+                environment = environment,
+                enableLogs = enableLogs,
+            )
 
             result.fold(
                 {
-                    _usersAuthorization.emit(AuthorizationState.Authorized(it))
+                    _usersInitialization.emit(InitializationState.Success(it))
                 },
                 {
-                    val error = "RookUsersAuthorization: ${it.localizedMessage}"
+                    val error = "RookUsersConfiguration: ${it.localizedMessage}"
 
-                    _usersAuthorization.emit(AuthorizationState.NotAuthorized(error))
+                    _usersInitialization.emit(InitializationState.Error(error))
                 }
             )
         }

@@ -43,19 +43,19 @@ class ModulesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            authViewModel.transmissionAuthorization.collect {
+            authViewModel.transmissionInitialization.collect {
                 when (it) {
-                    AuthorizationState.None -> {
+                    InitializationState.None -> {
                         binding.auth.rookTransmission.isVisible = false
                     }
 
-                    AuthorizationState.Loading -> {
+                    InitializationState.Loading -> {
                         binding.auth.rookTransmission.setText(R.string.loading)
                         binding.auth.rookTransmission.clearCompoundDrawablesWithIntrinsicBounds()
                         binding.auth.rookTransmission.isVisible = true
                     }
 
-                    is AuthorizationState.Authorized -> {
+                    is InitializationState.Success -> {
                         binding.auth.rookTransmission.text = "Transmission ➞ ${it.expirationDate}"
                         binding.auth.rookTransmission.setStartCompoundDrawableWithIntrinsicBounds(
                             R.drawable.ic_verified
@@ -63,7 +63,7 @@ class ModulesFragment : Fragment() {
                         binding.auth.rookTransmission.isVisible = true
                     }
 
-                    is AuthorizationState.NotAuthorized -> {
+                    is InitializationState.Error -> {
                         binding.auth.rookTransmission.text = it.message
                         binding.auth.rookTransmission.setStartCompoundDrawableWithIntrinsicBounds(
                             R.drawable.ic_not_verified
@@ -75,19 +75,19 @@ class ModulesFragment : Fragment() {
         }
 
         repeatOnResume {
-            authViewModel.healthConnectAuthorization.collect {
+            authViewModel.healthConnectInitialization.collect {
                 when (it) {
-                    AuthorizationState.None -> {
+                    InitializationState.None -> {
                         binding.auth.rookHealthConnect.isVisible = false
                     }
 
-                    AuthorizationState.Loading -> {
+                    InitializationState.Loading -> {
                         binding.auth.rookHealthConnect.setText(R.string.loading)
                         binding.auth.rookHealthConnect.clearCompoundDrawablesWithIntrinsicBounds()
                         binding.auth.rookHealthConnect.isVisible = true
                     }
 
-                    is AuthorizationState.Authorized -> {
+                    is InitializationState.Success -> {
                         binding.auth.rookHealthConnect.text =
                             "Health Connect ➞ ${it.expirationDate}"
                         binding.auth.rookHealthConnect.setStartCompoundDrawableWithIntrinsicBounds(
@@ -96,7 +96,7 @@ class ModulesFragment : Fragment() {
                         binding.auth.rookHealthConnect.isVisible = true
                     }
 
-                    is AuthorizationState.NotAuthorized -> {
+                    is InitializationState.Error -> {
                         binding.auth.rookHealthConnect.text = it.message
                         binding.auth.rookHealthConnect.setStartCompoundDrawableWithIntrinsicBounds(
                             R.drawable.ic_not_verified
@@ -108,19 +108,19 @@ class ModulesFragment : Fragment() {
         }
 
         repeatOnResume {
-            authViewModel.usersAuthorization.collect {
+            authViewModel.usersInitialization.collect {
                 when (it) {
-                    AuthorizationState.None -> {
+                    InitializationState.None -> {
                         binding.auth.rookUsers.isVisible = false
                     }
 
-                    AuthorizationState.Loading -> {
+                    InitializationState.Loading -> {
                         binding.auth.rookUsers.setText(R.string.loading)
                         binding.auth.rookUsers.clearCompoundDrawablesWithIntrinsicBounds()
                         binding.auth.rookUsers.isVisible = true
                     }
 
-                    is AuthorizationState.Authorized -> {
+                    is InitializationState.Success -> {
                         binding.auth.rookUsers.text = "Users ➞ ${it.expirationDate}"
                         binding.auth.rookUsers.setStartCompoundDrawableWithIntrinsicBounds(
                             R.drawable.ic_verified
@@ -130,7 +130,7 @@ class ModulesFragment : Fragment() {
                         userViewModel.registerUser(BuildConfig.USER_ID)
                     }
 
-                    is AuthorizationState.NotAuthorized -> {
+                    is InitializationState.Error -> {
                         binding.auth.rookUsers.text = it.message
                         binding.auth.rookUsers.setStartCompoundDrawableWithIntrinsicBounds(
                             R.drawable.ic_not_verified
@@ -173,9 +173,9 @@ class ModulesFragment : Fragment() {
         }
 
         binding.auth.retry.setOnClickListener {
-            authViewModel.authorizeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
-            authViewModel.authorizeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
-            authViewModel.authorizeUsers(requireContext(), BuildConfig.CLIENT_UUID)
+            authViewModel.initializeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
+            authViewModel.initializeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
+            authViewModel.initializeUsers(requireContext(), BuildConfig.CLIENT_UUID)
         }
 
         binding.users.retry.setOnClickListener {
@@ -186,8 +186,8 @@ class ModulesFragment : Fragment() {
             ModulesFragmentDirections.actionModulesFragmentToHCAvailabilityFragment()
         )
 
-        authViewModel.authorizeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
-        authViewModel.authorizeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
-        authViewModel.authorizeUsers(requireContext(), BuildConfig.CLIENT_UUID)
+        authViewModel.initializeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
+        authViewModel.initializeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
+        authViewModel.initializeUsers(requireContext(), BuildConfig.CLIENT_UUID)
     }
 }
