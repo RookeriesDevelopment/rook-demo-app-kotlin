@@ -9,13 +9,12 @@ import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rook.sdk.domain.enums.AvailabilityStatus
-import com.rookmotion.rook.sdk.domain.enums.LocalLoggingLevel
+import com.rookmotion.rook.sdk.domain.environment.RookEnvironment
 import com.rookmotion.rook.sdk.domain.exception.DeviceNotSupportedException
 import com.rookmotion.rook.sdk.domain.exception.HealthConnectNotInstalledException
 import com.rookmotion.rook.sdk.domain.exception.HttpRequestException
 import com.rookmotion.rook.sdk.domain.exception.MissingConfigurationException
 import com.rookmotion.rook.sdk.domain.exception.MissingPermissionsException
-import com.rookmotion.rook.sdk.domain.exception.NotAuthorizedException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import com.rookmotion.rook.sdk.domain.exception.TimeoutException
 import com.rookmotion.rook.sdk.domain.exception.UserNotInitializedException
@@ -60,12 +59,10 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
     val pendingEvents get() = _pendingEvents.asStateFlow()
 
     fun setConfiguration() {
-        val apiUrl = if (BuildConfig.DEBUG) "api.rook-connect.review" else "api.rook-connect.com"
-
         val rookConfiguration = RookConfiguration(
-            apiUrl,
             BuildConfig.CLIENT_UUID,
             BuildConfig.CLIENT_PASSWORD,
+            RookEnvironment.SANDBOX,
         )
 
         val stringBuilder = StringBuilder()
@@ -75,7 +72,7 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
             stringBuilder.appendConsoleLine("$rookConfiguration")
             _configuration.emit(stringBuilder.toString())
 
-            rookConfigurationManager.setLocalLoggingLevel(LocalLoggingLevel.ADVANCED)
+            rookConfigurationManager.enableLocalLogs()
             rookConfigurationManager.setConfiguration(rookConfiguration)
 
             stringBuilder.appendConsoleLine("Configuration set successfully")
@@ -100,7 +97,6 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
                 {
                     val error = when (it) {
                         is MissingConfigurationException -> "MissingConfigurationException: ${it.message}"
-                        is NotAuthorizedException -> "NotAuthorizedException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
                         else -> it.localizedMessage
                     }
