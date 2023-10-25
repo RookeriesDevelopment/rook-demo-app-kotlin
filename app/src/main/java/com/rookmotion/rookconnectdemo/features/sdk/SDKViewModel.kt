@@ -1,7 +1,7 @@
 package com.rookmotion.rookconnectdemo.features.sdk
 
-import android.app.Activity
 import android.content.Context
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.RookConfigurationManager
@@ -9,6 +9,7 @@ import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rook.sdk.domain.enums.AvailabilityStatus
+import com.rookmotion.rook.sdk.domain.enums.HealthPermission
 import com.rookmotion.rook.sdk.domain.environment.RookEnvironment
 import com.rookmotion.rook.sdk.domain.exception.DeviceNotSupportedException
 import com.rookmotion.rook.sdk.domain.exception.HealthConnectNotInstalledException
@@ -171,7 +172,7 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
             stringBuilder.appendConsoleLine("Checking availability...")
             _availability.emit(stringBuilder.toString())
 
-            val string = when (rookHealthPermissionsManager.checkAvailability(context)) {
+            val string = when (RookHealthPermissionsManager.checkAvailability(context)) {
                 AvailabilityStatus.INSTALLED -> "Health Connect is installed! You can skip the next step"
                 AvailabilityStatus.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
                 else -> "This device is not compatible with health connect. Please close the app"
@@ -190,7 +191,7 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
             stringBuilder.appendConsoleLine("Checking all permissions (Sleep, Physical and Body)...")
             _permissions.emit(stringBuilder.toString())
 
-            val result = rookHealthPermissionsManager.hasAllPermissions()
+            val result = rookHealthPermissionsManager.checkPermissions(HealthPermission.ALL)
 
             result.fold(
                 {
@@ -221,30 +222,22 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
         }
     }
 
-    fun requestPermissions(activity: Activity) {
-        viewModelScope.launch {
-            Timber.i("Requesting all permissions...")
+    fun registerPermissionsRequestLauncher(fragment: Fragment) {
+        Timber.i("Registering all permissions request launcher...")
+        RookHealthPermissionsManager.registerPermissionsRequestLauncher(fragment)
+        Timber.i("All permissions request launcher registered")
+    }
 
-            val result = rookHealthPermissionsManager.requestAllPermissions(activity)
+    fun unregisterPermissionsRequestLauncher() {
+        Timber.i("Unregistering all permissions request launcher...")
+        RookHealthPermissionsManager.unregisterPermissionsRequestLauncher()
+        Timber.i("All permissions request launcher unregistered")
+    }
 
-            result.fold(
-                {
-                    Timber.i("All permissions request sent")
-                },
-                {
-                    val error = when (it) {
-                        is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                        is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                        is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                        is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                        else -> it.localizedMessage
-                    }
-
-                    Timber.e("Error requesting all permissions:")
-                    Timber.e(error)
-                }
-            )
-        }
+    fun launchPermissionsRequest() {
+        Timber.i("Launching all permissions request...")
+        RookHealthPermissionsManager.launchPermissionsRequest(HealthPermission.ALL)
+        Timber.i("All permissions request launch")
     }
 
     fun openHealthConnect() {

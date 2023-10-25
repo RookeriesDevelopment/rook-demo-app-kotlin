@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.rookmotion.rook.health_connect.framework.health.permissions.HCPermission
+import com.rookmotion.rook.health_connect.framework.health.permissions.HCPermissionsRequestLauncher
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentHcPermissionsBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
@@ -26,9 +28,12 @@ class HCPermissionsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHcPermissionsBinding.inflate(inflater, container, false)
+
+        HCPermissionsRequestLauncher.register(this)
+
         return binding.root
     }
 
@@ -59,7 +64,7 @@ class HCPermissionsFragment : Fragment() {
                             binding.action.text = getString(R.string.request_permissions)
                             binding.action.icon = null
                             binding.action.setOnClickListener {
-                                hcPermissionsViewModel.requestPermissions(requireActivity())
+                                HCPermissionsRequestLauncher.launch(HCPermission.ALL)
                             }
                         }
 
@@ -82,5 +87,10 @@ class HCPermissionsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         hcPermissionsViewModel.checkPermissions()
+    }
+
+    override fun onDestroy() {
+        HCPermissionsRequestLauncher.unregister()
+        super.onDestroy()
     }
 }

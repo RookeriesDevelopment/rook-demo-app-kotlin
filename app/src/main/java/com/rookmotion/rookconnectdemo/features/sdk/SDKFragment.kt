@@ -26,6 +26,9 @@ class SDKFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSdkBinding.inflate(inflater, container, false)
+
+        viewModel.registerPermissionsRequestLauncher(this)
+
         return binding.root
     }
 
@@ -73,7 +76,7 @@ class SDKFragment : Fragment() {
         }
 
         binding.checkPermissions.setOnClickListener { viewModel.checkPermissions() }
-        binding.requestPermissions.setOnClickListener { viewModel.requestPermissions(requireActivity()) }
+        binding.requestPermissions.setOnClickListener { viewModel.launchPermissionsRequest() }
         binding.openHealthConnect.setOnClickListener { viewModel.openHealthConnect() }
 
         repeatOnResume {
@@ -93,6 +96,11 @@ class SDKFragment : Fragment() {
         }
 
         binding.syncPendingEvents.setOnClickListener { viewModel.syncPendingEvents() }
+    }
+
+    override fun onDestroy() {
+        viewModel.unregisterPermissionsRequestLauncher()
+        super.onDestroy()
     }
 
     private fun getUserID(): String? {
