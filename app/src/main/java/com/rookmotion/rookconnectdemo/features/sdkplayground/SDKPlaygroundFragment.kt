@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.sdk
+package com.rookmotion.rookconnectdemo.features.sdkplayground
 
 import android.content.Intent
 import android.net.Uri
@@ -8,24 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.rookmotion.rookconnectdemo.databinding.FragmentSdkBinding
+import com.rookmotion.rookconnectdemo.databinding.FragmentSdkPlaygroundBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
 
-class SDKFragment : Fragment() {
+class SDKPlaygroundFragment : Fragment() {
 
-    private var _binding: FragmentSdkBinding? = null
+    private var _binding: FragmentSdkPlaygroundBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<SDKViewModel> { ViewModelFactory(serviceLocator) }
+    private val viewModel by viewModels<SDKPlaygroundViewModel> { ViewModelFactory(serviceLocator) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentSdkBinding.inflate(inflater, container, false)
+        _binding = FragmentSdkPlaygroundBinding.inflate(inflater, container, false)
 
         viewModel.registerPermissionsRequestLauncher(this)
 

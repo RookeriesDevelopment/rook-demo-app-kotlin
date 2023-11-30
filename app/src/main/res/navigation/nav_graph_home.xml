@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/SDKFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.sdk.SDKFragment"
-        android:label="@string/sdk"
-        tools:layout="@layout/fragment_sdk" />
+        android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
+        android:label="@string/sdk_playground"
+        tools:layout="@layout/fragment_sdk_playground" />
 </navigation>

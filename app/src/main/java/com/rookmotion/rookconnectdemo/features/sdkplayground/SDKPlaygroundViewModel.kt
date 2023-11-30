@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.sdk
+package com.rookmotion.rookconnectdemo.features.sdkplayground
 
 import android.content.Context
 import androidx.fragment.app.Fragment
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 
-class SDKViewModel(private val rookConfigurationManager: RookConfigurationManager) : ViewModel() {
+class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigurationManager) : ViewModel() {
 
     private val rookHealthPermissionsManager =
         RookHealthPermissionsManager(rookConfigurationManager)

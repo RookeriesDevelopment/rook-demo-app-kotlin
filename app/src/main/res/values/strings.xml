@@ -57,6 +57,7 @@
     <string name="choose_an_implementation">Choose an implementation</string>
     <string name="choose_an_implementation_description">You can use the main SDK which handles everything or the individual modules for a more personalized behavior.</string>
     <string name="sdk">Sdk</string>
+    <string name="sdk_playground">SDK Playground</string>
     <string name="user_id">User ID</string>
     <string name="_1_configure_sdk">1. Configure SDK</string>
     <string name="set_configuration">Set configuration</string>
