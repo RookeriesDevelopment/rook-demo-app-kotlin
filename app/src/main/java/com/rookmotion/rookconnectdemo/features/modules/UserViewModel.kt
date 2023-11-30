@@ -14,6 +14,10 @@ class UserViewModel(private val rookUsersManager: RookUsersManager) : ViewModel(
     val userState get() = _userState.asStateFlow()
 
     fun registerUser(userID: String) {
+        if (userState.value == UserState.Loading || userState.value == UserState.Registered) {
+            return
+        }
+
         viewModelScope.launch {
             _userState.emit(UserState.Loading)
 
@@ -23,6 +27,20 @@ class UserViewModel(private val rookUsersManager: RookUsersManager) : ViewModel(
                 _userState.emit(UserState.Registered)
             } catch (e: Exception) {
                 _userState.emit(UserState.Error(e.toString()))
+            }
+        }
+    }
+
+    fun deleteUser(userID: String) {
+        viewModelScope.launch {
+            _userState.emit(UserState.Loading)
+
+            try {
+                rookUsersManager.deleteUserFromRook(userID, UserType.HEALTH_CONNECT)
+
+                _userState.emit(UserState.Error("User was deleted, click on 'retry' to start a new registration request"))
+            } catch (e: Exception) {
+                _userState.emit(UserState.Registered)
             }
         }
     }

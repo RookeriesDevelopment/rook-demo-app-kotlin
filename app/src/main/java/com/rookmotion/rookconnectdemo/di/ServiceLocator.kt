@@ -20,7 +20,7 @@ class ServiceLocator(context: Context) {
         RookUsersManager(
             context = context,
             clientUUID = BuildConfig.CLIENT_UUID,
-            clientPassword = BuildConfig.CLIENT_PASSWORD,
+            secretKey = BuildConfig.SECRET_KEY,
         )
     }
 
@@ -29,7 +29,7 @@ class ServiceLocator(context: Context) {
             context = context,
             userID = BuildConfig.USER_ID,
             clientUUID = BuildConfig.CLIENT_UUID,
-            clientPassword = BuildConfig.CLIENT_PASSWORD,
+            secretKey = BuildConfig.SECRET_KEY,
         )
     }
 

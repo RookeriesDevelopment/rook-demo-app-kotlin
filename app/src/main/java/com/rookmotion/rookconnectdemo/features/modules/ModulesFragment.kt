@@ -156,6 +156,7 @@ class ModulesFragment : Fragment() {
                         binding.users.hcUser.text = it.message
 
                         binding.users.progress.isVisible = false
+                        binding.users.deleteUser.isVisible = false
                         binding.users.retry.isVisible = true
                     }
 
@@ -166,6 +167,7 @@ class ModulesFragment : Fragment() {
                         )
 
                         binding.users.progress.isVisible = false
+                        binding.users.deleteUser.isVisible = true
                         binding.users.retry.isVisible = false
                     }
                 }
@@ -174,8 +176,17 @@ class ModulesFragment : Fragment() {
 
         binding.auth.retry.setOnClickListener {
             authViewModel.initializeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
-            authViewModel.initializeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
+            authViewModel.initializeHealthConnect(
+                requireContext(),
+                BuildConfig.USER_ID,
+                BuildConfig.CLIENT_UUID,
+                BuildConfig.SECRET_KEY,
+            )
             authViewModel.initializeUsers(requireContext(), BuildConfig.CLIENT_UUID)
+        }
+
+        binding.users.deleteUser.setOnClickListener {
+            userViewModel.deleteUser(BuildConfig.USER_ID)
         }
 
         binding.users.retry.setOnClickListener {
@@ -187,7 +198,12 @@ class ModulesFragment : Fragment() {
         )
 
         authViewModel.initializeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
-        authViewModel.initializeHealthConnect(requireContext(), BuildConfig.CLIENT_UUID)
+        authViewModel.initializeHealthConnect(
+            requireContext(),
+            BuildConfig.USER_ID,
+            BuildConfig.CLIENT_UUID,
+            BuildConfig.SECRET_KEY,
+        )
         authViewModel.initializeUsers(requireContext(), BuildConfig.CLIENT_UUID)
     }
 }

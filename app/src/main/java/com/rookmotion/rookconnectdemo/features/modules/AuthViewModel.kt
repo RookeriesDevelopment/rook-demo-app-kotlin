@@ -67,7 +67,12 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun initializeHealthConnect(context: Context, clientUUID: String) {
+    fun initializeHealthConnect(
+        context: Context,
+        userID: String,
+        clientUUID: String,
+        secretKey: String,
+    ) {
         if (
             healthConnectInitialization.value == InitializationState.Loading ||
             healthConnectInitialization.value is InitializationState.Success
@@ -86,12 +91,16 @@ class AuthViewModel : ViewModel() {
             val result = RookHealthConnectConfiguration.initRookHealthConnect(
                 context = context,
                 clientUUID = clientUUID,
+                secretKey = secretKey,
                 environment = environment,
                 enableLogs = enableLogs,
             )
 
             result.fold(
                 {
+                    // Needed to enable data source updates and to configure the owner of HC summaries and events
+                    RookHealthConnectConfiguration.setUserID(userID)
+
                     _healthConnectInitialization.emit(InitializationState.Success(it))
                 },
                 {

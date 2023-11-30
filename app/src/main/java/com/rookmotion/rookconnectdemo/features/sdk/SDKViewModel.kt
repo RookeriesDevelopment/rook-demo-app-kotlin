@@ -62,7 +62,7 @@ class SDKViewModel(private val rookConfigurationManager: RookConfigurationManage
     fun setConfiguration() {
         val rookConfiguration = RookConfiguration(
             BuildConfig.CLIENT_UUID,
-            BuildConfig.CLIENT_PASSWORD,
+            BuildConfig.SECRET_KEY,
             RookEnvironment.SANDBOX,
         )
 

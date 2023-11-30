@@ -39,6 +39,14 @@
             tools:text="@string/hc_placeholder_registered" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete_user"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_user"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/retry"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="match_parent"
