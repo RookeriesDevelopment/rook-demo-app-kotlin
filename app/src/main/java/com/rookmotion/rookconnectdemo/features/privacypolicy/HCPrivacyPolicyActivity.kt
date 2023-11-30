@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.healthconnect.privacypolicy
+package com.rookmotion.rookconnectdemo.features.privacypolicy
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
