@@ -13,7 +13,7 @@ Demo app for ROOK modular packages:
 ```properties
 userID=USER_ID
 clientUUID=CLIENT_UUID
-clientPassword=CLIENT_PASSWORD
+secretKey=SECRET_KEY
 ```
 
 2. Sync gradle.
