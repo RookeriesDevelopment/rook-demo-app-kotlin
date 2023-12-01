@@ -9,6 +9,7 @@ import com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygr
 import com.rookmotion.rookconnectdemo.features.modules.AuthViewModel
 import com.rookmotion.rookconnectdemo.features.modules.UserViewModel
 import com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundViewModel
+import com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
@@ -47,6 +48,10 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
                 connectionsPageUrl = connectionsPageUrl,
                 dataSourceRepository = serviceLocator.dataSourceRepository,
             ) as T
+        }
+
+        if (modelClass.isAssignableFrom(SDKConfigurationViewModel::class.java)) {
+            return SDKConfigurationViewModel(serviceLocator.rookConfigurationManager) as T
         }
 
         if (modelClass.isAssignableFrom(SDKPlaygroundViewModel::class.java)) {

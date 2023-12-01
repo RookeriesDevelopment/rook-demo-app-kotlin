@@ -31,7 +31,7 @@ class SelectorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.sdk.setNavigateOnClick(
-            SelectorFragmentDirections.actionSelectorFragmentToSDKFragment()
+            SelectorFragmentDirections.actionSelectorFragmentToSDKConfigurationFragment()
         )
         binding.modules.setNavigateOnClick(
             SelectorFragmentDirections.actionSelectorFragmentToModulesFragment()

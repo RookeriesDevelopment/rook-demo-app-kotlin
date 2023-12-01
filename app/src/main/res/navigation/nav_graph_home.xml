@@ -17,8 +17,8 @@
             android:id="@+id/action_selectorFragment_to_modulesFragment"
             app:destination="@id/modulesFragment" />
         <action
-            android:id="@+id/action_selectorFragment_to_SDKFragment"
-            app:destination="@id/SDKFragment" />
+            android:id="@+id/action_selectorFragment_to_SDKConfigurationFragment"
+            app:destination="@id/SDKConfigurationFragment" />
     </fragment>
     <fragment
         android:id="@+id/HCAvailabilityFragment"
@@ -62,4 +62,21 @@
         android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
         android:label="@string/sdk_playground"
         tools:layout="@layout/fragment_sdk_playground" />
+    <fragment
+        android:id="@+id/SDKConfigurationFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationFragment"
+        android:label="@string/sdk_configuration"
+        tools:layout="@layout/fragment_sdk_configuration" >
+        <action
+            android:id="@+id/action_SDKConfigurationFragment_to_SDKFragment"
+            app:destination="@id/SDKFragment" />
+        <action
+            android:id="@+id/action_SDKConfigurationFragment_to_stepsTrackerFragment"
+            app:destination="@id/stepsTrackerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stepsTrackerFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.stepstracker.StepsTrackerFragment"
+        android:label="@string/steps_tracker"
+        tools:layout="@layout/fragment_steps_tracker"/>
 </navigation>

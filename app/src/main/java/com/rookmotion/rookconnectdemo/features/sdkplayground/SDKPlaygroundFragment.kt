@@ -41,30 +41,6 @@ class SDKPlaygroundFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            viewModel.configuration.collect { binding.setConfigurationState.text = it }
-        }
-
-        binding.setConfiguration.setOnClickListener { viewModel.setConfiguration() }
-
-        repeatOnResume {
-            viewModel.initialize.collect { binding.initializeState.text = it }
-        }
-
-        binding.initialize.setOnClickListener { viewModel.initialize() }
-
-        repeatOnResume {
-            viewModel.user.collect { binding.updateUserState.text = it }
-        }
-
-        binding.updateUser.setOnClickListener {
-            val userID = getUserID()
-
-            if (userID != null) {
-                viewModel.updateUserID(userID)
-            }
-        }
-
-        repeatOnResume {
             viewModel.availability.collect { binding.checkAvailabilityState.text = it }
         }
 
@@ -101,22 +77,6 @@ class SDKPlaygroundFragment : Fragment() {
     override fun onDestroy() {
         viewModel.unregisterPermissionsRequestLauncher()
         super.onDestroy()
-    }
-
-    private fun getUserID(): String? {
-        val text = binding.userId.text.toString().trim()
-
-        return if (text.isEmpty()) {
-            binding.userIdContainer.error = "Cannot be empty"
-            binding.userIdContainer.isErrorEnabled = true
-
-            null
-        } else {
-            binding.userIdContainer.error = null
-            binding.userIdContainer.isErrorEnabled = false
-
-            text
-        }
     }
 
     private fun openPlayStore() {
