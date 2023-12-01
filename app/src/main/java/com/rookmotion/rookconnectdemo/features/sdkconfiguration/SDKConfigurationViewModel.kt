@@ -145,4 +145,28 @@ class SDKConfigurationViewModel(
             )
         }
     }
+
+    fun deleteUser() {
+        viewModelScope.launch {
+            Timber.i("Deleting user from rook...")
+
+            val result = rookConfigurationManager.deleteUserFromRook()
+
+            result.fold(
+                {
+                    Timber.i("User delete from rook")
+                },
+                {
+                    val error = when (it) {
+                        is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
+                        is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
+                        else -> it.localizedMessage
+                    }
+
+                    Timber.e("Error deleting user from rook:")
+                    Timber.e(error)
+                }
+            )
+        }
+    }
 }
