@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageViewModel
-import com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsViewModel
-import com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.features.modules.AuthViewModel
-import com.rookmotion.rookconnectdemo.features.modules.UserViewModel
-import com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationViewModel
+import com.rookmotion.rookconnectdemo.features.modules.healthconnect.permissions.HCPermissionsViewModel
+import com.rookmotion.rookconnectdemo.features.modules.healthconnect.playground.HCPlaygroundViewModel
+import com.rookmotion.rookconnectdemo.features.modules.menu.AuthViewModel
+import com.rookmotion.rookconnectdemo.features.modules.menu.UserViewModel
+import com.rookmotion.rookconnectdemo.features.monolithic.sdkplayground.SDKPlaygroundViewModel
+import com.rookmotion.rookconnectdemo.features.monolithic.sdkconfiguration.SDKConfigurationViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {

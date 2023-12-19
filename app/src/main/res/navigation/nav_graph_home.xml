@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/HCAvailabilityFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.healthconnect.availability.HCAvailabilityFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.modules.healthconnect.availability.HCAvailabilityFragment"
         android:label="@string/health_connect_availability"
         tools:layout="@layout/fragment_hc_availability">
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/HCPermissionsFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.healthconnect.permissions.HCPermissionsFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.modules.healthconnect.permissions.HCPermissionsFragment"
         android:label="@string/health_connect_permissions"
         tools:layout="@layout/fragment_hc_permissions">
         <action
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/HCPlaygroundFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.healthconnect.playground.HCPlaygroundFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.modules.healthconnect.playground.HCPlaygroundFragment"
         android:label="@string/health_connect"
         tools:layout="@layout/fragment_hc_playground" />
     <fragment
@@ -50,7 +50,7 @@
         tools:layout="@layout/fragment_connections_page" />
     <fragment
         android:id="@+id/modulesFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.modules.ModulesFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.modules.menu.ModulesFragment"
         android:label="@string/modules"
         tools:layout="@layout/fragment_modules">
         <action
@@ -59,12 +59,12 @@
     </fragment>
     <fragment
         android:id="@+id/SDKFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.monolithic.sdkplayground.SDKPlaygroundFragment"
         android:label="@string/sdk_playground"
         tools:layout="@layout/fragment_sdk_playground" />
     <fragment
         android:id="@+id/SDKConfigurationFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.monolithic.sdkconfiguration.SDKConfigurationFragment"
         android:label="@string/sdk_configuration"
         tools:layout="@layout/fragment_sdk_configuration" >
         <action
@@ -76,7 +76,7 @@
     </fragment>
     <fragment
         android:id="@+id/stepsTrackerFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.stepstracker.StepsTrackerFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.monolithic.stepstracker.StepsTrackerFragment"
         android:label="@string/steps_tracker"
         tools:layout="@layout/fragment_steps_tracker"/>
 </navigation>
