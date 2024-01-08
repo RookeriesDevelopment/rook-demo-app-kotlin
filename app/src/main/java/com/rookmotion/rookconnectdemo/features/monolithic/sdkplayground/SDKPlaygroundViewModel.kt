@@ -91,7 +91,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                         is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                         is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                         is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     stringBuilder.appendConsoleLine("Error checking all permissions:")
@@ -136,7 +136,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                         is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                         is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                         is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     Timber.e("Error opening Health Connect:")
@@ -249,7 +249,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                                 is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                                else -> it.localizedMessage
+                                else -> "${it.message}"
                             }
 
                             stringBuilder.appendConsoleLine("Error syncing Sleep summary:")
@@ -267,7 +267,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Sleep summary:")
@@ -300,7 +300,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                                 is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                                else -> it.localizedMessage
+                                else -> "${it.message}"
                             }
 
                             stringBuilder.appendConsoleLine("Error syncing Physical summary:")
@@ -318,7 +318,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Physical summary:")
@@ -348,7 +348,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                                 is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                                else -> it.localizedMessage
+                                else -> "${it.message}"
                             }
 
                             stringBuilder.appendConsoleLine("Error syncing Body summary:")
@@ -366,7 +366,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Body summary:")
@@ -393,7 +393,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Physical events:")
@@ -420,7 +420,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing BloodGlucose events:")
@@ -450,7 +450,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing BloodPressure events:")
@@ -477,7 +477,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing BodyMetrics events:")
@@ -507,7 +507,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing BodyHeartRate events:")
@@ -537,7 +537,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing PhysicalHeartRate events:")
@@ -564,7 +564,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Hydration events:")
@@ -591,7 +591,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Nutrition events:")
@@ -621,7 +621,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing BodyOxygenation events:")
@@ -651,7 +651,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing PhysicalOxygenation events:")
@@ -678,7 +678,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                    else -> it.localizedMessage
+                    else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Temperature events:")
@@ -708,7 +708,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                         is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
                         is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     stringBuilder.appendConsoleLine("Error syncing pending summaries:")
@@ -739,7 +739,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                         is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
                         is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     stringBuilder.appendConsoleLine("Error syncing pending events:")

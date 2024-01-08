@@ -80,7 +80,7 @@ class SDKConfigurationViewModel(
                     val error = when (it) {
                         is MissingConfigurationException -> "MissingConfigurationException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     stringBuilder.appendConsoleLine("Error initializing SDK:")
@@ -127,7 +127,7 @@ class SDKConfigurationViewModel(
                     val error = when (it) {
                         is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     stringBuilder.appendConsoleLine("Error updating userID:")
@@ -154,7 +154,7 @@ class SDKConfigurationViewModel(
                         is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                         is TimeoutException -> "TimeoutException: ${it.message}"
                         is HttpRequestException -> "HttpRequestException: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     Timber.e("Error updating user timezone:")
@@ -178,7 +178,7 @@ class SDKConfigurationViewModel(
                     val error = when (it) {
                         is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
                         is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                        else -> it.localizedMessage
+                        else -> "${it.message}"
                     }
 
                     Timber.e("Error deleting user from rook:")
