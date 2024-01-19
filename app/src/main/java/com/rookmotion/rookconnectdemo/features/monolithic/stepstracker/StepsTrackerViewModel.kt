@@ -29,7 +29,7 @@ class StepsTrackerViewModel : ViewModel() {
                     { throwable ->
                         val error = when (throwable) {
                             is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
-                            else -> throwable.localizedMessage
+                            else -> "${throwable.message}"
                         }
 
                         Timber.e("Error obtaining steps: $error")
@@ -74,7 +74,7 @@ class StepsTrackerViewModel : ViewModel() {
                     val error = when (throwable) {
                         is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
                         is MissingAndroidPermissionsException -> "MissingAndroidPermissionsException: ${throwable.message}"
-                        else -> throwable.localizedMessage
+                        else -> "${throwable.message}"
                     }
 
                     Timber.e("Error starting steps tracker: $error")
@@ -96,7 +96,7 @@ class StepsTrackerViewModel : ViewModel() {
                 { throwable ->
                     val error = when (throwable) {
                         is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
-                        else -> throwable.localizedMessage
+                        else -> "${throwable.message}"
                     }
 
                     Timber.e("Error stopping steps tracker: $error")
