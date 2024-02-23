@@ -66,17 +66,25 @@
         android:id="@+id/SDKConfigurationFragment"
         android:name="com.rookmotion.rookconnectdemo.features.monolithic.sdkconfiguration.SDKConfigurationFragment"
         android:label="@string/sdk_configuration"
-        tools:layout="@layout/fragment_sdk_configuration" >
+        tools:layout="@layout/fragment_sdk_configuration">
         <action
             android:id="@+id/action_SDKConfigurationFragment_to_SDKFragment"
             app:destination="@id/SDKFragment" />
         <action
             android:id="@+id/action_SDKConfigurationFragment_to_stepsTrackerFragment"
             app:destination="@id/stepsTrackerFragment" />
+        <action
+            android:id="@+id/action_SDKConfigurationFragment_to_yesterdaySyncPermissionsFragment"
+            app:destination="@id/yesterdaySyncPermissionsFragment" />
     </fragment>
     <fragment
         android:id="@+id/stepsTrackerFragment"
         android:name="com.rookmotion.rookconnectdemo.features.monolithic.stepstracker.StepsTrackerFragment"
         android:label="@string/steps_tracker"
-        tools:layout="@layout/fragment_steps_tracker"/>
+        tools:layout="@layout/fragment_steps_tracker" />
+    <fragment
+        android:id="@+id/yesterdaySyncPermissionsFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.monolithic.yesterdaysyncpermissions.YesterdaySyncPermissionsFragment"
+        android:label="fragment_yesterday_sync_permissions"
+        tools:layout="@layout/fragment_yesterday_sync_permissions" />
 </navigation>

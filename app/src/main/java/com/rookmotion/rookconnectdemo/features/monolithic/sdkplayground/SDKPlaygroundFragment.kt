@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.rookmotion.rook.sdk.RookHealthPermissionsManager
+import com.rookmotion.rook.sdk.domain.enums.HealthPermission
 import com.rookmotion.rookconnectdemo.databinding.FragmentSdkPlaygroundBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
@@ -18,7 +20,9 @@ class SDKPlaygroundFragment : Fragment() {
     private var _binding: FragmentSdkPlaygroundBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<SDKPlaygroundViewModel> { ViewModelFactory(serviceLocator) }
+    private val sdkPlaygroundViewModel by viewModels<SDKPlaygroundViewModel> {
+        ViewModelFactory(serviceLocator)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +31,7 @@ class SDKPlaygroundFragment : Fragment() {
     ): View {
         _binding = FragmentSdkPlaygroundBinding.inflate(inflater, container, false)
 
-        viewModel.registerPermissionsRequestLauncher(this)
+        RookHealthPermissionsManager.registerPermissionsRequestLauncher(this)
 
         return binding.root
     }
@@ -41,41 +45,49 @@ class SDKPlaygroundFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            viewModel.availability.collect { binding.checkAvailabilityState.text = it }
+            sdkPlaygroundViewModel.availability.collect { binding.checkAvailabilityState.text = it }
         }
 
-        binding.checkAvailability.setOnClickListener { viewModel.checkAvailability(requireContext()) }
+        binding.checkAvailability.setOnClickListener {
+            sdkPlaygroundViewModel.checkAvailability(requireContext())
+        }
         binding.downloadHealthConnect.setOnClickListener { openPlayStore() }
 
         repeatOnResume {
-            viewModel.permissions.collect { binding.checkPermissionsState.text = it }
+            sdkPlaygroundViewModel.permissions.collect { binding.checkPermissionsState.text = it }
         }
 
-        binding.checkPermissions.setOnClickListener { viewModel.checkPermissions() }
-        binding.requestPermissions.setOnClickListener { viewModel.launchPermissionsRequest() }
-        binding.openHealthConnect.setOnClickListener { viewModel.openHealthConnect() }
+        binding.checkPermissions.setOnClickListener { sdkPlaygroundViewModel.checkPermissions() }
+        binding.requestPermissions.setOnClickListener {
+            RookHealthPermissionsManager.launchPermissionsRequest(HealthPermission.ALL)
+        }
+        binding.openHealthConnect.setOnClickListener { sdkPlaygroundViewModel.openHealthConnect() }
 
         repeatOnResume {
-            viewModel.syncHealthData.collect { binding.syncHealthDataState.text = it }
+            sdkPlaygroundViewModel.syncHealthData.collect { binding.syncHealthDataState.text = it }
         }
 
-        binding.syncHealthData.setOnClickListener { viewModel.syncHealthData() }
+        binding.syncHealthData.setOnClickListener { sdkPlaygroundViewModel.syncHealthData() }
 
         repeatOnResume {
-            viewModel.pendingSummaries.collect { binding.syncPendingSummariesState.text = it }
+            sdkPlaygroundViewModel.pendingSummaries.collect {
+                binding.syncPendingSummariesState.text = it
+            }
         }
 
-        binding.syncPendingSummaries.setOnClickListener { viewModel.syncPendingSummaries() }
+        binding.syncPendingSummaries.setOnClickListener { sdkPlaygroundViewModel.syncPendingSummaries() }
 
         repeatOnResume {
-            viewModel.pendingEvents.collect { binding.syncPendingEventsState.text = it }
+            sdkPlaygroundViewModel.pendingEvents.collect {
+                binding.syncPendingEventsState.text = it
+            }
         }
 
-        binding.syncPendingEvents.setOnClickListener { viewModel.syncPendingEvents() }
+        binding.syncPendingEvents.setOnClickListener { sdkPlaygroundViewModel.syncPendingEvents() }
     }
 
     override fun onDestroy() {
-        viewModel.unregisterPermissionsRequestLauncher()
+        RookHealthPermissionsManager.unregisterPermissionsRequestLauncher()
         super.onDestroy()
     }
 

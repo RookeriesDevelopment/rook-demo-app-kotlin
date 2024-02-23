@@ -7,13 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.RookConfigurationManager
 import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
+import com.rookmotion.rook.sdk.RookHelpers
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rook.sdk.domain.enums.AvailabilityStatus
+import com.rookmotion.rook.sdk.domain.enums.HealthDataType
 import com.rookmotion.rook.sdk.domain.enums.HealthPermission
 import com.rookmotion.rook.sdk.domain.exception.DeviceNotSupportedException
 import com.rookmotion.rook.sdk.domain.exception.HealthConnectNotInstalledException
 import com.rookmotion.rook.sdk.domain.exception.HttpRequestException
 import com.rookmotion.rook.sdk.domain.exception.MissingPermissionsException
+import com.rookmotion.rook.sdk.domain.exception.RequestQuotaExceededException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import com.rookmotion.rook.sdk.domain.exception.TimeoutException
 import com.rookmotion.rook.sdk.domain.exception.UserNotInitializedException
@@ -24,11 +27,11 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 
-class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigurationManager) : ViewModel() {
-
-    private val rookHealthPermissionsManager = RookHealthPermissionsManager(rookConfigurationManager)
-    private val rookSummaryManager = RookSummaryManager(rookConfigurationManager)
-    private val rookEventManager = RookEventManager(rookConfigurationManager)
+class SDKPlaygroundViewModel(
+    private val rookHealthPermissionsManager: RookHealthPermissionsManager,
+    private val rookSummaryManager: RookSummaryManager,
+    private val rookEventManager: RookEventManager,
+) : ViewModel() {
 
     private val _availability = MutableStateFlow("")
     val availability get() = _availability.asStateFlow()
@@ -100,24 +103,6 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                 }
             )
         }
-    }
-
-    fun registerPermissionsRequestLauncher(fragment: Fragment) {
-        Timber.i("Registering all permissions request launcher...")
-        RookHealthPermissionsManager.registerPermissionsRequestLauncher(fragment)
-        Timber.i("All permissions request launcher registered")
-    }
-
-    fun unregisterPermissionsRequestLauncher() {
-        Timber.i("Unregistering all permissions request launcher...")
-        RookHealthPermissionsManager.unregisterPermissionsRequestLauncher()
-        Timber.i("All permissions request launcher unregistered")
-    }
-
-    fun launchPermissionsRequest() {
-        Timber.i("Launching all permissions request...")
-        RookHealthPermissionsManager.launchPermissionsRequest(HealthPermission.ALL)
-        Timber.i("All permissions request launch")
     }
 
     fun openHealthConnect() {
@@ -230,7 +215,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
 
 
     private suspend fun syncSleepSummary(yesterday: LocalDate, stringBuilder: StringBuilder) {
-        rookSummaryManager.shouldSyncSleepSummariesFor(yesterday).fold(
+        RookHelpers.shouldSyncFor(HealthDataType.SLEEP_SUMMARY, yesterday).fold(
             { shouldSyncSummariesForYesterday ->
                 if (shouldSyncSummariesForYesterday) {
                     val result = rookSummaryManager.syncSleepSummary(yesterday)
@@ -247,6 +232,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                                 is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                                 is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                                 is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                                is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                                 else -> "${it.message}"
@@ -264,9 +250,6 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
             }, {
                 val error = when (it) {
                     is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -281,7 +264,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
         yesterday: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        rookSummaryManager.shouldSyncPhysicalSummariesFor(yesterday).fold(
+        RookHelpers.shouldSyncFor(HealthDataType.PHYSICAL_SUMMARY, yesterday).fold(
             { shouldSyncSummariesForYesterday ->
                 if (shouldSyncSummariesForYesterday) {
                     val result = rookSummaryManager.syncPhysicalSummary(yesterday)
@@ -298,6 +281,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                                 is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                                 is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                                 is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                                is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                                 else -> "${it.message}"
@@ -315,9 +299,6 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
             }, {
                 val error = when (it) {
                     is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -329,7 +310,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
     }
 
     private suspend fun syncBodySummary(yesterday: LocalDate, stringBuilder: StringBuilder) {
-        rookSummaryManager.shouldSyncBodySummariesFor(yesterday).fold(
+        RookHelpers.shouldSyncFor(HealthDataType.BODY_SUMMARY, yesterday).fold(
             { shouldSyncSummariesForYesterday ->
                 if (shouldSyncSummariesForYesterday) {
                     val result = rookSummaryManager.syncBodySummary(yesterday)
@@ -346,6 +327,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                                 is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                                 is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                                 is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                                is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                                 else -> "${it.message}"
@@ -363,9 +345,6 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
             }, {
                 val error = when (it) {
                     is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -391,6 +370,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -418,6 +398,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -448,6 +429,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -475,6 +457,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -505,6 +488,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -535,6 +519,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -562,6 +547,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -589,6 +575,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -619,6 +606,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -649,6 +637,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"
@@ -676,6 +665,7 @@ class SDKPlaygroundViewModel(private val rookConfigurationManager: RookConfigura
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
                     is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
                     else -> "${it.message}"

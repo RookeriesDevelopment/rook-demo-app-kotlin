@@ -95,16 +95,22 @@
             android:text="@string/update_user" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/health_connect_data_sync"
+            android:id="@+id/health_connect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/health_connect_data_sync" />
+            android:text="@string/health_connect" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/steps_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:text="@string/steps_tracker" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/yesterday_sync_permissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/yesterday_sync_permissions" />
     </LinearLayout>
 </ScrollView>

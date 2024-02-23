@@ -8,8 +8,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.rookmotion.rook.sdk.domain.delegate.rookYesterdaySync
+import com.rookmotion.rook.sdk.domain.enums.SyncInstruction
 import com.rookmotion.rook.sdk.domain.environment.RookEnvironment
+import com.rookmotion.rook.sdk.framework.delegate.rookYesterdaySync
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.ActivityHomeBinding
@@ -21,7 +22,6 @@ class HomeActivity : AppCompatActivity() {
 
     private val rookYesterdaySync by rookYesterdaySync(
         enableLogs = BuildConfig.DEBUG,
-        ignoreConfigChange = true,
         clientUUID = BuildConfig.CLIENT_UUID,
         secretKey = BuildConfig.SECRET_KEY,
         environment = if (BuildConfig.DEBUG) RookEnvironment.SANDBOX else RookEnvironment.PRODUCTION,
@@ -29,9 +29,6 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be before super.onCreate(savedInstanceState)
-        // Before calling `rookYesterdaySync.enable` verify that your app has all permissions granted,
-        // calling `rookYesterdaySync.enable` without permissions WON'T crash the app but all sync processes will fail until the permissions are granted,
-        // so, it's safe to call `rookYesterdaySync.enable` and then request permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             rookYesterdaySync.enable(this)
         }

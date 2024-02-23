@@ -2,6 +2,9 @@ package com.rookmotion.rookconnectdemo.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.rookmotion.rook.sdk.RookEventManager
+import com.rookmotion.rook.sdk.RookHealthPermissionsManager
+import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageViewModel
 import com.rookmotion.rookconnectdemo.features.modules.healthconnect.permissions.HCPermissionsViewModel
@@ -10,6 +13,7 @@ import com.rookmotion.rookconnectdemo.features.modules.menu.AuthViewModel
 import com.rookmotion.rookconnectdemo.features.modules.menu.UserViewModel
 import com.rookmotion.rookconnectdemo.features.monolithic.sdkplayground.SDKPlaygroundViewModel
 import com.rookmotion.rookconnectdemo.features.monolithic.sdkconfiguration.SDKConfigurationViewModel
+import com.rookmotion.rookconnectdemo.features.monolithic.yesterdaysyncpermissions.YesterdaySyncPermissionsViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
@@ -51,11 +55,23 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
         }
 
         if (modelClass.isAssignableFrom(SDKConfigurationViewModel::class.java)) {
-            return SDKConfigurationViewModel(serviceLocator.rookConfigurationManager) as T
+            return SDKConfigurationViewModel(
+                rookConfigurationManager = serviceLocator.rookConfigurationManager,
+            ) as T
         }
 
         if (modelClass.isAssignableFrom(SDKPlaygroundViewModel::class.java)) {
-            return SDKPlaygroundViewModel(serviceLocator.rookConfigurationManager) as T
+            return SDKPlaygroundViewModel(
+                rookHealthPermissionsManager = RookHealthPermissionsManager(serviceLocator.rookConfigurationManager),
+                rookSummaryManager = RookSummaryManager(serviceLocator.rookConfigurationManager),
+                rookEventManager = RookEventManager(serviceLocator.rookConfigurationManager),
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(YesterdaySyncPermissionsViewModel::class.java)) {
+            return YesterdaySyncPermissionsViewModel(
+                rookHealthPermissionsManager = RookHealthPermissionsManager(serviceLocator.rookConfigurationManager),
+            ) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

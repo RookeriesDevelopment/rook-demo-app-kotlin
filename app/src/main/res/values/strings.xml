@@ -97,4 +97,9 @@
     <string name="missing_permissions">Missing permissions!</string>
     <string name="health_connect_data_sync">Health Connect Data Sync</string>
     <string name="sdk_configuration">SDK Configuration</string>
+    <string name="sync_title">Rook sync service</string>
+    <string name="sync_content">Rook is syncing your health data…</string>
+    <string name="yesterday_sync_permissions">Yesterday Sync Permissions</string>
+    <string name="yesterday_sync_android_permissions">Android permissions (POST_NOTIFICATIONS, FOREGROUND_SERVICE, FOREGROUND_SERVICE_HEALTH)</string>
+    <string name="yesterday_sync_health_connect_permissions">Health Connect permissions (SLEEP, PHYSICAL, BODY)</string>
 </resources>

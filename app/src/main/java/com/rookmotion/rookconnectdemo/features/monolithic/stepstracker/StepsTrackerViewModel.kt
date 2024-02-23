@@ -3,9 +3,9 @@ package com.rookmotion.rookconnectdemo.features.monolithic.stepstracker
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rookmotion.rook.sdk.RookStepsTracker
+import com.rookmotion.rook.sdk.domain.exception.MissingAndroidPermissionsException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
-import com.rookmotion.rook.tracker.StepsTracker
-import com.rookmotion.rook.tracker.domain.exception.MissingAndroidPermissionsException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +22,7 @@ class StepsTrackerViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             while (isActive) {
-                StepsTracker.getTodaySteps().fold(
+                RookStepsTracker.getTodaySteps().fold(
                     { todaySteps ->
                         _state.update { it.copy(steps = todaySteps) }
                     },
@@ -43,9 +43,9 @@ class StepsTrackerViewModel : ViewModel() {
 
     fun checkStepsTrackerStatus(context: Context) {
         viewModelScope.launch {
-            val isAvailable = StepsTracker.isAvailable(context)
-            val hasPermissions = StepsTracker.hasPermissions(context)
-            val isActive = StepsTracker.isActive()
+            val isAvailable = RookStepsTracker.isAvailable(context)
+            val hasPermissions = RookStepsTracker.hasPermissions(context)
+            val isActive = RookStepsTracker.isActive()
 
             _state.update {
                 it.copy(
@@ -59,14 +59,14 @@ class StepsTrackerViewModel : ViewModel() {
     }
 
     fun requestStepsTrackerPermissions(context: Context) {
-        StepsTracker.requestPermissions(context)
+        RookStepsTracker.requestPermissions(context)
     }
 
     fun startStepsTracker(context: Context) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            StepsTracker.start(context).fold(
+            RookStepsTracker.start(context).fold(
                 {
                     checkStepsTrackerStatus(context)
                 },
@@ -89,7 +89,7 @@ class StepsTrackerViewModel : ViewModel() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            StepsTracker.stop(context).fold(
+            RookStepsTracker.stop(context).fold(
                 {
                     checkStepsTrackerStatus(context)
                 },

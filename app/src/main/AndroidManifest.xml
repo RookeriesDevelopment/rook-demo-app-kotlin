@@ -90,5 +90,17 @@
         <meta-data
             android:name="io.tryrook.rook.realtime.STEPS_SERVICE_NOTIFICATION_CONTENT"
             android:resource="@string/steps_service_content" />
+
+        <meta-data
+            android:name="io.tryrook.service.notification.SYNC_ICON"
+            android:resource="@drawable/ic_launcher_foreground" />
+
+        <meta-data
+            android:name="io.tryrook.service.notification.SYNC_TITLE"
+            android:resource="@string/sync_title" />
+
+        <meta-data
+            android:name="io.tryrook.service.notification.SYNC_CONTENT"
+            android:resource="@string/sync_content" />
     </application>
 </manifest>

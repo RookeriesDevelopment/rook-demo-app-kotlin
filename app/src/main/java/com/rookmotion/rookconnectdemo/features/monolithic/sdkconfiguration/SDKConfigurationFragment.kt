@@ -62,12 +62,13 @@ class SDKConfigurationFragment : Fragment() {
 
         repeatOnResume {
             viewModel.enableNavigation.collect {
-                binding.healthConnectDataSync.isEnabled = it
+                binding.healthConnect.isEnabled = it
                 binding.stepsService.isEnabled = it
+                binding.yesterdaySyncPermissions.isEnabled = it
             }
         }
 
-        binding.healthConnectDataSync.setOnClickListener {
+        binding.healthConnect.setOnClickListener {
             findNavController().navigate(
                 SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToSDKFragment()
             )
@@ -76,6 +77,12 @@ class SDKConfigurationFragment : Fragment() {
         binding.stepsService.setOnClickListener {
             findNavController().navigate(
                 SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToStepsTrackerFragment()
+            )
+        }
+
+        binding.yesterdaySyncPermissions.setOnClickListener {
+            findNavController().navigate(
+                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToYesterdaySyncPermissionsFragment()
             )
         }
     }

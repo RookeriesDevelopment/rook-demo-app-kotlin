@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.rookmotion.rook.sdk.RookStepsTracker
+import com.rookmotion.rook.sdk.domain.annotation.Experimental
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentStepsTrackerBinding
@@ -80,6 +82,13 @@ class StepsTrackerFragment : Fragment() {
 
                     binding.totalSteps.text = getString(R.string.total_steps_number, it.steps)
                 }
+            }
+        }
+
+        // This element (class, method or field) is not in stable state yet. It may be renamed, changed or even removed in a future version.
+        repeatOnResume {
+            RookStepsTracker.observeTodaySteps().collectLatest {
+                Timber.i("observeTodaySteps: $it")
             }
         }
     }
