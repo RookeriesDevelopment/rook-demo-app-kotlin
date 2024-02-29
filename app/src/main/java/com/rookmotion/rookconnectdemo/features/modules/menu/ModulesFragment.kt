@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
+import com.rookmotion.rookconnectdemo.common.USER_ID
 import com.rookmotion.rookconnectdemo.databinding.FragmentModulesBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.clearCompoundDrawablesWithIntrinsicBounds
@@ -127,7 +128,7 @@ class ModulesFragment : Fragment() {
                         )
                         binding.auth.rookUsers.isVisible = true
 
-                        userViewModel.registerUser(BuildConfig.USER_ID)
+                        userViewModel.registerUser(USER_ID)
                     }
 
                     is InitializationState.Error -> {
@@ -163,7 +164,7 @@ class ModulesFragment : Fragment() {
                     is UserState.Registered -> {
                         binding.users.hcUser.text = getString(
                             R.string.hc_placeholder_registered,
-                            BuildConfig.USER_ID
+                            USER_ID
                         )
 
                         binding.users.progress.isVisible = false
@@ -178,7 +179,7 @@ class ModulesFragment : Fragment() {
             authViewModel.initializeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
             authViewModel.initializeHealthConnect(
                 requireContext(),
-                BuildConfig.USER_ID,
+                USER_ID,
                 BuildConfig.CLIENT_UUID,
                 BuildConfig.SECRET_KEY,
             )
@@ -186,11 +187,11 @@ class ModulesFragment : Fragment() {
         }
 
         binding.users.deleteUser.setOnClickListener {
-            userViewModel.deleteUser(BuildConfig.USER_ID)
+            userViewModel.deleteUser(USER_ID)
         }
 
         binding.users.retry.setOnClickListener {
-            userViewModel.registerUser(BuildConfig.USER_ID)
+            userViewModel.registerUser(USER_ID)
         }
 
         binding.healthConnectSdk.setNavigateOnClick(
@@ -200,7 +201,7 @@ class ModulesFragment : Fragment() {
         authViewModel.initializeTransmission(requireContext(), BuildConfig.CLIENT_UUID)
         authViewModel.initializeHealthConnect(
             requireContext(),
-            BuildConfig.USER_ID,
+            USER_ID,
             BuildConfig.CLIENT_UUID,
             BuildConfig.SECRET_KEY,
         )

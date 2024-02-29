@@ -8,11 +8,11 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.rookmotion.rook.sdk.domain.enums.SyncInstruction
-import com.rookmotion.rook.sdk.domain.environment.RookEnvironment
 import com.rookmotion.rook.sdk.framework.delegate.rookYesterdaySync
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
+import com.rookmotion.rookconnectdemo.common.isDebug
+import com.rookmotion.rookconnectdemo.common.rookEnvironment
 import com.rookmotion.rookconnectdemo.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
@@ -21,10 +21,10 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private val rookYesterdaySync by rookYesterdaySync(
-        enableLogs = BuildConfig.DEBUG,
+        enableLogs = isDebug,
         clientUUID = BuildConfig.CLIENT_UUID,
         secretKey = BuildConfig.SECRET_KEY,
-        environment = if (BuildConfig.DEBUG) RookEnvironment.SANDBOX else RookEnvironment.PRODUCTION,
+        environment = rookEnvironment,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

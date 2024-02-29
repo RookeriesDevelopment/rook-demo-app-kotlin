@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.health_connect.RookHealthConnectConfiguration
-import com.rookmotion.rook.health_connect.domain.environment.RookHealthConnectEnvironment
 import com.rookmotion.rook.transmission.RookTransmissionConfiguration
-import com.rookmotion.rook.transmission.domain.environment.RookTransmissionEnvironment
 import com.rookmotion.rook.users.RookUsersConfiguration
-import com.rookmotion.rook.users.domain.environment.RookUsersEnvironment
-import com.rookmotion.rookconnectdemo.BuildConfig
+import com.rookmotion.rookconnectdemo.common.isDebug
+import com.rookmotion.rookconnectdemo.common.rookHealthConnectEnvironment
+import com.rookmotion.rookconnectdemo.common.rookTransmissionEnvironment
+import com.rookmotion.rookconnectdemo.common.rookUsersEnvironment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -42,16 +42,11 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             _transmissionInitialization.emit(InitializationState.Loading)
 
-            val environment = if (BuildConfig.DEBUG) RookTransmissionEnvironment.SANDBOX
-            else RookTransmissionEnvironment.PRODUCTION
-
-            val enableLogs = BuildConfig.DEBUG
-
             val result = RookTransmissionConfiguration.initRookTransmission(
                 context = context,
                 clientUUID = clientUUID,
-                environment = environment,
-                enableLogs = enableLogs,
+                environment = rookTransmissionEnvironment,
+                enableLogs = isDebug,
             )
 
             result.fold(
@@ -83,17 +78,12 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             _healthConnectInitialization.emit(InitializationState.Loading)
 
-            val environment = if (BuildConfig.DEBUG) RookHealthConnectEnvironment.SANDBOX
-            else RookHealthConnectEnvironment.PRODUCTION
-
-            val enableLogs = BuildConfig.DEBUG
-
             val result = RookHealthConnectConfiguration.initRookHealthConnect(
                 context = context,
                 clientUUID = clientUUID,
                 secretKey = secretKey,
-                environment = environment,
-                enableLogs = enableLogs,
+                environment = rookHealthConnectEnvironment,
+                enableLogs = isDebug,
             )
 
             result.fold(
@@ -123,16 +113,11 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             _usersInitialization.emit(InitializationState.Loading)
 
-            val environment = if (BuildConfig.DEBUG) RookUsersEnvironment.SANDBOX
-            else RookUsersEnvironment.PRODUCTION
-
-            val enableLogs = BuildConfig.DEBUG
-
             val result = RookUsersConfiguration.initRookUsers(
                 context = context,
                 clientUUID = clientUUID,
-                environment = environment,
-                enableLogs = enableLogs,
+                environment = rookUsersEnvironment,
+                enableLogs = isDebug,
             )
 
             result.fold(

@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
+import com.rookmotion.rookconnectdemo.common.USER_ID
 import com.rookmotion.rookconnectdemo.databinding.FragmentConnectionsPageBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.enableJavaScriptAndDomStorage
@@ -64,7 +65,7 @@ class ConnectionsPageFragment : Fragment() {
         observers()
         bindings()
 
-        connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, BuildConfig.USER_ID)
+        connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, USER_ID)
     }
 
     private fun observers() {
@@ -93,7 +94,7 @@ class ConnectionsPageFragment : Fragment() {
 
     private fun bindings() {
         binding.error.retry.setOnClickListener {
-            connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, BuildConfig.USER_ID)
+            connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, USER_ID)
         }
         binding.items.setHasFixedSize(true)
         binding.items.adapter = dataSourceAdapter
@@ -130,7 +131,7 @@ class ConnectionsPageFragment : Fragment() {
                     connectionsPageViewModel.closeConnectionUrl()
                     connectionsPageViewModel.getDataSources(
                         BuildConfig.CLIENT_UUID,
-                        BuildConfig.USER_ID,
+                        USER_ID,
                     )
                 }
             }

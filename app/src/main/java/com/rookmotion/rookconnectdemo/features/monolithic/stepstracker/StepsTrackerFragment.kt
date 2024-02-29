@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rook.sdk.RookStepsTracker
-import com.rookmotion.rook.sdk.domain.annotation.Experimental
-import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
+import com.rookmotion.rookconnectdemo.common.isDebug
 import com.rookmotion.rookconnectdemo.databinding.FragmentStepsTrackerBinding
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +28,7 @@ class StepsTrackerFragment : Fragment() {
     ): View {
         _binding = FragmentStepsTrackerBinding.inflate(inflater, container, false)
 
-        if (BuildConfig.DEBUG) {
+        if (isDebug) {
             Timber.plant(Timber.DebugTree())
         }
 

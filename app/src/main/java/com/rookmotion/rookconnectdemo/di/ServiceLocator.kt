@@ -6,6 +6,7 @@ import com.rookmotion.rook.sdk.RookConfigurationManager
 import com.rookmotion.rook.transmission.RookTransmissionManager
 import com.rookmotion.rook.users.RookUsersManager
 import com.rookmotion.rookconnectdemo.BuildConfig
+import com.rookmotion.rookconnectdemo.common.USER_ID
 import com.rookmotion.rookconnectdemo.features.connectionspage.data.remote.ConnectionsPageApiService
 import com.rookmotion.rookconnectdemo.features.connectionspage.data.remote.ConnectionsPageClient
 import com.rookmotion.rookconnectdemo.features.connectionspage.data.repository.DefaultDataSourceRepository
@@ -27,7 +28,7 @@ class ServiceLocator(context: Context) {
     val rookTransmissionManager: RookTransmissionManager by lazy {
         RookTransmissionManager(
             context = context,
-            userID = BuildConfig.USER_ID,
+            userID = USER_ID,
             clientUUID = BuildConfig.CLIENT_UUID,
             secretKey = BuildConfig.SECRET_KEY,
         )

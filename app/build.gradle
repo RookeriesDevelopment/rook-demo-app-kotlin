@@ -21,17 +21,16 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "USER_ID", "\"${localProperties.userID}\"")
         buildConfigField("String", "CLIENT_UUID", "\"${localProperties.clientUUID}\"")
         buildConfigField("String", "SECRET_KEY", "\"${localProperties.secretKey}\"")
     }
 
     signingConfigs {
         release {
-            storeFile file('../keystore.jks')
-            storePassword localProperties.storePassword
-            keyAlias localProperties.keyAlias
-            keyPassword localProperties.keyPassword
+//            storeFile file('../keystore.jks')
+//            storePassword localProperties.storePassword
+//            keyAlias localProperties.keyAlias
+//            keyPassword localProperties.keyPassword
         }
     }
 

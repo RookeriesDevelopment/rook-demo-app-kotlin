@@ -11,6 +11,8 @@ import com.rookmotion.rook.sdk.domain.exception.TimeoutException
 import com.rookmotion.rook.sdk.domain.exception.UserNotInitializedException
 import com.rookmotion.rook.sdk.domain.model.RookConfiguration
 import com.rookmotion.rookconnectdemo.BuildConfig
+import com.rookmotion.rookconnectdemo.common.isDebug
+import com.rookmotion.rookconnectdemo.common.rookEnvironment
 import com.rookmotion.rookconnectdemo.extension.appendConsoleLine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,13 +36,10 @@ class SDKConfigurationViewModel(
     val enableNavigation get() = _enableNavigation.asStateFlow()
 
     fun setConfiguration() {
-        val environment = if (BuildConfig.DEBUG) RookEnvironment.SANDBOX
-        else RookEnvironment.PRODUCTION
-
         val rookConfiguration = RookConfiguration(
             BuildConfig.CLIENT_UUID,
             BuildConfig.SECRET_KEY,
-            environment,
+            rookEnvironment,
         )
 
         val stringBuilder = StringBuilder()
@@ -50,7 +49,7 @@ class SDKConfigurationViewModel(
             stringBuilder.appendConsoleLine("$rookConfiguration")
             _configuration.emit(stringBuilder.toString())
 
-            if (BuildConfig.DEBUG) {
+            if (isDebug) {
                 rookConfigurationManager.enableLocalLogs()
             }
 

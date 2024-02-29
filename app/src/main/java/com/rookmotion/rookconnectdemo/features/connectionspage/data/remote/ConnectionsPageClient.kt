@@ -1,6 +1,6 @@
 package com.rookmotion.rookconnectdemo.features.connectionspage.data.remote
 
-import com.rookmotion.rookconnectdemo.BuildConfig
+import com.rookmotion.rookconnectdemo.common.isDebug
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -8,7 +8,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class ConnectionsPageClient {
     private val baseUrl = kotlin.run {
-        return@run if (BuildConfig.DEBUG) {
+        return@run if (isDebug) {
             "https://api.rook-connect.review/"
         } else {
             "https://api.rook-connect.com/"
