@@ -8,13 +8,14 @@ Demo app for ROOK modular packages:
 
 ## Configure & Run
 
-* In the root folder create a `local.properties` file with the following properties:
+In the root folder create a `local.properties` file with the following properties:
 
 ```properties
 clientUUID=CLIENT_UUID
 secretKey=SECRET_KEY
 ```
 
-* Sync gradle.
-* This project has a preconfigured USER_ID (clientHC) if you want to change it, go to
+Sync gradle.
+
+This project has a preconfigured USER_ID (clientHC) if you want to change it, go to
   the `com.rookmotion.rookconnectdemo.common.Environment.kt` file. 
