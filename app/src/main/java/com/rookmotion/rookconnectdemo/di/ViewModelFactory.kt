@@ -5,52 +5,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
-import com.rookmotion.rookconnectdemo.BuildConfig
-import com.rookmotion.rookconnectdemo.common.isDebug
-import com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageViewModel
-import com.rookmotion.rookconnectdemo.features.modules.healthconnect.permissions.HCPermissionsViewModel
-import com.rookmotion.rookconnectdemo.features.modules.healthconnect.playground.HCPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.features.modules.menu.AuthViewModel
-import com.rookmotion.rookconnectdemo.features.modules.menu.UserViewModel
-import com.rookmotion.rookconnectdemo.features.monolithic.sdkplayground.SDKPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.features.monolithic.sdkconfiguration.SDKConfigurationViewModel
-import com.rookmotion.rookconnectdemo.features.monolithic.yesterdaysyncpermissions.YesterdaySyncPermissionsViewModel
+import com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageViewModel
+import com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationViewModel
+import com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundViewModel
+import com.rookmotion.rookconnectdemo.features.yesterdaysyncpermissions.YesterdaySyncPermissionsViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-
-        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            return AuthViewModel() as T
-        }
-
-        if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
-            return UserViewModel(serviceLocator.rookUsersManager) as T
-        }
-
-        if (modelClass.isAssignableFrom(HCPermissionsViewModel::class.java)) {
-            return HCPermissionsViewModel(
-                rookHealthConnectManager = serviceLocator.rookHealthConnectManager,
-            ) as T
-        }
-
-        if (modelClass.isAssignableFrom(HCPlaygroundViewModel::class.java)) {
-            return HCPlaygroundViewModel(
-                rookTransmissionManager = serviceLocator.rookTransmissionManager,
-                rookHealthConnectManager = serviceLocator.rookHealthConnectManager,
-            ) as T
-        }
-
         if (modelClass.isAssignableFrom(ConnectionsPageViewModel::class.java)) {
-
-            val connectionsPageUrl =
-                if (isDebug) "https://connections.rook-connect.review/"
-                else "https://connections.rook-connect.com/"
-
             return ConnectionsPageViewModel(
                 dispatcher = serviceLocator.defaultDispatcher,
-                connectionsPageUrl = connectionsPageUrl,
+                connectionsPageUrl = serviceLocator.connectionsPageUrl,
                 dataSourceRepository = serviceLocator.dataSourceRepository,
             ) as T
         }

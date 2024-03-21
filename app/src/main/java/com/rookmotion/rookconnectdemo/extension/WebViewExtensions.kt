@@ -1,9 +1,11 @@
 package com.rookmotion.rookconnectdemo.extension
 
+import android.annotation.SuppressLint
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
+@SuppressLint("SetJavaScriptEnabled")
 fun WebView.enableJavaScriptAndDomStorage() {
     settings.javaScriptEnabled = true
     settings.domStorageEnabled = true

@@ -1,46 +1,26 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
-
 android {
-    namespace 'com.rookmotion.rookconnectdemo'
+    namespace 'io.tryrook.connectionspage'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.rookmotion.rookconnectdemo"
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "CLIENT_UUID", "\"${localProperties.clientUUID}\"")
-        buildConfigField("String", "SECRET_KEY", "\"${localProperties.secretKey}\"")
-    }
-
-    signingConfigs {
-        release {
-            storeFile file('../keystore.jks')
-            storePassword localProperties.storePassword
-            keyAlias localProperties.keyAlias
-            keyPassword localProperties.keyPassword
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
-
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 
@@ -54,7 +34,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
         buildConfig = true
     }
 }
@@ -69,11 +48,9 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
-    implementation "io.coil-kt:coil:$coil_version"
-
-    implementation "com.rookmotion.android:rook-sdk:$rook_sdk_version"
-
-    implementation(project(":connectionspage"))
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$converter_moshi_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"

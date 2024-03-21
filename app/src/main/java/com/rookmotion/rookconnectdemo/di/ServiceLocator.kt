@@ -1,41 +1,22 @@
 package com.rookmotion.rookconnectdemo.di
 
 import android.content.Context
-import com.rookmotion.rook.health_connect.RookHealthConnectManager
 import com.rookmotion.rook.sdk.RookConfigurationManager
-import com.rookmotion.rook.transmission.RookTransmissionManager
-import com.rookmotion.rook.users.RookUsersManager
-import com.rookmotion.rookconnectdemo.BuildConfig
-import com.rookmotion.rookconnectdemo.common.USER_ID
-import com.rookmotion.rookconnectdemo.features.connectionspage.data.remote.ConnectionsPageApiService
-import com.rookmotion.rookconnectdemo.features.connectionspage.data.remote.ConnectionsPageClient
-import com.rookmotion.rookconnectdemo.features.connectionspage.data.repository.DefaultDataSourceRepository
-import com.rookmotion.rookconnectdemo.features.connectionspage.domain.repository.DataSourceRepository
+import com.rookmotion.rookconnectdemo.common.isDebug
+import io.tryrook.connectionspage.data.repository.DefaultDataSourceRepository
+import io.tryrook.connectionspage.data.server.ConnectionsPageApiService
+import io.tryrook.connectionspage.data.server.ConnectionsPageClient
+import io.tryrook.connectionspage.domain.repository.DataSourceRepository
 import kotlinx.coroutines.Dispatchers
 
 class ServiceLocator(context: Context) {
 
     val defaultDispatcher = Dispatchers.IO
 
-    val rookUsersManager: RookUsersManager by lazy {
-        RookUsersManager(
-            context = context,
-            clientUUID = BuildConfig.CLIENT_UUID,
-            secretKey = BuildConfig.SECRET_KEY,
-        )
-    }
-
-    val rookTransmissionManager: RookTransmissionManager by lazy {
-        RookTransmissionManager(
-            context = context,
-            userID = USER_ID,
-            clientUUID = BuildConfig.CLIENT_UUID,
-            secretKey = BuildConfig.SECRET_KEY,
-        )
-    }
-
-    val rookHealthConnectManager: RookHealthConnectManager by lazy {
-        RookHealthConnectManager(context)
+    val connectionsPageUrl = if (isDebug) {
+        "https://connections.rook-connect.review/"
+    } else {
+        "https://connections.rook-connect.com/"
     }
 
     private val connectionsPageApiService: ConnectionsPageApiService by lazy {

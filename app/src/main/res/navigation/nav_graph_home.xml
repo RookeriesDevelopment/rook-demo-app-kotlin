@@ -3,68 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_home"
-    app:startDestination="@id/selectorFragment">
+    app:startDestination="@id/SDKConfigurationFragment">
 
     <fragment
-        android:id="@+id/selectorFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.selector.SelectorFragment"
-        android:label="@string/menu"
-        tools:layout="@layout/fragment_selector">
-        <action
-            android:id="@+id/action_selectorFragment_to_connectionsPageFragment"
-            app:destination="@id/connectionsPageFragment" />
-        <action
-            android:id="@+id/action_selectorFragment_to_modulesFragment"
-            app:destination="@id/modulesFragment" />
-        <action
-            android:id="@+id/action_selectorFragment_to_SDKConfigurationFragment"
-            app:destination="@id/SDKConfigurationFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/HCAvailabilityFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.modules.healthconnect.availability.HCAvailabilityFragment"
-        android:label="@string/health_connect_availability"
-        tools:layout="@layout/fragment_hc_availability">
-        <action
-            android:id="@+id/action_HCAvailabilityFragment_to_HCPermissionsFragment"
-            app:destination="@id/HCPermissionsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/HCPermissionsFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.modules.healthconnect.permissions.HCPermissionsFragment"
-        android:label="@string/health_connect_permissions"
-        tools:layout="@layout/fragment_hc_permissions">
-        <action
-            android:id="@+id/action_HCPermissionsFragment_to_HCPlaygroundFragment"
-            app:destination="@id/HCPlaygroundFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/HCPlaygroundFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.modules.healthconnect.playground.HCPlaygroundFragment"
-        android:label="@string/health_connect"
-        tools:layout="@layout/fragment_hc_playground" />
-    <fragment
         android:id="@+id/connectionsPageFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ui.ConnectionsPageFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageFragment"
         android:label="@string/connections_page"
         tools:layout="@layout/fragment_connections_page" />
     <fragment
-        android:id="@+id/modulesFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.modules.menu.ModulesFragment"
-        android:label="@string/modules"
-        tools:layout="@layout/fragment_modules">
-        <action
-            android:id="@+id/action_modulesFragment_to_HCAvailabilityFragment"
-            app:destination="@id/HCAvailabilityFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/SDKFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.monolithic.sdkplayground.SDKPlaygroundFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
         android:label="@string/sdk_playground"
         tools:layout="@layout/fragment_sdk_playground" />
     <fragment
         android:id="@+id/SDKConfigurationFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.monolithic.sdkconfiguration.SDKConfigurationFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationFragment"
         android:label="@string/sdk_configuration"
         tools:layout="@layout/fragment_sdk_configuration">
         <action
@@ -76,15 +29,18 @@
         <action
             android:id="@+id/action_SDKConfigurationFragment_to_yesterdaySyncPermissionsFragment"
             app:destination="@id/yesterdaySyncPermissionsFragment" />
+        <action
+            android:id="@+id/action_SDKConfigurationFragment_to_connectionsPageFragment"
+            app:destination="@id/connectionsPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/stepsTrackerFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.monolithic.stepstracker.StepsTrackerFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.stepstracker.StepsTrackerFragment"
         android:label="@string/steps_tracker"
         tools:layout="@layout/fragment_steps_tracker" />
     <fragment
         android:id="@+id/yesterdaySyncPermissionsFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.monolithic.yesterdaysyncpermissions.YesterdaySyncPermissionsFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.yesterdaysyncpermissions.YesterdaySyncPermissionsFragment"
         android:label="fragment_yesterday_sync_permissions"
         tools:layout="@layout/fragment_yesterday_sync_permissions" />
 </navigation>
