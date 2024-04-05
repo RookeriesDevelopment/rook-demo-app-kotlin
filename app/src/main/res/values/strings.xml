@@ -49,4 +49,9 @@
     <string name="yesterday_sync_permissions">Yesterday Sync Permissions</string>
     <string name="yesterday_sync_android_permissions">Android permissions (POST_NOTIFICATIONS, FOREGROUND_SERVICE, FOREGROUND_SERVICE_HEALTH, ACTIVITY_RECOGNITION)</string>
     <string name="yesterday_sync_health_connect_permissions">Health Connect permissions (SLEEP, PHYSICAL, BODY)</string>
+    <string name="enable_yesterday_sync">Enable yesterday sync</string>
+    <string name="disable_yesterday_sync">Disable yesterday sync</string>
+    <string name="yesterday_sync">Yesterday Sync</string>
+    <string name="yesterday_sync_description">Yesterday sync will execute a service every time you open the app. This service will retrieve all of your health data and send it to the ROOK servers.</string>
+    <string name="yesterday_sync_requirements">To use Yesterday sync you need to Install Health Connect and grant the following permissions</string>
 </resources>

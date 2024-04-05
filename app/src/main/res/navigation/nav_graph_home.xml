@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_steps_tracker" />
     <fragment
         android:id="@+id/yesterdaySyncPermissionsFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.yesterdaysyncpermissions.YesterdaySyncPermissionsFragment"
-        android:label="fragment_yesterday_sync_permissions"
-        tools:layout="@layout/fragment_yesterday_sync_permissions" />
+        android:name="com.rookmotion.rookconnectdemo.features.yesterdaysync.YesterdaySyncFragment"
+        android:label="@string/yesterday_sync"
+        tools:layout="@layout/fragment_yesterday_sync" />
 </navigation>

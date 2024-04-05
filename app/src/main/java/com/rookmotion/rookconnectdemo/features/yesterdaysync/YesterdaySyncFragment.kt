@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.yesterdaysyncpermissions
+package com.rookmotion.rookconnectdemo.features.yesterdaysync
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,18 +9,19 @@ import androidx.fragment.app.viewModels
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookYesterdaySyncPermissions
 import com.rookmotion.rook.sdk.domain.enums.AvailabilityStatus
+import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.common.openPlayStore
-import com.rookmotion.rookconnectdemo.databinding.FragmentYesterdaySyncPermissionsBinding
+import com.rookmotion.rookconnectdemo.databinding.FragmentYesterdaySyncBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
 
-class YesterdaySyncPermissionsFragment : Fragment() {
+class YesterdaySyncFragment : Fragment() {
 
-    private var _binding: FragmentYesterdaySyncPermissionsBinding? = null
+    private var _binding: FragmentYesterdaySyncBinding? = null
     private val binding get() = _binding!!
 
-    private val yesterdaySyncPermissionsViewModel by viewModels<YesterdaySyncPermissionsViewModel> {
+    private val yesterdaySyncViewModel by viewModels<YesterdaySyncViewModel> {
         ViewModelFactory(serviceLocator)
     }
 
@@ -29,7 +30,7 @@ class YesterdaySyncPermissionsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentYesterdaySyncPermissionsBinding.inflate(inflater, container, false)
+        _binding = FragmentYesterdaySyncBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -63,7 +64,7 @@ class YesterdaySyncPermissionsFragment : Fragment() {
         }
 
         binding.openHealthConnect.setOnClickListener {
-            yesterdaySyncPermissionsViewModel.openHealthConnect()
+            yesterdaySyncViewModel.openHealthConnect()
         }
     }
 
@@ -85,5 +86,25 @@ class YesterdaySyncPermissionsFragment : Fragment() {
         }
 
         binding.availabilityStatus.text = string
+
+        checkYesterdaySyncAcceptation()
+    }
+
+    private fun checkYesterdaySyncAcceptation() {
+        if (yesterdaySyncViewModel.userAcceptedYesterdaySync) {
+            binding.yesterdaySyncStatus.isChecked = true
+            binding.yesterdaySyncToggle.setText(R.string.disable_yesterday_sync)
+            binding.yesterdaySyncToggle.setOnClickListener {
+                yesterdaySyncViewModel.disableYesterdaySync()
+                checkYesterdaySyncAcceptation()
+            }
+        } else {
+            binding.yesterdaySyncStatus.isChecked = false
+            binding.yesterdaySyncToggle.setText(R.string.enable_yesterday_sync)
+            binding.yesterdaySyncToggle.setOnClickListener {
+                yesterdaySyncViewModel.enableYesterdaySync()
+                checkYesterdaySyncAcceptation()
+            }
+        }
     }
 }

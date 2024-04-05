@@ -3,6 +3,7 @@ package com.rookmotion.rookconnectdemo.di
 import android.content.Context
 import com.rookmotion.rook.sdk.RookConfigurationManager
 import com.rookmotion.rookconnectdemo.common.isDebug
+import com.rookmotion.rookconnectdemo.data.preferences.RookDemoPreferences
 import io.tryrook.connectionspage.data.repository.DefaultDataSourceRepository
 import io.tryrook.connectionspage.data.server.ConnectionsPageApiService
 import io.tryrook.connectionspage.data.server.ConnectionsPageClient
@@ -29,5 +30,9 @@ class ServiceLocator(context: Context) {
 
     val rookConfigurationManager: RookConfigurationManager by lazy {
         RookConfigurationManager(context)
+    }
+
+    val rookDemoPreferences: RookDemoPreferences by lazy {
+        RookDemoPreferences(context)
     }
 }
