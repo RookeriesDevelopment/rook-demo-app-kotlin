@@ -13,6 +13,22 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp">
 
+        <TextView
+            android:id="@+id/availability_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            tools:text="Health Connect is not installed. Please download from the Play Store" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/download_health_connect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/download_health_connect" />
+
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/android_permissions"
             android:layout_width="match_parent"

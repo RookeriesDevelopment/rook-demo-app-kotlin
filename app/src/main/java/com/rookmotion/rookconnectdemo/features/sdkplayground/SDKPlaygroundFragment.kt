@@ -1,7 +1,5 @@
 package com.rookmotion.rookconnectdemo.features.sdkplayground
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.domain.enums.HealthPermission
+import com.rookmotion.rookconnectdemo.common.openPlayStore
 import com.rookmotion.rookconnectdemo.databinding.FragmentSdkPlaygroundBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
@@ -51,7 +50,7 @@ class SDKPlaygroundFragment : Fragment() {
         binding.checkAvailability.setOnClickListener {
             sdkPlaygroundViewModel.checkAvailability(requireContext())
         }
-        binding.downloadHealthConnect.setOnClickListener { openPlayStore() }
+        binding.downloadHealthConnect.setOnClickListener { openPlayStore(requireContext()) }
 
         repeatOnResume {
             sdkPlaygroundViewModel.permissions.collect { binding.checkPermissionsState.text = it }
@@ -89,14 +88,5 @@ class SDKPlaygroundFragment : Fragment() {
     override fun onDestroy() {
         RookHealthPermissionsManager.unregisterPermissionsRequestLauncher()
         super.onDestroy()
-    }
-
-    private fun openPlayStore() {
-        requireContext().startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata")
-            )
-        )
     }
 }
