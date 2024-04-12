@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".features.stepstracker.StepsTrackerFragment">
+    tools:context=".features.backgroundsteps.BackgroundStepsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:checked="false"
             android:clickable="false"
-            android:text="@string/tracker_is_stopped" />
+            android:text="@string/background_steps" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/permissions_status"
@@ -42,14 +42,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="@string/start_tracker" />
+            android:text="@string/start_background_steps" />
 
         <TextView
-            android:id="@+id/total_steps"
+            android:id="@+id/current_day_steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/current_day_steps"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+        <TextView
+            android:id="@+id/observed_steps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="@string/total_steps_number"
+            android:text="@string/observed_steps_of"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
     </LinearLayout>

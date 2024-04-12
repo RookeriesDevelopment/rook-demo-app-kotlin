@@ -113,9 +113,7 @@ class SDKConfigurationViewModel(
             stringBuilder.appendConsoleLine("Updating userID...")
             _user.emit(stringBuilder.toString())
 
-            val result = rookConfigurationManager.updateUserID(userID)
-
-            result.fold(
+            rookConfigurationManager.updateUserID(userID).fold(
                 {
                     stringBuilder.appendConsoleLine("userID updated successfully")
                     _user.emit(stringBuilder.toString())

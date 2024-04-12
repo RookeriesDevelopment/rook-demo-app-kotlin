@@ -70,19 +70,19 @@ class SDKConfigurationFragment : Fragment() {
 
         binding.healthConnect.setOnClickListener {
             findNavController().navigate(
-                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToSDKFragment()
+                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToSdkPlaygroundFragment()
             )
         }
 
         binding.stepsService.setOnClickListener {
             findNavController().navigate(
-                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToStepsTrackerFragment()
+                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToBackgroundStepsFragment()
             )
         }
 
         binding.yesterdaySyncPermissions.setOnClickListener {
             findNavController().navigate(
-                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToYesterdaySyncPermissionsFragment()
+                SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToYesterdaySyncFragment()
             )
         }
 

@@ -1,4 +1,4 @@
-package com.rookmotion.rookconnectdemo.features.stepstracker
+package com.rookmotion.rookconnectdemo.features.backgroundsteps
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,29 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.rookmotion.rook.sdk.RookStepsTracker
 import com.rookmotion.rookconnectdemo.R
-import com.rookmotion.rookconnectdemo.common.isDebug
-import com.rookmotion.rookconnectdemo.databinding.FragmentStepsTrackerBinding
+import com.rookmotion.rookconnectdemo.databinding.FragmentBackgroundStepsBinding
+import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
+import com.rookmotion.rookconnectdemo.extension.serviceLocator
+import io.tryrook.connectionspage.common.isDebug
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
+import java.time.LocalDate
 
-class StepsTrackerFragment : Fragment() {
+class BackgroundStepsFragment : Fragment() {
 
-    private var _binding: FragmentStepsTrackerBinding? = null
+    private var _binding: FragmentBackgroundStepsBinding? = null
     private val binding get() = _binding!!
 
-    private val stepsTrackerViewModel by viewModels<StepsTrackerViewModel>()
+    private val backgroundStepsViewModel by viewModels<BackgroundStepsViewModel> {
+        ViewModelFactory(serviceLocator)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentStepsTrackerBinding.inflate(inflater, container, false)
+        _binding = FragmentBackgroundStepsBinding.inflate(inflater, container, false)
 
-        if (isDebug) {
+        if (isDebug && Timber.treeCount < 1) {
             Timber.plant(Timber.DebugTree())
         }
 
@@ -44,7 +48,7 @@ class StepsTrackerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         repeatOnResume {
-            stepsTrackerViewModel.state.collectLatest {
+            backgroundStepsViewModel.state.collectLatest {
                 if (it.hasPermissions) {
                     binding.permissionsStatus.setText(R.string.permissions_are_granted)
                     binding.permissionsStatus.isChecked = true
@@ -54,7 +58,7 @@ class StepsTrackerFragment : Fragment() {
                     binding.permissionsStatus.isChecked = false
                     binding.requestPermissions.isEnabled = true
                     binding.requestPermissions.setOnClickListener {
-                        stepsTrackerViewModel.requestStepsTrackerPermissions(requireContext())
+                        backgroundStepsViewModel.requestStepsPermissions()
                     }
                 }
 
@@ -65,35 +69,38 @@ class StepsTrackerFragment : Fragment() {
 
                     if (it.isActive) {
                         binding.serviceStatus.isChecked = true
-                        binding.serviceStatus.setText(R.string.tracker_is_running)
-                        binding.serviceToggle.setText(R.string.stop_tracker)
+                        binding.serviceStatus.setText(R.string.background_steps_is_running)
+                        binding.serviceToggle.setText(R.string.stop_background_steps)
                         binding.serviceToggle.setOnClickListener {
-                            stepsTrackerViewModel.stopStepsTracker(requireContext())
+                            backgroundStepsViewModel.stopStepsService()
                         }
                     } else {
                         binding.serviceStatus.isChecked = false
-                        binding.serviceStatus.setText(R.string.tracker_is_stopped)
-                        binding.serviceToggle.setText(R.string.start_tracker)
+                        binding.serviceStatus.setText(R.string.background_steps_is_stopped)
+                        binding.serviceToggle.setText(R.string.start_background_steps)
                         binding.serviceToggle.setOnClickListener {
-                            stepsTrackerViewModel.startStepsTracker(requireContext())
+                            backgroundStepsViewModel.startStepsService()
                         }
                     }
 
-                    binding.totalSteps.text = getString(R.string.total_steps_number, it.steps)
+                    binding.currentDaySteps.text = getString(R.string.current_day_steps, it.steps)
                 }
             }
         }
 
-        // This element (class, method or field) is not in stable state yet. It may be renamed, changed or even removed in a future version.
         repeatOnResume {
-            RookStepsTracker.observeTodaySteps().collectLatest {
-                Timber.i("observeTodaySteps: $it")
+            backgroundStepsViewModel.observeTodaySteps().collect {
+                binding.observedSteps.text = getString(
+                    R.string.observed_steps_of,
+                    LocalDate.now().toString(),
+                    it,
+                )
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        stepsTrackerViewModel.checkStepsTrackerStatus(requireContext())
+        backgroundStepsViewModel.checkStepsServiceStatus()
     }
 }

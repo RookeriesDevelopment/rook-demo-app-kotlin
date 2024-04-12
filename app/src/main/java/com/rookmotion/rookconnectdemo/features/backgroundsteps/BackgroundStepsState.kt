@@ -1,6 +1,6 @@
-package com.rookmotion.rookconnectdemo.features.stepstracker
+package com.rookmotion.rookconnectdemo.features.backgroundsteps
 
-data class StepsTrackerState(
+data class BackgroundStepsState(
     val isLoading: Boolean = false,
     val isAvailable: Boolean = false,
     val isActive: Boolean = false,

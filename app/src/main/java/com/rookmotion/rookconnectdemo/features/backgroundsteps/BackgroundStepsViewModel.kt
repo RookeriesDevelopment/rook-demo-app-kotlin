@@ -1,28 +1,29 @@
-package com.rookmotion.rookconnectdemo.features.stepstracker
+package com.rookmotion.rookconnectdemo.features.backgroundsteps
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rookmotion.rook.sdk.RookStepsTracker
+import com.rookmotion.rook.sdk.RookStepsManager
 import com.rookmotion.rook.sdk.domain.exception.MissingAndroidPermissionsException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
 
-class StepsTrackerViewModel : ViewModel() {
+class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) : ViewModel() {
 
-    private val _state = MutableStateFlow(StepsTrackerState())
+    private val _state = MutableStateFlow(BackgroundStepsState())
     val state get() = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
             while (isActive) {
-                RookStepsTracker.getTodaySteps().fold(
+                rookStepsManager.getTodaySteps().fold(
                     { todaySteps ->
                         _state.update { it.copy(steps = todaySteps) }
                     },
@@ -41,11 +42,15 @@ class StepsTrackerViewModel : ViewModel() {
         }
     }
 
-    fun checkStepsTrackerStatus(context: Context) {
+    fun observeTodaySteps(): Flow<Long> {
+        return rookStepsManager.observeStepsOf(LocalDate.now())
+    }
+
+    fun checkStepsServiceStatus() {
         viewModelScope.launch {
-            val isAvailable = RookStepsTracker.isAvailable(context)
-            val hasPermissions = RookStepsTracker.hasPermissions(context)
-            val isActive = RookStepsTracker.isActive()
+            val isAvailable = rookStepsManager.isAvailable()
+            val hasPermissions = rookStepsManager.hasPermissions()
+            val isActive = rookStepsManager.isActive()
 
             _state.update {
                 it.copy(
@@ -58,17 +63,17 @@ class StepsTrackerViewModel : ViewModel() {
         }
     }
 
-    fun requestStepsTrackerPermissions(context: Context) {
-        RookStepsTracker.requestPermissions(context)
+    fun requestStepsPermissions() {
+        rookStepsManager.requestPermissions()
     }
 
-    fun startStepsTracker(context: Context) {
+    fun startStepsService() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            RookStepsTracker.start(context).fold(
+            rookStepsManager.start().fold(
                 {
-                    checkStepsTrackerStatus(context)
+                    checkStepsServiceStatus()
                 },
                 { throwable ->
                     val error = when (throwable) {
@@ -77,7 +82,7 @@ class StepsTrackerViewModel : ViewModel() {
                         else -> "${throwable.message}"
                     }
 
-                    Timber.e("Error starting steps tracker: $error")
+                    Timber.e("Error starting steps : $error")
 
                     _state.update { it.copy(isLoading = false) }
                 }
@@ -85,13 +90,13 @@ class StepsTrackerViewModel : ViewModel() {
         }
     }
 
-    fun stopStepsTracker(context: Context) {
+    fun stopStepsService() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            RookStepsTracker.stop(context).fold(
+            rookStepsManager.stop().fold(
                 {
-                    checkStepsTrackerStatus(context)
+                    checkStepsServiceStatus()
                 },
                 { throwable ->
                     val error = when (throwable) {
@@ -99,7 +104,7 @@ class StepsTrackerViewModel : ViewModel() {
                         else -> "${throwable.message}"
                     }
 
-                    Timber.e("Error stopping steps tracker: $error")
+                    Timber.e("Error stopping steps service: $error")
 
                     _state.update { it.copy(isLoading = false) }
                 }

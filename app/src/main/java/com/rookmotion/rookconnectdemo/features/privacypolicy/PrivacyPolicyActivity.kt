@@ -7,6 +7,6 @@ import com.rookmotion.rookconnectdemo.R
 class PrivacyPolicyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_privacy_policy)
+        setContentView(R.layout.activity_hc_privacy_policy)
     }
 }

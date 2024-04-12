@@ -4,11 +4,13 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.rookmotion.rook.sdk.domain.enums.SyncInstruction
 import com.rookmotion.rook.sdk.framework.delegate.rookYesterdaySync
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.HomeViewModel
@@ -33,6 +35,8 @@ class HomeActivity : AppCompatActivity() {
         clientUUID = BuildConfig.CLIENT_UUID,
         secretKey = BuildConfig.SECRET_KEY,
         environment = rookEnvironment,
+        state = Lifecycle.State.CREATED,
+        doOnEnd = SyncInstruction.NOTHING,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

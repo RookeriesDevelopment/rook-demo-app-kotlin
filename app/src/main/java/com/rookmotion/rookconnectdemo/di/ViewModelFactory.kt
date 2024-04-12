@@ -6,6 +6,7 @@ import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rookconnectdemo.HomeViewModel
+import com.rookmotion.rookconnectdemo.features.backgroundsteps.BackgroundStepsViewModel
 import com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageViewModel
 import com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationViewModel
 import com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundViewModel
@@ -47,6 +48,12 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return HomeViewModel(
                 rookDemoPreferences = serviceLocator.rookDemoPreferences,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(BackgroundStepsViewModel::class.java)) {
+            return BackgroundStepsViewModel(
+                rookStepsManager = serviceLocator.rookStepsManager,
             ) as T
         }
 

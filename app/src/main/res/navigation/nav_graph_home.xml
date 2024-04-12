@@ -6,41 +6,46 @@
     app:startDestination="@id/SDKConfigurationFragment">
 
     <fragment
-        android:id="@+id/connectionsPageFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageFragment"
-        android:label="@string/connections_page"
-        tools:layout="@layout/fragment_connections_page" />
-    <fragment
-        android:id="@+id/SDKFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
-        android:label="@string/sdk_playground"
-        tools:layout="@layout/fragment_sdk_playground" />
-    <fragment
         android:id="@+id/SDKConfigurationFragment"
         android:name="com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationFragment"
         android:label="@string/sdk_configuration"
         tools:layout="@layout/fragment_sdk_configuration">
+
         <action
-            android:id="@+id/action_SDKConfigurationFragment_to_SDKFragment"
-            app:destination="@id/SDKFragment" />
+            android:id="@+id/action_SDKConfigurationFragment_to_sdkPlaygroundFragment"
+            app:destination="@id/sdkPlaygroundFragment" />
         <action
-            android:id="@+id/action_SDKConfigurationFragment_to_stepsTrackerFragment"
-            app:destination="@id/stepsTrackerFragment" />
+            android:id="@+id/action_SDKConfigurationFragment_to_backgroundStepsFragment"
+            app:destination="@id/backgroundStepsFragment" />
         <action
-            android:id="@+id/action_SDKConfigurationFragment_to_yesterdaySyncPermissionsFragment"
-            app:destination="@id/yesterdaySyncPermissionsFragment" />
+            android:id="@+id/action_SDKConfigurationFragment_to_yesterdaySyncFragment"
+            app:destination="@id/yesterdaySyncFragment" />
         <action
             android:id="@+id/action_SDKConfigurationFragment_to_connectionsPageFragment"
             app:destination="@id/connectionsPageFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/stepsTrackerFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.stepstracker.StepsTrackerFragment"
-        android:label="@string/steps_tracker"
-        tools:layout="@layout/fragment_steps_tracker" />
+        android:id="@+id/sdkPlaygroundFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
+        android:label="@string/sdk_playground"
+        tools:layout="@layout/fragment_sdk_playground" />
+
     <fragment
-        android:id="@+id/yesterdaySyncPermissionsFragment"
+        android:id="@+id/backgroundStepsFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.backgroundsteps.BackgroundStepsFragment"
+        android:label="@string/background_steps"
+        tools:layout="@layout/fragment_background_steps" />
+
+    <fragment
+        android:id="@+id/yesterdaySyncFragment"
         android:name="com.rookmotion.rookconnectdemo.features.yesterdaysync.YesterdaySyncFragment"
         android:label="@string/yesterday_sync"
         tools:layout="@layout/fragment_yesterday_sync" />
+
+    <fragment
+        android:id="@+id/connectionsPageFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageFragment"
+        android:label="@string/connections_page"
+        tools:layout="@layout/fragment_connections_page" />
 </navigation>
