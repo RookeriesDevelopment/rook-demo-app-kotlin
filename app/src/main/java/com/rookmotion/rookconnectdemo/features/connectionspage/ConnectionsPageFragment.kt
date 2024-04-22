@@ -65,20 +65,20 @@ class ConnectionsPageFragment : Fragment() {
         observers()
         bindings()
 
-        connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, USER_ID)
+        connectionsPageViewModel.getAvailableDataSources()
     }
 
     private fun observers() {
         repeatOnResume {
-            connectionsPageViewModel.uiState.collectLatest { state ->
+            connectionsPageViewModel.state.collectLatest { state ->
                 if (state.loading) {
                     showProgress()
                 } else {
                     if (state.webViewUrl == null) {
                         binding.webView.loadUrl(BLANK_PAGE)
 
-                        if (state.dataSources.isEmpty()) {
-                            showError()
+                        if (state.error != null) {
+                            showError(state.error)
                         } else {
                             showItems()
 
@@ -94,7 +94,7 @@ class ConnectionsPageFragment : Fragment() {
 
     private fun bindings() {
         binding.error.retry.setOnClickListener {
-            connectionsPageViewModel.getDataSources(BuildConfig.CLIENT_UUID, USER_ID)
+            connectionsPageViewModel.getAvailableDataSources()
         }
         binding.items.setHasFixedSize(true)
         binding.items.adapter = dataSourceAdapter
@@ -107,8 +107,8 @@ class ConnectionsPageFragment : Fragment() {
         binding.webView.isVisible = false
     }
 
-    private fun showError() {
-        binding.error.message.setText(R.string.no_data_sources_found)
+    private fun showError(error: String) {
+        binding.error.message.text = error
 
         binding.progress.root.isVisible = false
         binding.error.root.isVisible = true
@@ -129,10 +129,7 @@ class ConnectionsPageFragment : Fragment() {
             connectionsPageViewModel.isHomePageUrl(request.url.toString()).also {
                 if (it) {
                     connectionsPageViewModel.closeConnectionUrl()
-                    connectionsPageViewModel.getDataSources(
-                        BuildConfig.CLIENT_UUID,
-                        USER_ID,
-                    )
+                    connectionsPageViewModel.getAvailableDataSources()
                 }
             }
         }

@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Rook Connect Demo"
 include ':app'
-include ':connectionspage'

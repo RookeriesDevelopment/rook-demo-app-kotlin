@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rookconnectdemo.R
+import com.rookmotion.rookconnectdemo.common.isDebug
 import com.rookmotion.rookconnectdemo.databinding.FragmentBackgroundStepsBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
-import io.tryrook.connectionspage.common.isDebug
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import java.time.LocalDate

@@ -73,8 +73,6 @@ dependencies {
 
     implementation "com.rookmotion.android:rook-sdk:$rook_sdk_version"
 
-    implementation(project(":connectionspage"))
-
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core_version"

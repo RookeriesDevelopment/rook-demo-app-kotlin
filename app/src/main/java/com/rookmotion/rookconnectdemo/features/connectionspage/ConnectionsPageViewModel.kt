@@ -2,41 +2,44 @@ package com.rookmotion.rookconnectdemo.features.connectionspage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.tryrook.connectionspage.domain.repository.DataSourceRepository
-import kotlinx.coroutines.CoroutineDispatcher
+import com.rookmotion.rook.sdk.RookDataSources
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ConnectionsPageViewModel(
-    private val dispatcher: CoroutineDispatcher,
+    private val rookDataSources: RookDataSources,
     private val connectionsPageUrl: String,
-    private val dataSourceRepository: DataSourceRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ConnectionsPageState())
-    val uiState get() = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(ConnectionsPageState())
+    val state get() = _state.asStateFlow()
 
-    fun getDataSources(clientUUID: String, userID: String) {
-        viewModelScope.launch(dispatcher) {
-            _uiState.update { it.copy(loading = true) }
+    fun getAvailableDataSources() {
+        viewModelScope.launch {
+            _state.update { it.copy(loading = true) }
 
-            val dataSources = dataSourceRepository.getDataSources(clientUUID, userID)
-
-            _uiState.update { it.copy(loading = false, dataSources = dataSources) }
+            rookDataSources.getAvailableDataSources().fold(
+                { dataSources ->
+                    _state.update { it.copy(loading = false, dataSources = dataSources) }
+                },
+                { throwable ->
+                    _state.update { it.copy(loading = false, error = "${throwable.message}") }
+                },
+            )
         }
     }
 
     fun openConnectionUrl(connectionUrl: String) {
-        viewModelScope.launch(dispatcher) {
-            _uiState.update { it.copy(webViewUrl = connectionUrl) }
+        viewModelScope.launch {
+            _state.update { it.copy(webViewUrl = connectionUrl) }
         }
     }
 
     fun closeConnectionUrl() {
-        viewModelScope.launch(dispatcher) {
-            _uiState.update { it.copy(webViewUrl = null) }
+        viewModelScope.launch {
+            _state.update { it.copy(webViewUrl = null) }
         }
     }
 
