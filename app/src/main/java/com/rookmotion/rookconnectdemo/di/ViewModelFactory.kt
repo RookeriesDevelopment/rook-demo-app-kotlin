@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
-import com.rookmotion.rookconnectdemo.HomeViewModel
+import com.rookmotion.rookconnectdemo.features.HomeViewModel
 import com.rookmotion.rookconnectdemo.features.backgroundsteps.BackgroundStepsViewModel
 import com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageViewModel
 import com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationViewModel
