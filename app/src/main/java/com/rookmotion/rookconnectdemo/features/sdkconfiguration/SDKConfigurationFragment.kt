@@ -65,6 +65,8 @@ class SDKConfigurationFragment : Fragment() {
                 binding.healthConnect.isEnabled = it
                 binding.stepsService.isEnabled = it
                 binding.yesterdaySyncPermissions.isEnabled = it
+                binding.connectionsPage.isEnabled = it
+                binding.connectionsPageBuild.isEnabled = it
             }
         }
 
@@ -90,6 +92,10 @@ class SDKConfigurationFragment : Fragment() {
             findNavController().navigate(
                 SDKConfigurationFragmentDirections.actionSDKConfigurationFragmentToConnectionsPageFragment()
             )
+        }
+
+        binding.connectionsPageBuild.setOnClickListener {
+            serviceLocator.rookDataSources.presentDataSourceView()
         }
     }
 

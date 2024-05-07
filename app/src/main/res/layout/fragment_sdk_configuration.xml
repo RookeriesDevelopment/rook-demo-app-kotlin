@@ -104,21 +104,25 @@
             android:id="@+id/steps_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/steps_tracker" />
+            android:text="@string/background_steps" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/yesterday_sync_permissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:text="@string/yesterday_sync" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/connections_page"
-            style="@style/Widget.Material3.Button.UnelevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/connections_page" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/connections_page_build"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/connections_page_pre_built" />
     </LinearLayout>
 </ScrollView>

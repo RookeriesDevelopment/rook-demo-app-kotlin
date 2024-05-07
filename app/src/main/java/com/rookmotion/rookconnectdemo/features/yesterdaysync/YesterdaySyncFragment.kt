@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookYesterdaySyncPermissions
-import com.rookmotion.rook.sdk.domain.enums.AvailabilityStatus
+import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.common.openPlayStore
 import com.rookmotion.rookconnectdemo.databinding.FragmentYesterdaySyncBinding
@@ -80,8 +80,8 @@ class YesterdaySyncFragment : Fragment() {
         }
 
         val string = when (RookHealthPermissionsManager.checkAvailability(requireContext())) {
-            AvailabilityStatus.INSTALLED -> "Health Connect is installed!"
-            AvailabilityStatus.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
+            HealthConnectAvailability.INSTALLED -> "Health Connect is installed!"
+            HealthConnectAvailability.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
             else -> "This device is not compatible with health connect. Go back!"
         }
 

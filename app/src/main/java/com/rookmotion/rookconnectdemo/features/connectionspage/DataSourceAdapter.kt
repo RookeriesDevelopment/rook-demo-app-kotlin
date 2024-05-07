@@ -6,19 +6,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.rookmotion.rook.sdk.domain.model.DataSource
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.ListTileDataSourceBinding
 
 class DataSourceAdapter(
     private val onClick: (String) -> Unit,
-) : ListAdapter<com.rookmotion.rook.sdk.domain.model.DataSource, DataSourceAdapter.ViewHolder>(
-    DiffCallback()
-) {
+) : ListAdapter<DataSource, DataSourceAdapter.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(private val binding: ListTileDataSourceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(dataSource: com.rookmotion.rook.sdk.domain.model.DataSource) {
+        fun bind(dataSource: DataSource) {
             binding.thumbnail.load(dataSource.image)
             binding.title.text = dataSource.name
             binding.subtitle.text = dataSource.description
@@ -40,18 +39,12 @@ class DataSourceAdapter(
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<com.rookmotion.rook.sdk.domain.model.DataSource>() {
-        override fun areItemsTheSame(
-            oldItem: com.rookmotion.rook.sdk.domain.model.DataSource,
-            newItem: com.rookmotion.rook.sdk.domain.model.DataSource,
-        ): Boolean {
+    class DiffCallback : DiffUtil.ItemCallback<DataSource>() {
+        override fun areItemsTheSame(oldItem: DataSource, newItem: DataSource): Boolean {
             return oldItem.name == newItem.name
         }
 
-        override fun areContentsTheSame(
-            oldItem: com.rookmotion.rook.sdk.domain.model.DataSource,
-            newItem: com.rookmotion.rook.sdk.domain.model.DataSource,
-        ): Boolean {
+        override fun areContentsTheSame(oldItem: DataSource, newItem: DataSource): Boolean {
             return oldItem == newItem
         }
     }

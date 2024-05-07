@@ -7,7 +7,7 @@ import com.rookmotion.rook.sdk.RookEventManager
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookHelpers
 import com.rookmotion.rook.sdk.RookSummaryManager
-import com.rookmotion.rook.sdk.domain.enums.AvailabilityStatus
+import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import com.rookmotion.rook.sdk.domain.enums.HealthDataType
 import com.rookmotion.rook.sdk.domain.enums.HealthPermission
 import com.rookmotion.rook.sdk.domain.exception.DeviceNotSupportedException
@@ -54,8 +54,8 @@ class SDKPlaygroundViewModel(
             _availability.emit(stringBuilder.toString())
 
             val string = when (RookHealthPermissionsManager.checkAvailability(context)) {
-                AvailabilityStatus.INSTALLED -> "Health Connect is installed! You can skip the next step"
-                AvailabilityStatus.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
+                HealthConnectAvailability.INSTALLED -> "Health Connect is installed! You can skip the next step"
+                HealthConnectAvailability.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
                 else -> "This device is not compatible with health connect. Please close the app"
             }
 
