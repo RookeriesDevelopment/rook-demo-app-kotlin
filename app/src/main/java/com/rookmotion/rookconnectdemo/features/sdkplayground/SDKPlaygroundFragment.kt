@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rook.sdk.RookHealthPermissionsManager
-import com.rookmotion.rook.sdk.domain.enums.HealthPermission
 import com.rookmotion.rookconnectdemo.common.openPlayStore
 import com.rookmotion.rookconnectdemo.databinding.FragmentSdkPlaygroundBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
@@ -58,7 +57,7 @@ class SDKPlaygroundFragment : Fragment() {
 
         binding.checkPermissions.setOnClickListener { sdkPlaygroundViewModel.checkPermissions() }
         binding.requestPermissions.setOnClickListener {
-            RookHealthPermissionsManager.launchPermissionsRequest(HealthPermission.ALL)
+            RookHealthPermissionsManager.launchPermissionsRequest()
         }
         binding.openHealthConnect.setOnClickListener { sdkPlaygroundViewModel.openHealthConnect() }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.RookStepsManager
 import com.rookmotion.rook.sdk.domain.exception.MissingAndroidPermissionsException
+import com.rookmotion.rook.sdk.domain.exception.SDKNotAuthorizedException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -23,13 +24,14 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
     init {
         viewModelScope.launch {
             while (isActive) {
-                rookStepsManager.getTodaySteps().fold(
+                rookStepsManager.getTodayStepsCount().fold(
                     { todaySteps ->
                         _state.update { it.copy(steps = todaySteps) }
                     },
                     { throwable ->
                         val error = when (throwable) {
                             is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
+                            is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${throwable.message}"
                             else -> "${throwable.message}"
                         }
 
@@ -42,15 +44,11 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
         }
     }
 
-    fun observeTodaySteps(): Flow<Long> {
-        return rookStepsManager.observeStepsOf(LocalDate.now())
-    }
-
     fun checkStepsServiceStatus() {
         viewModelScope.launch {
             val isAvailable = rookStepsManager.isAvailable()
             val hasPermissions = rookStepsManager.hasPermissions()
-            val isActive = rookStepsManager.isActive()
+            val isActive = rookStepsManager.isBackgroundAndroidStepsActive()
 
             _state.update {
                 it.copy(
@@ -71,7 +69,7 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            rookStepsManager.start().fold(
+            rookStepsManager.enableBackgroundAndroidSteps().fold(
                 {
                     checkStepsServiceStatus()
                 },
@@ -94,7 +92,7 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            rookStepsManager.stop().fold(
+            rookStepsManager.disableBackgroundAndroidSteps().fold(
                 {
                     checkStepsServiceStatus()
                 },

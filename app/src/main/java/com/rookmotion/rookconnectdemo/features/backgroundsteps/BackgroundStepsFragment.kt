@@ -14,7 +14,6 @@ import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
-import java.time.LocalDate
 
 class BackgroundStepsFragment : Fragment() {
 
@@ -85,16 +84,6 @@ class BackgroundStepsFragment : Fragment() {
 
                     binding.currentDaySteps.text = getString(R.string.current_day_steps, it.steps)
                 }
-            }
-        }
-
-        repeatOnResume {
-            backgroundStepsViewModel.observeTodaySteps().collect {
-                binding.observedSteps.text = getString(
-                    R.string.observed_steps_of,
-                    LocalDate.now().toString(),
-                    it,
-                )
             }
         }
     }

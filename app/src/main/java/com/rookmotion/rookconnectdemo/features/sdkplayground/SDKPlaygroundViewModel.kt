@@ -9,15 +9,17 @@ import com.rookmotion.rook.sdk.RookHelpers
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import com.rookmotion.rook.sdk.domain.enums.HealthDataType
-import com.rookmotion.rook.sdk.domain.enums.HealthPermission
+import com.rookmotion.rook.sdk.domain.enums.SyncStatus
 import com.rookmotion.rook.sdk.domain.exception.DeviceNotSupportedException
 import com.rookmotion.rook.sdk.domain.exception.HealthConnectNotInstalledException
 import com.rookmotion.rook.sdk.domain.exception.HttpRequestException
 import com.rookmotion.rook.sdk.domain.exception.MissingPermissionsException
 import com.rookmotion.rook.sdk.domain.exception.RequestQuotaExceededException
+import com.rookmotion.rook.sdk.domain.exception.SDKNotAuthorizedException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import com.rookmotion.rook.sdk.domain.exception.TimeoutException
 import com.rookmotion.rook.sdk.domain.exception.UserNotInitializedException
+import com.rookmotion.rook.sdk.domain.model.SyncStatusWithData
 import com.rookmotion.rookconnectdemo.extension.appendConsoleLine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -72,7 +74,7 @@ class SDKPlaygroundViewModel(
             stringBuilder.appendConsoleLine("Checking all permissions (Sleep, Physical and Body)...")
             _permissions.emit(stringBuilder.toString())
 
-            val result = rookHealthPermissionsManager.checkPermissions(HealthPermission.ALL)
+            val result = rookHealthPermissionsManager.checkPermissions()
 
             result.fold(
                 {
@@ -208,6 +210,11 @@ class SDKPlaygroundViewModel(
             _syncHealthData.emit(stringBuilder.toString())
 
             syncTemperatureEvents(today, stringBuilder)
+
+            stringBuilder.appendConsoleLine("Syncing Steps events of today: $today...")
+            _syncHealthData.emit(stringBuilder.toString())
+
+            syncStepsEvents(stringBuilder)
         }
     }
 
@@ -216,11 +223,18 @@ class SDKPlaygroundViewModel(
         RookHelpers.shouldSyncFor(HealthDataType.SLEEP_SUMMARY, yesterday).fold(
             { shouldSyncSummariesForYesterday ->
                 if (shouldSyncSummariesForYesterday) {
-                    val result = rookSummaryManager.syncSleepSummary(yesterday)
-
-                    result.fold(
+                    rookSummaryManager.syncSleepSummary(yesterday).fold(
                         {
-                            stringBuilder.appendConsoleLine("Sleep summary synced successfully")
+                            when (it) {
+                                SyncStatus.RECORDS_NOT_FOUND -> {
+                                    stringBuilder.appendConsoleLine("Sleep summary not found")
+                                }
+
+                                SyncStatus.SYNCED -> {
+                                    stringBuilder.appendConsoleLine("Sleep summary synced successfully")
+                                }
+                            }
+
                             _syncHealthData.emit(stringBuilder.toString())
                         },
                         {
@@ -233,6 +247,7 @@ class SDKPlaygroundViewModel(
                                 is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                                is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                                 else -> "${it.message}"
                             }
 
@@ -265,11 +280,18 @@ class SDKPlaygroundViewModel(
         RookHelpers.shouldSyncFor(HealthDataType.PHYSICAL_SUMMARY, yesterday).fold(
             { shouldSyncSummariesForYesterday ->
                 if (shouldSyncSummariesForYesterday) {
-                    val result = rookSummaryManager.syncPhysicalSummary(yesterday)
-
-                    result.fold(
+                    rookSummaryManager.syncPhysicalSummary(yesterday).fold(
                         {
-                            stringBuilder.appendConsoleLine("Physical summary synced successfully")
+                            when (it) {
+                                SyncStatus.RECORDS_NOT_FOUND -> {
+                                    stringBuilder.appendConsoleLine("Physical summary not found")
+                                }
+
+                                SyncStatus.SYNCED -> {
+                                    stringBuilder.appendConsoleLine("Physical summary synced successfully")
+                                }
+                            }
+
                             _syncHealthData.emit(stringBuilder.toString())
                         },
                         {
@@ -282,6 +304,7 @@ class SDKPlaygroundViewModel(
                                 is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                                is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                                 else -> "${it.message}"
                             }
 
@@ -311,11 +334,18 @@ class SDKPlaygroundViewModel(
         RookHelpers.shouldSyncFor(HealthDataType.BODY_SUMMARY, yesterday).fold(
             { shouldSyncSummariesForYesterday ->
                 if (shouldSyncSummariesForYesterday) {
-                    val result = rookSummaryManager.syncBodySummary(yesterday)
-
-                    result.fold(
+                    rookSummaryManager.syncBodySummary(yesterday).fold(
                         {
-                            stringBuilder.appendConsoleLine("Body summary synced successfully")
+                            when (it) {
+                                SyncStatus.RECORDS_NOT_FOUND -> {
+                                    stringBuilder.appendConsoleLine("Body summary not found")
+                                }
+
+                                SyncStatus.SYNCED -> {
+                                    stringBuilder.appendConsoleLine("Body summary synced successfully")
+                                }
+                            }
+
                             _syncHealthData.emit(stringBuilder.toString())
                         },
                         {
@@ -328,6 +358,7 @@ class SDKPlaygroundViewModel(
                                 is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                                is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                                 else -> "${it.message}"
                             }
 
@@ -354,11 +385,18 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncPhysicalEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        val result = rookEventManager.syncPhysicalEvents(today)
-
-        result.fold(
+        rookEventManager.syncPhysicalEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("Physical events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("Physical events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Physical events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -371,6 +409,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -382,11 +421,18 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncBloodGlucoseEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        val result = rookEventManager.syncBloodGlucoseEvents(today)
-
-        result.fold(
+        rookEventManager.syncBloodGlucoseEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("BloodGlucose events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("BloodGlucose events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("BloodGlucose events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -399,6 +445,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -413,11 +460,18 @@ class SDKPlaygroundViewModel(
         today: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        val result = rookEventManager.syncBloodPressureEvents(today)
-
-        result.fold(
+        rookEventManager.syncBloodPressureEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("BloodPressure events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("BloodPressure events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("BloodPressure events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -430,6 +484,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -441,11 +496,18 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncBodyMetricsEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        val result = rookEventManager.syncBodyMetricsEvents(today)
-
-        result.fold(
+        rookEventManager.syncBodyMetricsEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("BodyMetrics events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("BodyMetrics events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("BodyMetrics events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -458,6 +520,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -472,11 +535,18 @@ class SDKPlaygroundViewModel(
         today: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        val result = rookEventManager.syncBodyHeartRateEvents(today)
-
-        result.fold(
+        rookEventManager.syncBodyHeartRateEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("BodyHeartRate events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("BodyHearRate events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("BodyHeartRate events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -489,6 +559,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -503,11 +574,18 @@ class SDKPlaygroundViewModel(
         today: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        val result = rookEventManager.syncPhysicalHeartRateEvents(today)
-
-        result.fold(
+        rookEventManager.syncPhysicalHeartRateEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("PhysicalHeartRate events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("PhysicalHeartRate events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("PhysicalHeartRate events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -520,6 +598,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -531,11 +610,18 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncHydrationEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        val result = rookEventManager.syncHydrationEvents(today)
-
-        result.fold(
+        rookEventManager.syncHydrationEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("Hydration events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("Hydration events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Hydration events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -548,6 +634,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -559,11 +646,18 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncNutritionEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        val result = rookEventManager.syncNutritionEvents(today)
-
-        result.fold(
+        rookEventManager.syncNutritionEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("Nutrition events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("Nutrition events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Nutrition events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -576,6 +670,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -590,11 +685,18 @@ class SDKPlaygroundViewModel(
         today: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        val result = rookEventManager.syncBodyOxygenationEvents(today)
-
-        result.fold(
+        rookEventManager.syncBodyOxygenationEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("BodyOxygenation events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("BodyOxygenation events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("BodyOxygenation events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -607,6 +709,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -621,11 +724,18 @@ class SDKPlaygroundViewModel(
         today: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        val result = rookEventManager.syncPhysicalOxygenationEvents(today)
-
-        result.fold(
+        rookEventManager.syncPhysicalOxygenationEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("PhysicalOxygenation events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("PhysicalOxygenation events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("PhysicalOxygenation events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -638,6 +748,7 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -649,11 +760,18 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncTemperatureEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        val result = rookEventManager.syncTemperatureEvents(today)
-
-        result.fold(
+        rookEventManager.syncTemperatureEvents(today).fold(
             {
-                stringBuilder.appendConsoleLine("Temperature events synced successfully")
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("temperature events not found")
+                    }
+
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Temperature events synced successfully")
+                    }
+                }
+
                 _syncHealthData.emit(stringBuilder.toString())
             },
             {
@@ -666,10 +784,47 @@ class SDKPlaygroundViewModel(
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
                 stringBuilder.appendConsoleLine("Error syncing Temperature events:")
+                stringBuilder.appendConsoleLine(error)
+                _syncHealthData.emit(stringBuilder.toString())
+            }
+        )
+    }
+
+    private suspend fun syncStepsEvents(stringBuilder: StringBuilder) {
+        rookEventManager.syncTodayStepsCount().fold(
+            {
+                when (it) {
+                    SyncStatusWithData.RecordsNotFound -> {
+                        stringBuilder.appendConsoleLine("Steps events not found")
+                    }
+
+                    is SyncStatusWithData.Synced -> {
+                        stringBuilder.appendConsoleLine("${it.data} steps synced successfully")
+                    }
+                }
+
+                _syncHealthData.emit(stringBuilder.toString())
+            },
+            {
+                val error = when (it) {
+                    is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
+                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
+                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
+                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
+                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
+                    is TimeoutException -> "TimeoutException: ${it.message}"
+                    is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
+                    else -> "${it.message}"
+                }
+
+                stringBuilder.appendConsoleLine("Error syncing Steps events:")
                 stringBuilder.appendConsoleLine(error)
                 _syncHealthData.emit(stringBuilder.toString())
             }
@@ -735,13 +890,6 @@ class SDKPlaygroundViewModel(
                     _pendingEvents.emit(stringBuilder.toString())
                 }
             )
-        }
-    }
-
-    fun syncYesterdayHealthData() {
-        viewModelScope.launch {
-            rookSummaryManager.syncYesterdaySummaries()
-            rookEventManager.syncYesterdayEvents()
         }
     }
 }
