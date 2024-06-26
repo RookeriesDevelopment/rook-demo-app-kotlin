@@ -21,29 +21,6 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
     private val _state = MutableStateFlow(BackgroundStepsState())
     val state get() = _state.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            while (isActive) {
-                rookStepsManager.getTodayStepsCount().fold(
-                    { todaySteps ->
-                        _state.update { it.copy(steps = todaySteps) }
-                    },
-                    { throwable ->
-                        val error = when (throwable) {
-                            is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
-                            is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${throwable.message}"
-                            else -> "${throwable.message}"
-                        }
-
-                        Timber.e("Error obtaining steps: $error")
-                    }
-                )
-
-                delay(3000)
-            }
-        }
-    }
-
     fun checkStepsServiceStatus() {
         viewModelScope.launch {
             val isAvailable = rookStepsManager.isAvailable()
@@ -105,6 +82,25 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
                     Timber.e("Error stopping steps service: $error")
 
                     _state.update { it.copy(isLoading = false) }
+                }
+            )
+        }
+    }
+
+    fun syncTodaySteps() {
+        viewModelScope.launch {
+            rookStepsManager.syncTodayAndroidStepsCount().fold(
+                { todaySteps ->
+                    _state.update { it.copy(steps = todaySteps) }
+                },
+                { throwable ->
+                    val error = when (throwable) {
+                        is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
+                        is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${throwable.message}"
+                        else -> "${throwable.message}"
+                    }
+
+                    Timber.e("Error obtaining steps: $error")
                 }
             )
         }

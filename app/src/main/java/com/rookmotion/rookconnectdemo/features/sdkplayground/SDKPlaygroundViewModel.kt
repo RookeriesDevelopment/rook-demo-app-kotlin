@@ -796,7 +796,7 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncStepsEvents(stringBuilder: StringBuilder) {
-        rookEventManager.syncTodayStepsCount().fold(
+        rookEventManager.syncTodayHealthConnectStepsCount().fold(
             {
                 when (it) {
                     SyncStatusWithData.RecordsNotFound -> {

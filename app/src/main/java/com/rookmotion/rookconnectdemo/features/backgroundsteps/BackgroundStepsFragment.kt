@@ -7,13 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rookmotion.rookconnectdemo.R
-import com.rookmotion.rookconnectdemo.common.isDebug
 import com.rookmotion.rookconnectdemo.databinding.FragmentBackgroundStepsBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 class BackgroundStepsFragment : Fragment() {
 
@@ -30,10 +28,6 @@ class BackgroundStepsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentBackgroundStepsBinding.inflate(inflater, container, false)
-
-        if (isDebug && Timber.treeCount < 1) {
-            Timber.plant(Timber.DebugTree())
-        }
 
         return binding.root
     }
@@ -86,6 +80,8 @@ class BackgroundStepsFragment : Fragment() {
                 }
             }
         }
+
+        backgroundStepsViewModel.syncTodaySteps()
     }
 
     override fun onResume() {
