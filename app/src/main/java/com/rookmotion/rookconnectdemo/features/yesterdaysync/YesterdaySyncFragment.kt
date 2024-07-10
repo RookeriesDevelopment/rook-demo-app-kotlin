@@ -13,8 +13,10 @@ import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.common.openPlayStore
 import com.rookmotion.rookconnectdemo.databinding.FragmentYesterdaySyncBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
+import com.rookmotion.rookconnectdemo.extension.openApplicationSettings
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
+import com.rookmotion.rookconnectdemo.extension.toastLong
 
 class YesterdaySyncFragment : Fragment() {
 
@@ -56,7 +58,14 @@ class YesterdaySyncFragment : Fragment() {
         }
 
         binding.requestAndroidPermissions.setOnClickListener {
-            RookYesterdaySyncPermissions.requestAndroidPermissions(requireContext())
+            val shouldRequest = RookYesterdaySyncPermissions.shouldRequestAndroidPermissions(requireActivity())
+
+            if (shouldRequest) {
+                RookYesterdaySyncPermissions.requestAndroidPermissions(requireContext())
+            } else {
+                requireContext().openApplicationSettings()
+                requireContext().toastLong(R.string.give_permissions_manually)
+            }
         }
 
         binding.requestHealthConnectPermissions.setOnClickListener {

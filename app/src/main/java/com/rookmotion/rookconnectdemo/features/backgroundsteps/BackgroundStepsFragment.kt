@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.rookmotion.rook.sdk.RookStepsPermissions
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentBackgroundStepsBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
+import com.rookmotion.rookconnectdemo.extension.openApplicationSettings
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
+import com.rookmotion.rookconnectdemo.extension.toastLong
 import kotlinx.coroutines.flow.collectLatest
 
 class BackgroundStepsFragment : Fragment() {
@@ -51,7 +54,14 @@ class BackgroundStepsFragment : Fragment() {
                     binding.permissionsStatus.isChecked = false
                     binding.requestPermissions.isEnabled = true
                     binding.requestPermissions.setOnClickListener {
-                        backgroundStepsViewModel.requestStepsPermissions()
+                        val shouldRequest = RookStepsPermissions.shouldRequestPermissions(requireActivity())
+
+                        if (shouldRequest) {
+                            backgroundStepsViewModel.requestStepsPermissions()
+                        } else {
+                            requireContext().openApplicationSettings()
+                            requireContext().toastLong(R.string.give_permissions_manually)
+                        }
                     }
                 }
 

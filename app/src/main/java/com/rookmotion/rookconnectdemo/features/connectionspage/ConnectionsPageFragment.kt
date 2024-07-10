@@ -8,9 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.rookmotion.rookconnectdemo.BuildConfig
-import com.rookmotion.rookconnectdemo.R
-import com.rookmotion.rookconnectdemo.common.USER_ID
 import com.rookmotion.rookconnectdemo.databinding.FragmentConnectionsPageBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.enableJavaScriptAndDomStorage
