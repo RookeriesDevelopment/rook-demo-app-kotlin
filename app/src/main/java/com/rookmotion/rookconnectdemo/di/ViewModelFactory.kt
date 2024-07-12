@@ -16,6 +16,7 @@ import com.rookmotion.rookconnectdemo.features.yesterdaysync.YesterdaySyncViewMo
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
+
         if (modelClass.isAssignableFrom(SDKConfigurationViewModel::class.java)) {
             return SDKConfigurationViewModel(
                 rookConfigurationManager = serviceLocator.rookConfigurationManager,
@@ -52,7 +53,6 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
         if (modelClass.isAssignableFrom(ConnectionsPageViewModel::class.java)) {
             return ConnectionsPageViewModel(
                 rookDataSources = serviceLocator.rookDataSources,
-                connectionsPageUrl = serviceLocator.connectionsPageUrl,
             ) as T
         }
 

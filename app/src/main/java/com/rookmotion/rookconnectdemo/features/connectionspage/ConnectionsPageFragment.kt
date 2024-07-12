@@ -16,6 +16,7 @@ import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
 import com.rookmotion.rookconnectdemo.extension.setOnNavigationRequestListener
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 class ConnectionsPageFragment : Fragment() {
 
@@ -123,6 +124,8 @@ class ConnectionsPageFragment : Fragment() {
     private fun showWebView(url: String) {
         binding.webView.enableJavaScriptAndDomStorage()
         binding.webView.setOnNavigationRequestListener { request ->
+            Timber.i("Navigation requested to: ${request.url}")
+
             connectionsPageViewModel.isHomePageUrl(request.url.toString()).also {
                 if (it) {
                     connectionsPageViewModel.closeConnectionUrl()

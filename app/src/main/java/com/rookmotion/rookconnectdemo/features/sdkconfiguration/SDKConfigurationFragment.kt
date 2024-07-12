@@ -95,7 +95,7 @@ class SDKConfigurationFragment : Fragment() {
         }
 
         binding.connectionsPageBuild.setOnClickListener {
-            serviceLocator.rookDataSources.presentDataSourceView()
+            serviceLocator.rookDataSources.presentDataSourceView("https://tryrook.io")
         }
     }
 

@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 
 class ConnectionsPageViewModel(
     private val rookDataSources: RookDataSources,
-    private val connectionsPageUrl: String,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ConnectionsPageState())
@@ -20,7 +19,7 @@ class ConnectionsPageViewModel(
         viewModelScope.launch {
             _state.update { it.copy(loading = true) }
 
-            rookDataSources.getAvailableDataSources().fold(
+            rookDataSources.getAvailableDataSources(HOME_PAGE_URL).fold(
                 { dataSources ->
                     _state.update { it.copy(loading = false, dataSources = dataSources) }
                 },
@@ -44,6 +43,8 @@ class ConnectionsPageViewModel(
     }
 
     fun isHomePageUrl(url: String): Boolean {
-        return url.startsWith(connectionsPageUrl)
+        return url.startsWith(HOME_PAGE_URL)
     }
 }
+
+private const val HOME_PAGE_URL = "https://www.google.com"
