@@ -1,13 +1,17 @@
 package com.rookmotion.rookconnectdemo.features.yesterdaysync
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.rookmotion.rook.sdk.RookHealthPermissionsManager
-import com.rookmotion.rook.sdk.RookYesterdaySyncPermissions
+import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.common.openPlayStore
@@ -27,6 +31,28 @@ class YesterdaySyncFragment : Fragment() {
         ViewModelFactory(serviceLocator)
     }
 
+    private val healthConnectBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val permissionsGranted = intent?.getBooleanExtra(
+                /* name = */ RookPermissionsManager.EXTRA_HEALTH_CONNECT_PERMISSIONS_GRANTED,
+                /* defaultValue = */ false
+            ) ?: false
+
+            yesterdaySyncViewModel.onHealthConnectPermissionsResult(permissionsGranted)
+        }
+    }
+
+    private val androidBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val permissionsGranted = intent?.getBooleanExtra(
+                /* name = */ RookPermissionsManager.EXTRA_ANDROID_PERMISSIONS_GRANTED,
+                /* defaultValue = */ false
+            ) ?: false
+
+            yesterdaySyncViewModel.onAndroidPermissionsResult(permissionsGranted)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,34 +60,66 @@ class YesterdaySyncFragment : Fragment() {
     ): View {
         _binding = FragmentYesterdaySyncBinding.inflate(inflater, container, false)
 
+        ContextCompat.registerReceiver(
+            requireContext(),
+            healthConnectBroadcastReceiver,
+            IntentFilter(RookPermissionsManager.ACTION_HEALTH_CONNECT_PERMISSIONS),
+            ContextCompat.RECEIVER_EXPORTED,
+        )
+
+        ContextCompat.registerReceiver(
+            requireContext(),
+            androidBroadcastReceiver,
+            IntentFilter(RookPermissionsManager.ACTION_ANDROID_PERMISSIONS),
+            ContextCompat.RECEIVER_EXPORTED,
+        )
+
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        requireContext().unregisterReceiver(healthConnectBroadcastReceiver)
+        requireContext().unregisterReceiver(androidBroadcastReceiver)
+
         _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.downloadHealthConnect.setOnClickListener { openPlayStore(requireContext()) }
-
         repeatOnResume {
-            if (RookYesterdaySyncPermissions.hasHealthConnectPermissions(requireContext())) {
-                binding.healthConnectPermissions.isChecked = true
-                binding.requestHealthConnectPermissions.isEnabled = false
-            } else {
-                binding.healthConnectPermissions.isChecked = false
-                binding.requestHealthConnectPermissions.isEnabled = true
+            yesterdaySyncViewModel.hasHealthConnectPermissions.collect {
+                if (it) {
+                    binding.healthConnectPermissions.isChecked = true
+                    binding.requestHealthConnectPermissions.isEnabled = false
+                } else {
+                    binding.healthConnectPermissions.isChecked = false
+                    binding.requestHealthConnectPermissions.isEnabled = true
+                }
             }
         }
 
+        repeatOnResume {
+            yesterdaySyncViewModel.hasAndroidPermissions.collect {
+                if (it) {
+                    binding.androidPermissions.isChecked = true
+                    binding.requestAndroidPermissions.isEnabled = false
+                } else {
+                    binding.androidPermissions.isChecked = false
+                    binding.requestAndroidPermissions.isEnabled = true
+                }
+            }
+        }
+
+        binding.downloadHealthConnect.setOnClickListener { openPlayStore(requireContext()) }
+
         binding.requestAndroidPermissions.setOnClickListener {
-            val shouldRequest = RookYesterdaySyncPermissions.shouldRequestAndroidPermissions(requireActivity())
+            val shouldRequest = RookPermissionsManager.shouldRequestAndroidPermissions(requireActivity())
 
             if (shouldRequest) {
-                RookYesterdaySyncPermissions.requestAndroidPermissions(requireContext())
+                yesterdaySyncViewModel.requestAndroidPermissions()
             } else {
                 requireContext().openApplicationSettings()
                 requireContext().toastLong(R.string.give_permissions_manually)
@@ -69,7 +127,7 @@ class YesterdaySyncFragment : Fragment() {
         }
 
         binding.requestHealthConnectPermissions.setOnClickListener {
-            RookYesterdaySyncPermissions.requestHealthConnectPermissions(requireContext())
+            yesterdaySyncViewModel.requestHealthConnectPermissions()
         }
 
         binding.openHealthConnect.setOnClickListener {
@@ -80,21 +138,11 @@ class YesterdaySyncFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if (RookYesterdaySyncPermissions.hasAndroidPermissions(requireContext())) {
-            binding.androidPermissions.isChecked = true
-            binding.requestAndroidPermissions.isEnabled = false
-        } else {
-            binding.androidPermissions.isChecked = false
-            binding.requestAndroidPermissions.isEnabled = true
-        }
-
-        val string = when (RookHealthPermissionsManager.checkAvailability(requireContext())) {
+        binding.availabilityStatus.text = when (yesterdaySyncViewModel.checkHealthConnectAvailability()) {
             HealthConnectAvailability.INSTALLED -> "Health Connect is installed!"
             HealthConnectAvailability.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
             else -> "This device is not compatible with health connect. Go back!"
         }
-
-        binding.availabilityStatus.text = string
 
         checkYesterdaySyncAcceptation()
     }

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.rookmotion.rook.sdk.RookStepsPermissions
+import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rookconnectdemo.R
 import com.rookmotion.rookconnectdemo.databinding.FragmentBackgroundStepsBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
@@ -45,7 +45,7 @@ class BackgroundStepsFragment : Fragment() {
 
         repeatOnResume {
             backgroundStepsViewModel.state.collectLatest {
-                if (it.hasPermissions) {
+                if (it.hasAndroidPermissions) {
                     binding.permissionsStatus.setText(R.string.permissions_are_granted)
                     binding.permissionsStatus.isChecked = true
                     binding.requestPermissions.isEnabled = false
@@ -54,10 +54,10 @@ class BackgroundStepsFragment : Fragment() {
                     binding.permissionsStatus.isChecked = false
                     binding.requestPermissions.isEnabled = true
                     binding.requestPermissions.setOnClickListener {
-                        val shouldRequest = RookStepsPermissions.shouldRequestPermissions(requireActivity())
+                        val shouldRequest = RookPermissionsManager.shouldRequestAndroidPermissions(requireActivity())
 
                         if (shouldRequest) {
-                            backgroundStepsViewModel.requestStepsPermissions()
+                            backgroundStepsViewModel.requestAndroidPermissions()
                         } else {
                             requireContext().openApplicationSettings()
                             requireContext().toastLong(R.string.give_permissions_manually)

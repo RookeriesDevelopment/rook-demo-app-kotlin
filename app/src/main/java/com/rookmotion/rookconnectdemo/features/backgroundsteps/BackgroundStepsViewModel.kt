@@ -2,21 +2,21 @@ package com.rookmotion.rookconnectdemo.features.backgroundsteps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rook.sdk.RookStepsManager
 import com.rookmotion.rook.sdk.domain.exception.MissingAndroidPermissionsException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotAuthorizedException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDate
 
-class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) : ViewModel() {
+class BackgroundStepsViewModel(
+    private val rookPermissionsManager: RookPermissionsManager,
+    private val rookStepsManager: RookStepsManager
+) : ViewModel() {
 
     private val _state = MutableStateFlow(BackgroundStepsState())
     val state get() = _state.asStateFlow()
@@ -24,7 +24,7 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
     fun checkStepsServiceStatus() {
         viewModelScope.launch {
             val isAvailable = rookStepsManager.isAvailable()
-            val hasPermissions = rookStepsManager.hasPermissions()
+            val hasAndroidPermissions = rookPermissionsManager.checkAndroidPermissions()
             val isActive = rookStepsManager.isBackgroundAndroidStepsActive()
 
             _state.update {
@@ -32,14 +32,14 @@ class BackgroundStepsViewModel(private val rookStepsManager: RookStepsManager) :
                     isLoading = false,
                     isAvailable = isAvailable,
                     isActive = isActive,
-                    hasPermissions = hasPermissions,
+                    hasAndroidPermissions = hasAndroidPermissions,
                 )
             }
         }
     }
 
-    fun requestStepsPermissions() {
-        rookStepsManager.requestPermissions()
+    fun requestAndroidPermissions() {
+        rookPermissionsManager.requestAndroidPermissions()
     }
 
     fun startStepsService() {

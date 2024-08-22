@@ -10,8 +10,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.rookmotion.rook.sdk.RookYesterdaySyncPermissions
-import com.rookmotion.rook.sdk.domain.enums.SyncInstruction
 import com.rookmotion.rook.sdk.framework.delegate.rookYesterdaySync
 import com.rookmotion.rookconnectdemo.BuildConfig
 import com.rookmotion.rookconnectdemo.R
@@ -36,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
         secretKey = BuildConfig.SECRET_KEY,
         environment = rookEnvironment,
         state = Lifecycle.State.CREATED,
-        doOnEnd = SyncInstruction.SYNC_OLDEST,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

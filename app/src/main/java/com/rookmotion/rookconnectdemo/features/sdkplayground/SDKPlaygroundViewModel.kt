@@ -1,11 +1,10 @@
 package com.rookmotion.rookconnectdemo.features.sdkplayground
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.RookEventManager
-import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookHelpers
+import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rook.sdk.domain.enums.HealthConnectAvailability
 import com.rookmotion.rook.sdk.domain.enums.HealthDataType
@@ -13,7 +12,7 @@ import com.rookmotion.rook.sdk.domain.enums.SyncStatus
 import com.rookmotion.rook.sdk.domain.exception.DeviceNotSupportedException
 import com.rookmotion.rook.sdk.domain.exception.HealthConnectNotInstalledException
 import com.rookmotion.rook.sdk.domain.exception.HttpRequestException
-import com.rookmotion.rook.sdk.domain.exception.MissingPermissionsException
+import com.rookmotion.rook.sdk.domain.exception.MissingHealthConnectPermissionsException
 import com.rookmotion.rook.sdk.domain.exception.RequestQuotaExceededException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotAuthorizedException
 import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
@@ -28,7 +27,7 @@ import timber.log.Timber
 import java.time.LocalDate
 
 class SDKPlaygroundViewModel(
-    private val rookHealthPermissionsManager: RookHealthPermissionsManager,
+    private val rookPermissionsManager: RookPermissionsManager,
     private val rookSummaryManager: RookSummaryManager,
     private val rookEventManager: RookEventManager,
 ) : ViewModel() {
@@ -48,14 +47,14 @@ class SDKPlaygroundViewModel(
     private val _pendingEvents = MutableStateFlow("")
     val pendingEvents get() = _pendingEvents.asStateFlow()
 
-    fun checkAvailability(context: Context) {
+    fun checkAvailability() {
         val stringBuilder = StringBuilder()
 
         viewModelScope.launch {
             stringBuilder.appendConsoleLine("Checking availability...")
             _availability.emit(stringBuilder.toString())
 
-            val string = when (RookHealthPermissionsManager.checkAvailability(context)) {
+            val string = when (rookPermissionsManager.checkHealthConnectAvailability()) {
                 HealthConnectAvailability.INSTALLED -> "Health Connect is installed! You can skip the next step"
                 HealthConnectAvailability.NOT_INSTALLED -> "Health Connect is not installed. Please download from the Play Store"
                 else -> "This device is not compatible with health connect. Please close the app"
@@ -74,7 +73,7 @@ class SDKPlaygroundViewModel(
             stringBuilder.appendConsoleLine("Checking all permissions (Sleep, Physical and Body)...")
             _permissions.emit(stringBuilder.toString())
 
-            val result = rookHealthPermissionsManager.checkPermissions()
+            val result = rookPermissionsManager.checkHealthConnectPermissions()
 
             result.fold(
                 {
@@ -109,7 +108,7 @@ class SDKPlaygroundViewModel(
         viewModelScope.launch {
             Timber.i("Opening Health Connect...")
 
-            val result = rookHealthPermissionsManager.openHealthConnectSettings()
+            val result = rookPermissionsManager.openHealthConnectSettings()
 
             result.fold(
                 {
@@ -243,7 +242,7 @@ class SDKPlaygroundViewModel(
                                 is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                                 is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                                 is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                                is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                                is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                                 is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -300,7 +299,7 @@ class SDKPlaygroundViewModel(
                                 is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                                 is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                                 is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                                is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                                is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                                 is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -354,7 +353,7 @@ class SDKPlaygroundViewModel(
                                 is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                                 is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                                 is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                                is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                                is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                                 is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                                 is TimeoutException -> "TimeoutException: ${it.message}"
                                 is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -405,7 +404,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -441,7 +440,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -480,7 +479,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -516,7 +515,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -555,7 +554,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -594,7 +593,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -630,7 +629,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -666,7 +665,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -705,7 +704,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -744,7 +743,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -780,7 +779,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
@@ -816,7 +815,7 @@ class SDKPlaygroundViewModel(
                     is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
                     is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
                     is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                    is MissingPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
                     is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
                     is TimeoutException -> "TimeoutException: ${it.message}"
                     is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"

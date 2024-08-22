@@ -3,7 +3,6 @@ package com.rookmotion.rookconnectdemo.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rookmotion.rook.sdk.RookEventManager
-import com.rookmotion.rook.sdk.RookHealthPermissionsManager
 import com.rookmotion.rook.sdk.RookSummaryManager
 import com.rookmotion.rookconnectdemo.features.HomeViewModel
 import com.rookmotion.rookconnectdemo.features.backgroundsteps.BackgroundStepsViewModel
@@ -25,7 +24,7 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
 
         if (modelClass.isAssignableFrom(SDKPlaygroundViewModel::class.java)) {
             return SDKPlaygroundViewModel(
-                rookHealthPermissionsManager = RookHealthPermissionsManager(serviceLocator.rookConfigurationManager),
+                rookPermissionsManager = serviceLocator.rookPermissionsManager,
                 rookSummaryManager = RookSummaryManager(serviceLocator.rookConfigurationManager),
                 rookEventManager = RookEventManager(serviceLocator.rookConfigurationManager),
             ) as T
@@ -33,7 +32,7 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
 
         if (modelClass.isAssignableFrom(YesterdaySyncViewModel::class.java)) {
             return YesterdaySyncViewModel(
-                rookHealthPermissionsManager = RookHealthPermissionsManager(serviceLocator.rookConfigurationManager),
+                rookPermissionsManager = serviceLocator.rookPermissionsManager,
                 rookDemoPreferences = serviceLocator.rookDemoPreferences,
             ) as T
         }
@@ -46,6 +45,7 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
 
         if (modelClass.isAssignableFrom(BackgroundStepsViewModel::class.java)) {
             return BackgroundStepsViewModel(
+                rookPermissionsManager = serviceLocator.rookPermissionsManager,
                 rookStepsManager = serviceLocator.rookStepsManager,
             ) as T
         }

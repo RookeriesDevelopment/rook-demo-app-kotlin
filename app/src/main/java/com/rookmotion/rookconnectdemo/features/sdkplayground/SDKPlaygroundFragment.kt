@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.rookmotion.rook.sdk.RookHealthPermissionsManager
+import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rookconnectdemo.common.openPlayStore
 import com.rookmotion.rookconnectdemo.databinding.FragmentSdkPlaygroundBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
@@ -29,7 +29,7 @@ class SDKPlaygroundFragment : Fragment() {
     ): View {
         _binding = FragmentSdkPlaygroundBinding.inflate(inflater, container, false)
 
-        RookHealthPermissionsManager.registerPermissionsRequestLauncher(this)
+        RookPermissionsManager.registerPermissionsRequestLauncher(this)
 
         return binding.root
     }
@@ -47,7 +47,7 @@ class SDKPlaygroundFragment : Fragment() {
         }
 
         binding.checkAvailability.setOnClickListener {
-            sdkPlaygroundViewModel.checkAvailability(requireContext())
+            sdkPlaygroundViewModel.checkAvailability()
         }
         binding.downloadHealthConnect.setOnClickListener { openPlayStore(requireContext()) }
 
@@ -57,7 +57,7 @@ class SDKPlaygroundFragment : Fragment() {
 
         binding.checkPermissions.setOnClickListener { sdkPlaygroundViewModel.checkPermissions() }
         binding.requestPermissions.setOnClickListener {
-            RookHealthPermissionsManager.launchPermissionsRequest()
+            RookPermissionsManager.launchPermissionsRequest()
         }
         binding.openHealthConnect.setOnClickListener { sdkPlaygroundViewModel.openHealthConnect() }
 
@@ -85,7 +85,7 @@ class SDKPlaygroundFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        RookHealthPermissionsManager.unregisterPermissionsRequestLauncher()
+        RookPermissionsManager.unregisterPermissionsRequestLauncher()
         super.onDestroy()
     }
 }
