@@ -3,10 +3,12 @@ package com.rookmotion.rookconnectdemo.features.connectionspage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.RookDataSources
+import com.rookmotion.rook.sdk.domain.enums.DataSourceType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ConnectionsPageViewModel(
     private val rookDataSources: RookDataSources,
@@ -26,6 +28,21 @@ class ConnectionsPageViewModel(
                 { throwable ->
                     _state.update { it.copy(loading = false, error = "${throwable.message}") }
                 },
+            )
+        }
+    }
+
+    fun revokeDataSource(dataSourceType: DataSourceType) {
+        viewModelScope.launch {
+            _state.update { it.copy(loading = true) }
+
+            rookDataSources.revokeDataSource(dataSourceType).fold(
+                {
+                    getAvailableDataSources()
+                },
+                { throwable ->
+                    Timber.e(throwable, "Error revoking data source")
+                }
             )
         }
     }

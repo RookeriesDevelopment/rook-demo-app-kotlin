@@ -18,7 +18,7 @@ class DataSourceAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(dataSource: DataSource) {
-            binding.thumbnail.load(dataSource.image)
+            binding.thumbnail.load(dataSource.imageUrl)
             binding.title.text = dataSource.name
             binding.subtitle.text = dataSource.description
 
