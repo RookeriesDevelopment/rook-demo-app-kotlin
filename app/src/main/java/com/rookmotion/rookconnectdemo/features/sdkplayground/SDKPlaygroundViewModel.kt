@@ -130,87 +130,84 @@ class SDKPlaygroundViewModel(
         }
     }
 
-    fun syncHealthData() {
+    fun syncHealthData(localDate: LocalDate) {
         val stringBuilder = StringBuilder()
-
-        val today = LocalDate.now()
-        val yesterday = today.minusDays(1)
 
         viewModelScope.launch {
             stringBuilder.appendConsoleLine("Syncing health data...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            stringBuilder.appendConsoleLine("Syncing Sleep summary of yesterday: $yesterday...")
+            stringBuilder.appendConsoleLine("Syncing Sleep summary: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncSleepSummary(yesterday, stringBuilder)
+            syncSleepSummary(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Physical summary of yesterday: $yesterday...")
+            stringBuilder.appendConsoleLine("Syncing Physical summary: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncPhysicalSummary(yesterday, stringBuilder)
+            syncPhysicalSummary(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Body summary of yesterday: $yesterday...")
+            stringBuilder.appendConsoleLine("Syncing Body summary: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncBodySummary(yesterday, stringBuilder)
+            syncBodySummary(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Physical events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing Physical events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncPhysicalEvents(today, stringBuilder)
+            syncPhysicalEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing BloodGlucose events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing BloodGlucose events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncBloodGlucoseEvents(today, stringBuilder)
+            syncBloodGlucoseEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing BloodPressure events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing BloodPressure events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncBloodPressureEvents(today, stringBuilder)
+            syncBloodPressureEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing BodyMetrics events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing BodyMetrics events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncBodyMetricsEvents(today, stringBuilder)
+            syncBodyMetricsEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing BodyHeartRate events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing BodyHeartRate events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncBodyHeartRateEvents(today, stringBuilder)
+            syncBodyHeartRateEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing PhysicalHeartRate events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing PhysicalHeartRate events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncPhysicalHeartRateEvents(today, stringBuilder)
+            syncPhysicalHeartRateEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Hydration events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing Hydration events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncHydrationEvents(today, stringBuilder)
+            syncHydrationEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Nutrition events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing Nutrition events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncNutritionEvents(today, stringBuilder)
+            syncNutritionEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing BodyOxygenation events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing BodyOxygenation events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncBodyOxygenationEvents(today, stringBuilder)
+            syncBodyOxygenationEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing PhysicalOxygenation events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing PhysicalOxygenation events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncPhysicalOxygenationEvents(today, stringBuilder)
+            syncPhysicalOxygenationEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Temperature events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing Temperature events: $localDate...")
             _syncHealthData.emit(stringBuilder.toString())
 
-            syncTemperatureEvents(today, stringBuilder)
+            syncTemperatureEvents(localDate, stringBuilder)
 
-            stringBuilder.appendConsoleLine("Syncing Steps events of today: $today...")
+            stringBuilder.appendConsoleLine("Syncing Steps events of today: ${LocalDate.now()}...")
             _syncHealthData.emit(stringBuilder.toString())
 
             syncStepsEvents(stringBuilder)
@@ -218,50 +215,32 @@ class SDKPlaygroundViewModel(
     }
 
 
-    private suspend fun syncSleepSummary(yesterday: LocalDate, stringBuilder: StringBuilder) {
-        RookHelpers.shouldSyncFor(HealthDataType.SLEEP_SUMMARY, yesterday).fold(
-            { shouldSyncSummariesForYesterday ->
-                if (shouldSyncSummariesForYesterday) {
-                    rookSummaryManager.syncSleepSummary(yesterday).fold(
-                        {
-                            when (it) {
-                                SyncStatus.RECORDS_NOT_FOUND -> {
-                                    stringBuilder.appendConsoleLine("Sleep summary not found")
-                                }
+    private suspend fun syncSleepSummary(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookSummaryManager.syncSleepSummary(localDate).fold(
+            {
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("Sleep summary not found")
+                    }
 
-                                SyncStatus.SYNCED -> {
-                                    stringBuilder.appendConsoleLine("Sleep summary synced successfully")
-                                }
-                            }
-
-                            _syncHealthData.emit(stringBuilder.toString())
-                        },
-                        {
-                            val error = when (it) {
-                                is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                                is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                                is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                                is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                                is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
-                                is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
-                                is TimeoutException -> "TimeoutException: ${it.message}"
-                                is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                                is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
-                                else -> "${it.message}"
-                            }
-
-                            stringBuilder.appendConsoleLine("Error syncing Sleep summary:")
-                            stringBuilder.appendConsoleLine(error)
-                            _syncHealthData.emit(stringBuilder.toString())
-                        }
-                    )
-                } else {
-                    stringBuilder.appendConsoleLine("Sleep summary was already synced for this day")
-                    _syncHealthData.emit(stringBuilder.toString())
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Sleep summary synced successfully")
+                    }
                 }
-            }, {
+
+                _syncHealthData.emit(stringBuilder.toString())
+            },
+            {
                 val error = when (it) {
                     is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
+                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
+                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
+                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
+                    is TimeoutException -> "TimeoutException: ${it.message}"
+                    is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -273,52 +252,34 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncPhysicalSummary(
-        yesterday: LocalDate,
+        localDate: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        RookHelpers.shouldSyncFor(HealthDataType.PHYSICAL_SUMMARY, yesterday).fold(
-            { shouldSyncSummariesForYesterday ->
-                if (shouldSyncSummariesForYesterday) {
-                    rookSummaryManager.syncPhysicalSummary(yesterday).fold(
-                        {
-                            when (it) {
-                                SyncStatus.RECORDS_NOT_FOUND -> {
-                                    stringBuilder.appendConsoleLine("Physical summary not found")
-                                }
+        rookSummaryManager.syncPhysicalSummary(localDate).fold(
+            {
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("Physical summary not found")
+                    }
 
-                                SyncStatus.SYNCED -> {
-                                    stringBuilder.appendConsoleLine("Physical summary synced successfully")
-                                }
-                            }
-
-                            _syncHealthData.emit(stringBuilder.toString())
-                        },
-                        {
-                            val error = when (it) {
-                                is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                                is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                                is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                                is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                                is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
-                                is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
-                                is TimeoutException -> "TimeoutException: ${it.message}"
-                                is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                                is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
-                                else -> "${it.message}"
-                            }
-
-                            stringBuilder.appendConsoleLine("Error syncing Physical summary:")
-                            stringBuilder.appendConsoleLine(error)
-                            _syncHealthData.emit(stringBuilder.toString())
-                        }
-                    )
-                } else {
-                    stringBuilder.appendConsoleLine("Physical summary was already synced for this day")
-                    _syncHealthData.emit(stringBuilder.toString())
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Physical summary synced successfully")
+                    }
                 }
-            }, {
+
+                _syncHealthData.emit(stringBuilder.toString())
+            },
+            {
                 val error = when (it) {
                     is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
+                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
+                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
+                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
+                    is TimeoutException -> "TimeoutException: ${it.message}"
+                    is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -329,50 +290,32 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncBodySummary(yesterday: LocalDate, stringBuilder: StringBuilder) {
-        RookHelpers.shouldSyncFor(HealthDataType.BODY_SUMMARY, yesterday).fold(
-            { shouldSyncSummariesForYesterday ->
-                if (shouldSyncSummariesForYesterday) {
-                    rookSummaryManager.syncBodySummary(yesterday).fold(
-                        {
-                            when (it) {
-                                SyncStatus.RECORDS_NOT_FOUND -> {
-                                    stringBuilder.appendConsoleLine("Body summary not found")
-                                }
+    private suspend fun syncBodySummary(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookSummaryManager.syncBodySummary(localDate).fold(
+            {
+                when (it) {
+                    SyncStatus.RECORDS_NOT_FOUND -> {
+                        stringBuilder.appendConsoleLine("Body summary not found")
+                    }
 
-                                SyncStatus.SYNCED -> {
-                                    stringBuilder.appendConsoleLine("Body summary synced successfully")
-                                }
-                            }
-
-                            _syncHealthData.emit(stringBuilder.toString())
-                        },
-                        {
-                            val error = when (it) {
-                                is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
-                                is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
-                                is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
-                                is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
-                                is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
-                                is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
-                                is TimeoutException -> "TimeoutException: ${it.message}"
-                                is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
-                                is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
-                                else -> "${it.message}"
-                            }
-
-                            stringBuilder.appendConsoleLine("Error syncing Body summary:")
-                            stringBuilder.appendConsoleLine(error)
-                            _syncHealthData.emit(stringBuilder.toString())
-                        }
-                    )
-                } else {
-                    stringBuilder.appendConsoleLine("Body summary was already synced for this day")
-                    _syncHealthData.emit(stringBuilder.toString())
+                    SyncStatus.SYNCED -> {
+                        stringBuilder.appendConsoleLine("Body summary synced successfully")
+                    }
                 }
-            }, {
+
+                _syncHealthData.emit(stringBuilder.toString())
+            },
+            {
                 val error = when (it) {
                     is SDKNotInitializedException -> "SDKNotInitializedException: ${it.message}"
+                    is UserNotInitializedException -> "UserNotInitializedException: ${it.message}"
+                    is HealthConnectNotInstalledException -> "HealthConnectNotInstalledException: ${it.message}"
+                    is DeviceNotSupportedException -> "DeviceNotSupportedException: ${it.message}"
+                    is MissingHealthConnectPermissionsException -> "MissingPermissionsException: ${it.message}"
+                    is RequestQuotaExceededException -> "RequestQuotaExceededException: ${it.message}"
+                    is TimeoutException -> "TimeoutException: ${it.message}"
+                    is HttpRequestException -> "HttpRequestException: code: ${it.code} message: ${it.message}"
+                    is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${it.message}"
                     else -> "${it.message}"
                 }
 
@@ -383,8 +326,8 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncPhysicalEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        rookEventManager.syncPhysicalEvents(today).fold(
+    private suspend fun syncPhysicalEvents(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookEventManager.syncPhysicalEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -419,8 +362,8 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncBloodGlucoseEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        rookEventManager.syncBloodGlucoseEvents(today).fold(
+    private suspend fun syncBloodGlucoseEvents(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookEventManager.syncBloodGlucoseEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -456,10 +399,10 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncBloodPressureEvents(
-        today: LocalDate,
+        localDate: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        rookEventManager.syncBloodPressureEvents(today).fold(
+        rookEventManager.syncBloodPressureEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -494,8 +437,8 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncBodyMetricsEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        rookEventManager.syncBodyMetricsEvents(today).fold(
+    private suspend fun syncBodyMetricsEvents(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookEventManager.syncBodyMetricsEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -531,10 +474,10 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncBodyHeartRateEvents(
-        today: LocalDate,
+        localDate: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        rookEventManager.syncBodyHeartRateEvents(today).fold(
+        rookEventManager.syncBodyHeartRateEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -570,10 +513,10 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncPhysicalHeartRateEvents(
-        today: LocalDate,
+        localDate: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        rookEventManager.syncPhysicalHeartRateEvents(today).fold(
+        rookEventManager.syncPhysicalHeartRateEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -608,8 +551,8 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncHydrationEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        rookEventManager.syncHydrationEvents(today).fold(
+    private suspend fun syncHydrationEvents(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookEventManager.syncHydrationEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -644,8 +587,8 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncNutritionEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        rookEventManager.syncNutritionEvents(today).fold(
+    private suspend fun syncNutritionEvents(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookEventManager.syncNutritionEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -681,10 +624,10 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncBodyOxygenationEvents(
-        today: LocalDate,
+        localDate: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        rookEventManager.syncBodyOxygenationEvents(today).fold(
+        rookEventManager.syncBodyOxygenationEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -720,10 +663,10 @@ class SDKPlaygroundViewModel(
     }
 
     private suspend fun syncPhysicalOxygenationEvents(
-        today: LocalDate,
+        localDate: LocalDate,
         stringBuilder: StringBuilder,
     ) {
-        rookEventManager.syncPhysicalOxygenationEvents(today).fold(
+        rookEventManager.syncPhysicalOxygenationEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {
@@ -758,8 +701,8 @@ class SDKPlaygroundViewModel(
         )
     }
 
-    private suspend fun syncTemperatureEvents(today: LocalDate, stringBuilder: StringBuilder) {
-        rookEventManager.syncTemperatureEvents(today).fold(
+    private suspend fun syncTemperatureEvents(localDate: LocalDate, stringBuilder: StringBuilder) {
+        rookEventManager.syncTemperatureEvents(localDate).fold(
             {
                 when (it) {
                     SyncStatus.RECORDS_NOT_FOUND -> {

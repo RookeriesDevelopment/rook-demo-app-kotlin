@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rookconnectdemo.common.openPlayStore
 import com.rookmotion.rookconnectdemo.databinding.FragmentSdkPlaygroundBinding
 import com.rookmotion.rookconnectdemo.di.ViewModelFactory
 import com.rookmotion.rookconnectdemo.extension.repeatOnResume
 import com.rookmotion.rookconnectdemo.extension.serviceLocator
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.LocalDate
 
 class SDKPlaygroundFragment : Fragment() {
 
@@ -29,7 +33,9 @@ class SDKPlaygroundFragment : Fragment() {
     ): View {
         _binding = FragmentSdkPlaygroundBinding.inflate(inflater, container, false)
 
-        RookPermissionsManager.registerPermissionsRequestLauncher(this)
+        RookPermissionsManager.registerPermissionsRequestLauncher(this) {
+            Timber.d("Permissions request result: $it")
+        }
 
         return binding.root
     }
@@ -57,7 +63,7 @@ class SDKPlaygroundFragment : Fragment() {
 
         binding.checkPermissions.setOnClickListener { sdkPlaygroundViewModel.checkPermissions() }
         binding.requestPermissions.setOnClickListener {
-            RookPermissionsManager.launchPermissionsRequest()
+            lifecycleScope.launch { RookPermissionsManager.launchPermissionsRequest(requireContext()) }
         }
         binding.openHealthConnect.setOnClickListener { sdkPlaygroundViewModel.openHealthConnect() }
 
@@ -65,7 +71,11 @@ class SDKPlaygroundFragment : Fragment() {
             sdkPlaygroundViewModel.syncHealthData.collect { binding.syncHealthDataState.text = it }
         }
 
-        binding.syncHealthData.setOnClickListener { sdkPlaygroundViewModel.syncHealthData() }
+        binding.syncHealthData.setOnClickListener {
+            val localDate = LocalDate.parse(binding.date.text.toString())
+
+            sdkPlaygroundViewModel.syncHealthData(localDate)
+        }
 
         repeatOnResume {
             sdkPlaygroundViewModel.pendingSummaries.collect {
@@ -82,6 +92,7 @@ class SDKPlaygroundFragment : Fragment() {
         }
 
         binding.syncPendingEvents.setOnClickListener { sdkPlaygroundViewModel.syncPendingEvents() }
+        binding.date.setText(LocalDate.now().minusDays(1).toString())
     }
 
     override fun onDestroy() {
