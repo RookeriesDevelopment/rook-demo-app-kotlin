@@ -30,9 +30,6 @@ class HomeActivity : AppCompatActivity() {
 
     private val rookYesterdaySync by rookYesterdaySync(
         enableLogs = isDebug,
-        clientUUID = BuildConfig.CLIENT_UUID,
-        secretKey = BuildConfig.SECRET_KEY,
-        environment = rookEnvironment,
         state = Lifecycle.State.CREATED,
     )
 
