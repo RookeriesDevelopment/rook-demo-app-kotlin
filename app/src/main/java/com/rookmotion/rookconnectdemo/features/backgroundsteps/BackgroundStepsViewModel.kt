@@ -4,9 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rookmotion.rook.sdk.RookPermissionsManager
 import com.rookmotion.rook.sdk.RookStepsManager
-import com.rookmotion.rook.sdk.domain.exception.MissingAndroidPermissionsException
-import com.rookmotion.rook.sdk.domain.exception.SDKNotAuthorizedException
-import com.rookmotion.rook.sdk.domain.exception.SDKNotInitializedException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -30,8 +27,8 @@ class BackgroundStepsViewModel(
             _state.update {
                 it.copy(
                     isLoading = false,
-                    isAvailable = isAvailable,
-                    isActive = isActive,
+                    isStepsServiceAvailable = isAvailable,
+                    isTrackingSteps = isActive,
                     hasAndroidPermissions = hasAndroidPermissions,
                 )
             }
@@ -42,65 +39,60 @@ class BackgroundStepsViewModel(
         rookPermissionsManager.requestAndroidPermissions()
     }
 
-    fun startStepsService() {
+    fun enableBackgroundSteps() {
+        Timber.i("Enabling background steps")
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             rookStepsManager.enableBackgroundAndroidSteps().fold(
                 {
                     checkStepsServiceStatus()
+                    Timber.i("Background steps enabled")
                 },
                 { throwable ->
-                    val error = when (throwable) {
-                        is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
-                        is MissingAndroidPermissionsException -> "MissingAndroidPermissionsException: ${throwable.message}"
-                        else -> "${throwable.message}"
-                    }
-
-                    Timber.e("Error starting steps : $error")
-
                     _state.update { it.copy(isLoading = false) }
+                    Timber.e("Error enabling background steps: ${throwable.message}")
                 }
             )
         }
     }
 
-    fun stopStepsService() {
+    fun disableBackgroundSteps() {
+        Timber.i("Disabling background steps")
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             rookStepsManager.disableBackgroundAndroidSteps().fold(
                 {
                     checkStepsServiceStatus()
+                    Timber.i("Background steps disabled")
                 },
                 { throwable ->
-                    val error = when (throwable) {
-                        is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
-                        else -> "${throwable.message}"
-                    }
-
-                    Timber.e("Error stopping steps service: $error")
-
                     _state.update { it.copy(isLoading = false) }
+                    Timber.e("Error disabling background steps: ${throwable.message}")
                 }
             )
         }
     }
 
     fun syncTodaySteps() {
+        Timber.i("Syncing today steps")
+
         viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
             rookStepsManager.syncTodayAndroidStepsCount().fold(
                 { todaySteps ->
-                    _state.update { it.copy(steps = todaySteps) }
+                    _state.update {
+                        it.copy(isLoading = false, steps = todaySteps)
+                    }
+                    Timber.i("Today steps synced: $todaySteps")
                 },
                 { throwable ->
-                    val error = when (throwable) {
-                        is SDKNotInitializedException -> "SDKNotInitializedException: ${throwable.message}"
-                        is SDKNotAuthorizedException -> "SDKNotAuthorizedException: ${throwable.message}"
-                        else -> "${throwable.message}"
-                    }
-
-                    Timber.e("Error obtaining steps: $error")
+                    _state.update { it.copy(isLoading = false) }
+                    Timber.e("Error syncing today steps: ${throwable.message}")
                 }
             )
         }

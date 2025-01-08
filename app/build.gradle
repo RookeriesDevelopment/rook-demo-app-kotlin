@@ -72,6 +72,7 @@ dependencies {
     implementation "io.coil-kt:coil:$coil_version"
 
     implementation "com.rookmotion.android:rook-sdk:$rook_sdk_version"
+    implementation "androidx.browser:browser:$browser_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"

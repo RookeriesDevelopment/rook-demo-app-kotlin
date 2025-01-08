@@ -5,19 +5,18 @@ import android.content.SharedPreferences
 
 class RookDemoPreferences(context: Context) {
 
-    private val preferences: SharedPreferences
+    private val preferences: SharedPreferences = context.getSharedPreferences(
+        /* name = */ "rook_demo_preferences",
+        /* mode = */ Context.MODE_PRIVATE,
+    )
 
-    init {
-        preferences = context.getSharedPreferences("rook_demo_preferences", Context.MODE_PRIVATE)
+    fun setUserAcceptedContinuousUpload(accepted: Boolean) {
+        preferences.edit().putBoolean(ACCEPTED_CONTINUOUS_UPLOAD_KEY, accepted).apply()
     }
 
-    fun setUserAcceptedYesterdaySync(accepted: Boolean) {
-        preferences.edit().putBoolean(ACCEPTED_YESTERDAY_SYNC_KEY, accepted).apply()
-    }
-
-    fun getUserAcceptedYesterdaySync(): Boolean {
-        return preferences.getBoolean(ACCEPTED_YESTERDAY_SYNC_KEY, false)
+    fun getUserAcceptedContinuousUpload(): Boolean {
+        return preferences.getBoolean(ACCEPTED_CONTINUOUS_UPLOAD_KEY, false)
     }
 }
 
-private const val ACCEPTED_YESTERDAY_SYNC_KEY = "ACCEPTED_YESTERDAY_SYNC"
+private const val ACCEPTED_CONTINUOUS_UPLOAD_KEY = "ACCEPTED_CONTINUOUS_UPLOAD"

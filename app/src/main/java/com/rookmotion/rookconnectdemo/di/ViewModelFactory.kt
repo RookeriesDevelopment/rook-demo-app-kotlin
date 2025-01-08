@@ -2,44 +2,23 @@ package com.rookmotion.rookconnectdemo.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rookmotion.rook.sdk.RookEventManager
-import com.rookmotion.rook.sdk.RookSummaryManager
-import com.rookmotion.rookconnectdemo.features.HomeViewModel
 import com.rookmotion.rookconnectdemo.features.backgroundsteps.BackgroundStepsViewModel
-import com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageViewModel
-import com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationViewModel
-import com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundViewModel
-import com.rookmotion.rookconnectdemo.features.yesterdaysync.YesterdaySyncViewModel
+import com.rookmotion.rookconnectdemo.features.configuration.ConfigurationViewModel
+import com.rookmotion.rookconnectdemo.features.continuousupload.ContinuousUploadViewModel
+import com.rookmotion.rookconnectdemo.features.datasources.DataSourcesViewModel
+import com.rookmotion.rookconnectdemo.features.datasources.connections.ConnectionsViewModel
+import com.rookmotion.rookconnectdemo.features.permissions.PermissionsViewModel
+import com.rookmotion.rookconnectdemo.features.sync.SyncViewModel
+import com.rookmotion.rookconnectdemo.features.usermanagement.UserManagementViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
-        if (modelClass.isAssignableFrom(SDKConfigurationViewModel::class.java)) {
-            return SDKConfigurationViewModel(
+        if (modelClass.isAssignableFrom(ConfigurationViewModel::class.java)) {
+            return ConfigurationViewModel(
                 rookConfigurationManager = serviceLocator.rookConfigurationManager,
-            ) as T
-        }
-
-        if (modelClass.isAssignableFrom(SDKPlaygroundViewModel::class.java)) {
-            return SDKPlaygroundViewModel(
-                rookPermissionsManager = serviceLocator.rookPermissionsManager,
-                rookSummaryManager = RookSummaryManager(serviceLocator.rookConfigurationManager),
-                rookEventManager = RookEventManager(serviceLocator.rookConfigurationManager),
-            ) as T
-        }
-
-        if (modelClass.isAssignableFrom(YesterdaySyncViewModel::class.java)) {
-            return YesterdaySyncViewModel(
-                rookPermissionsManager = serviceLocator.rookPermissionsManager,
-                rookDemoPreferences = serviceLocator.rookDemoPreferences,
-            ) as T
-        }
-
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(
-                rookDemoPreferences = serviceLocator.rookDemoPreferences,
             ) as T
         }
 
@@ -50,9 +29,42 @@ class ViewModelFactory(private val serviceLocator: ServiceLocator) : ViewModelPr
             ) as T
         }
 
-        if (modelClass.isAssignableFrom(ConnectionsPageViewModel::class.java)) {
-            return ConnectionsPageViewModel(
+        if (modelClass.isAssignableFrom(UserManagementViewModel::class.java)) {
+            return UserManagementViewModel(
+                rookConfigurationManager = serviceLocator.rookConfigurationManager,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(DataSourcesViewModel::class.java)) {
+            return DataSourcesViewModel(
                 rookDataSources = serviceLocator.rookDataSources,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(ConnectionsViewModel::class.java)) {
+            return ConnectionsViewModel(
+                rookDataSources = serviceLocator.rookDataSources,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(PermissionsViewModel::class.java)) {
+            return PermissionsViewModel(
+                rookPermissionsManager = serviceLocator.rookPermissionsManager,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(SyncViewModel::class.java)) {
+            return SyncViewModel(
+                rookSummaryManager = serviceLocator.rookSummaryManager,
+                rookEventManager = serviceLocator.rookEventManager,
+            ) as T
+        }
+
+        if (modelClass.isAssignableFrom(ContinuousUploadViewModel::class.java)) {
+            return ContinuousUploadViewModel(
+                rookPermissionsManager = serviceLocator.rookPermissionsManager,
+                rookContinuousUploadManager = serviceLocator.rookContinuousUploadManager,
+                rookDemoPreferences = serviceLocator.rookDemoPreferences,
             ) as T
         }
 

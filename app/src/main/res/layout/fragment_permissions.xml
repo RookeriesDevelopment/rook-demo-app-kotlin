@@ -1,181 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".features.sdkplayground.SDKPlaygroundFragment">
+    tools:context=".features.permissions.PermissionsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="10dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/_4_check_availability"
+            android:layout_marginBottom="8dp"
+            android:text="@string/health_connect_availability"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <TextView
-            android:id="@+id/check_availability_state"
+            android:id="@+id/check_health_connect_availability_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/check_availability"
+            android:id="@+id/check_health_connect_availability"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/check_availability" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/check_health_connect_availability" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/_4_1_download_health_connect"
+            android:layout_marginBottom="8dp"
+            android:text="@string/download_health_connect"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/download_health_connect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/download_health_connect" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/_5_check_permissions"
+            android:layout_marginBottom="8dp"
+            android:text="@string/health_connect_permissions"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <TextView
-            android:id="@+id/check_permissions_state"
+            android:id="@+id/check_health_connect_permissions_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/check_permissions"
+            android:id="@+id/check_health_connect_permissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/check_permissions" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/check_health_connect_permissions" />
 
         <TextView
+            android:id="@+id/check_health_connect_permissions_partially_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/_5_1_request_permissions"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/request_permissions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/request_permissions" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/_5_2_open_health_connect"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/open_health_connect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/open_health_connect" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/_6_sync_health_data"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:helperText="2007-12-31">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/sync_health_data_state"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/sync_health_data"
+            android:id="@+id/check_health_connect_permissions_partially"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/sync_health_data" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/check_health_connect_permissions_partially" />
 
         <TextView
+            android:id="@+id/request_health_connect_permissions_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/sync_pending_summaries_optional"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-
-        <TextView
-            android:id="@+id/sync_pending_summaries_state"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/sync_pending_summaries"
+            android:id="@+id/request_health_connect_permissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/sync_pending_summaries" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/request_health_connect_permissions" />
 
         <TextView
+            android:id="@+id/revoke_health_connect_permissions_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/sync_pending_events_optional"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-
-        <TextView
-            android:id="@+id/sync_pending_events_state"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/sync_pending_events"
+            android:id="@+id/revoke_health_connect_permissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/sync_pending_events" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/revoke_health_connect_permissions" />
+
+        <TextView
+            android:id="@+id/open_health_connect_settings_output"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textIsSelectable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_health_connect_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/open_health_connect_settings" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/android_permissions"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+        <TextView
+            android:id="@+id/check_android_permissions_output"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textIsSelectable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/check_android_permissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/check_android_permissions" />
+
+        <TextView
+            android:id="@+id/request_android_permissions_output"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textIsSelectable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/request_android_permissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/request_android_permissions" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/open_app_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/open_app_settings" />
     </LinearLayout>
 </ScrollView>

@@ -3,49 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_home"
-    app:startDestination="@id/SDKConfigurationFragment">
+    app:startDestination="@id/ConfigurationFragment">
 
     <fragment
-        android:id="@+id/SDKConfigurationFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.sdkconfiguration.SDKConfigurationFragment"
-        android:label="@string/sdk_configuration"
-        tools:layout="@layout/fragment_sdk_configuration">
-
+        android:id="@+id/ConfigurationFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.configuration.ConfigurationFragment"
+        android:label="@string/configuration"
+        tools:layout="@layout/fragment_configuration">
         <action
-            android:id="@+id/action_SDKConfigurationFragment_to_sdkPlaygroundFragment"
-            app:destination="@id/sdkPlaygroundFragment" />
-        <action
-            android:id="@+id/action_SDKConfigurationFragment_to_backgroundStepsFragment"
+            android:id="@+id/action_ConfigurationFragment_to_backgroundStepsFragment"
             app:destination="@id/backgroundStepsFragment" />
         <action
-            android:id="@+id/action_SDKConfigurationFragment_to_yesterdaySyncFragment"
-            app:destination="@id/yesterdaySyncFragment" />
+            android:id="@+id/action_ConfigurationFragment_to_userManagementFragment"
+            app:destination="@id/userManagementFragment" />
         <action
-            android:id="@+id/action_SDKConfigurationFragment_to_connectionsPageFragment"
-            app:destination="@id/connectionsPageFragment" />
+            android:id="@+id/action_ConfigurationFragment_to_dataSourcesFragment"
+            app:destination="@id/dataSourcesFragment" />
+        <action
+            android:id="@+id/action_ConfigurationFragment_to_permissionsFragment"
+            app:destination="@id/permissionsFragment" />
+        <action
+            android:id="@+id/action_ConfigurationFragment_to_syncFragment"
+            app:destination="@id/syncFragment" />
+        <action
+            android:id="@+id/action_ConfigurationFragment_to_continuousUploadFragment"
+            app:destination="@id/continuousUploadFragment" />
     </fragment>
-
-    <fragment
-        android:id="@+id/sdkPlaygroundFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.sdkplayground.SDKPlaygroundFragment"
-        android:label="@string/sdk_playground"
-        tools:layout="@layout/fragment_sdk_playground" />
-
     <fragment
         android:id="@+id/backgroundStepsFragment"
         android:name="com.rookmotion.rookconnectdemo.features.backgroundsteps.BackgroundStepsFragment"
         android:label="@string/background_steps"
         tools:layout="@layout/fragment_background_steps" />
-
     <fragment
-        android:id="@+id/yesterdaySyncFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.yesterdaysync.YesterdaySyncFragment"
-        android:label="@string/yesterday_sync"
-        tools:layout="@layout/fragment_yesterday_sync" />
-
+        android:id="@+id/userManagementFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.usermanagement.UserManagementFragment"
+        android:label="@string/user_management"
+        tools:layout="@layout/fragment_user_management" />
     <fragment
-        android:id="@+id/connectionsPageFragment"
-        android:name="com.rookmotion.rookconnectdemo.features.connectionspage.ConnectionsPageFragment"
-        android:label="@string/connections_page"
-        tools:layout="@layout/fragment_connections_page" />
+        android:id="@+id/dataSourcesFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.datasources.DataSourcesFragment"
+        android:label="@string/data_sources"
+        tools:layout="@layout/fragment_data_sources" />
+    <fragment
+        android:id="@+id/permissionsFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.permissions.PermissionsFragment"
+        android:label="@string/permissions"
+        tools:layout="@layout/fragment_permissions" />
+    <fragment
+        android:id="@+id/syncFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.sync.SyncFragment"
+        android:label="@string/manually_sync_health_data"
+        tools:layout="@layout/fragment_sync" />
+    <fragment
+        android:id="@+id/continuousUploadFragment"
+        android:name="com.rookmotion.rookconnectdemo.features.continuousupload.ContinuousUploadFragment"
+        android:label="@string/continuous_upload"
+        tools:layout="@layout/fragment_continuous_upload" />
 </navigation>

@@ -49,7 +49,9 @@ class BackgroundStepsFragment : Fragment() {
                     binding.permissionsStatus.setText(R.string.permissions_are_granted)
                     binding.permissionsStatus.isChecked = true
                     binding.requestPermissions.isEnabled = false
-                } else {
+                }
+
+                if (!it.hasAndroidPermissions) {
                     binding.permissionsStatus.setText(R.string.missing_permissions)
                     binding.permissionsStatus.isChecked = false
                     binding.requestPermissions.isEnabled = true
@@ -65,33 +67,35 @@ class BackgroundStepsFragment : Fragment() {
                     }
                 }
 
-                if (it.isLoading) {
-                    binding.serviceToggle.isEnabled = false
-                } else {
-                    binding.serviceToggle.isEnabled = it.isAvailable
+                binding.serviceToggle.isEnabled = it.isStepsServiceAvailable &&
+                        it.hasAndroidPermissions &&
+                        !it.isLoading
 
-                    if (it.isActive) {
-                        binding.serviceStatus.isChecked = true
-                        binding.serviceStatus.setText(R.string.background_steps_is_running)
-                        binding.serviceToggle.setText(R.string.stop_background_steps)
-                        binding.serviceToggle.setOnClickListener {
-                            backgroundStepsViewModel.stopStepsService()
-                        }
-                    } else {
-                        binding.serviceStatus.isChecked = false
-                        binding.serviceStatus.setText(R.string.background_steps_is_stopped)
-                        binding.serviceToggle.setText(R.string.start_background_steps)
-                        binding.serviceToggle.setOnClickListener {
-                            backgroundStepsViewModel.startStepsService()
-                        }
+                binding.syncTodaySteps.isEnabled = it.isTrackingSteps && !it.isLoading
+
+                binding.currentDaySteps.text = getString(R.string.current_day_steps, it.steps)
+
+                if (it.isTrackingSteps) {
+                    binding.serviceStatus.isChecked = true
+                    binding.serviceStatus.setText(R.string.background_steps_is_running)
+                    binding.serviceToggle.setText(R.string.stop_background_steps)
+                    binding.serviceToggle.setOnClickListener {
+                        backgroundStepsViewModel.disableBackgroundSteps()
                     }
 
-                    binding.currentDaySteps.text = getString(R.string.current_day_steps, it.steps)
+                    binding.syncTodaySteps.setOnClickListener {
+                        backgroundStepsViewModel.syncTodaySteps()
+                    }
+                } else {
+                    binding.serviceStatus.isChecked = false
+                    binding.serviceStatus.setText(R.string.background_steps_is_stopped)
+                    binding.serviceToggle.setText(R.string.start_background_steps)
+                    binding.serviceToggle.setOnClickListener {
+                        backgroundStepsViewModel.enableBackgroundSteps()
+                    }
                 }
             }
         }
-
-        backgroundStepsViewModel.syncTodaySteps()
     }
 
     override fun onResume() {

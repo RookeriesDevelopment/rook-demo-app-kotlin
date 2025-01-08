@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="10dp">
+        android:padding="16dp">
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/service_status"
@@ -25,7 +24,7 @@
             android:id="@+id/permissions_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:checked="false"
             android:clickable="false"
             android:text="@string/missing_permissions" />
@@ -34,21 +33,25 @@
             android:id="@+id/request_permissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/request_permissions" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/service_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/start_background_steps" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sync_today_steps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/sync_today_steps" />
 
         <TextView
             android:id="@+id/current_day_steps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="@string/current_day_steps"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />

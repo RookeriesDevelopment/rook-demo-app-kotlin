@@ -4,27 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".features.sdkconfiguration.SDKConfigurationFragment">
+    tools:context=".features.configuration.ConfigurationFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="10dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/_1_configure_sdk"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <TextView
-            android:id="@+id/set_configuration_state"
+            android:id="@+id/configuration_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
@@ -32,21 +31,21 @@
             android:id="@+id/set_configuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/set_configuration" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/_2_initialize_sdk"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
         <TextView
-            android:id="@+id/initialize_state"
+            android:id="@+id/initialize_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
@@ -54,13 +53,13 @@
             android:id="@+id/initialize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/initialize" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/_3_update_user_id"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
@@ -69,7 +68,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:hint="@string/user_id">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -80,10 +79,10 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/update_user_state"
+            android:id="@+id/update_user_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textIsSelectable="true" />
 
@@ -91,38 +90,43 @@
             android:id="@+id/update_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/update_user" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/health_connect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/health_connect" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/steps_service"
+            android:id="@+id/background_steps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/background_steps" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/yesterday_sync_permissions"
+            android:id="@+id/user_management"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/yesterday_sync" />
+            android:text="@string/user_management" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/connections_page"
+            android:id="@+id/data_sources"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/connections_page" />
+            android:text="@string/data_sources" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/connections_page_build"
+            android:id="@+id/permissions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/connections_page_pre_built" />
+            android:text="@string/permissions" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/manually_sync_health_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manually_sync_health_data" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/continuous_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continuous_upload" />
     </LinearLayout>
 </ScrollView>
