@@ -36,6 +36,15 @@ class DataSourcesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        displayConsoleOutputUpdates(
+            consoleOutput = viewModel.authorizedDataSourcesOutput,
+            receiver = binding.getAuthorizedDataSourcesOutput,
+        )
+
+        binding.getAuthorizedDataSources.setOnClickListener {
+            viewModel.getAuthorizedDataSources()
+        }
+
         binding.connectionsPageDataSourcesList.setOnClickListener {
             ConnectionsBottomSheet().show(
                 requireActivity().supportFragmentManager,

@@ -34,7 +34,10 @@ class ConfigurationViewModel(
 
         configurationOutput.appendMultiple(
             "Using configuration:",
-            "$rookConfiguration",
+            "Client UUID: ${rookConfiguration.clientUUID}",
+            "Secret Key: ${rookConfiguration.secretKey}",
+            "Environment: ${rookConfiguration.environment}",
+            "APP IN DEVELOPMENT MODE: $isDebug"
         )
 
         if (isDebug) {

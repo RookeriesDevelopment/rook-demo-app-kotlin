@@ -94,6 +94,7 @@ class SyncViewModel(
             syncPhysicalOxygenationEvents(localDate)
             syncTemperatureEvents(localDate)
             syncStepsEvents()
+            syncCaloriesEvents()
         }
     }
 
@@ -285,6 +286,22 @@ class SyncViewModel(
             },
             {
                 syncEventsOutput.appendError(it, "Error syncing Steps events")
+            }
+        )
+    }
+
+    private suspend fun syncCaloriesEvents() {
+        syncEventsOutput.append("Syncing Calories events of today...")
+
+        rookEventManager.getTodayCaloriesCount().fold(
+            {
+                when (it) {
+                    SyncStatusWithData.RecordsNotFound -> syncEventsOutput.append("Calories events not found")
+                    is SyncStatusWithData.Synced -> syncEventsOutput.append("Calories events synced successfully")
+                }
+            },
+            {
+                syncEventsOutput.appendError(it, "Error syncing Calories events")
             }
         )
     }
